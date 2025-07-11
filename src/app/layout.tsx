@@ -40,8 +40,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${apexMk2.variable} ${geist.variable} ${geistMono.variable} font-apex`}
+        className={`${apexMk2.variable} ${geist.variable} ${geistMono.variable} font-apex relative min-h-screen`}
       >
+        <div className="overlay" />
         <Navbar />
         {children}
       </body>

@@ -138,31 +138,31 @@
   font-family: var(--font-geist-mono);
 }
 
+.overlay {
+  position: fixed;
+  inset: 0;
+  background-image: url('/img/stars.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0.6;
+  z-index: -1;
+  pointer-events: none;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
   body {
     @apply bg-background text-foreground;
+    overflow: auto;
+    height: auto;
     background-image: url("/img/planets.jpg");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     background-attachment: fixed;
     padding: 0 5.625rem;
-  }
-  body::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-image: url('/img/stars.png');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    opacity: 0.6;
-    z-index: -1;
   }
 }
