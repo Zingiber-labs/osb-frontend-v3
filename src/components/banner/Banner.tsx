@@ -58,7 +58,7 @@ export default function WeaponBanner({
         </p>
         <Button
           onClick={onButtonClick}
-          className="bg-cyan-400 hover:bg-cyan-500 text-black font-bold px-6 py-2 rounded-full w-fit"
+          className="bg-cyan-400 hover:bg-cyan-500 text-black px-6 py-2 rounded-full w-fit"
         >
           {buttonText.toUpperCase()}
         </Button>
