@@ -10,7 +10,7 @@ import {
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 
-interface WeaponInventoryCardProps {
+interface InventoryCardProps {
   weapon: {
     name: string;
     level?: string;
@@ -18,7 +18,7 @@ interface WeaponInventoryCardProps {
   };
 }
 
-const WeaponInventoryCard = ({ weapon }: WeaponInventoryCardProps) => {
+const InventoryCard = ({ weapon }: InventoryCardProps) => {
   return (
     <Card
       className="group bg-orange-24 pt-2 hover:shadow-lg text-white font-bold border-2 border-transparent hover:bg-transparent hover:border-secondary transition-colors duration-300 cursor-pointer"
@@ -45,4 +45,4 @@ const WeaponInventoryCard = ({ weapon }: WeaponInventoryCardProps) => {
   );
 };
 
-export default WeaponInventoryCard;
+export default InventoryCard;

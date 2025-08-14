@@ -7,7 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import WeaponInventoryCard from "@/components/inventory/WeaponInventoryCard";
+import InventoryCard from "@/components/inventory/InventoryCard";
 
 const weapons = [
   { name: "BLUE ORB", src: "/img/gun.svg", level: "5" },
@@ -48,7 +48,7 @@ const Inventory = () => {
 
       <div className="mt-20 mb-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {weapons.map((weapon, index) => {
-          return <WeaponInventoryCard key={index} weapon={weapon} />;
+          return <InventoryCard key={index} weapon={weapon} />;
         })}
       </div>
     </div>
