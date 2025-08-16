@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { Button } from "../ui/button";
+import ExperienceLevels from "./ExperienceLevels";
 
 interface InventoryDetailProps {
   inventory: any;
@@ -61,20 +62,14 @@ const InventoryDetail = ({
                 WEAPON LEVEL
               </p>
             </div>
-            <div className="flex justify-between text-card-bg font-light text-sm py-3.5">
-              <div className="flex gap-5">
-                <p>LVL 5</p>
-                <p>LVL 6</p>
-              </div>
-              <div>230/600 XP</div>
-            </div>
+            <ExperienceLevels />
 
             {/* Action Buttons */}
             <div className="flex gap-4 pt-4">
-              <Button className="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-bold py-3">
+              <Button className="flex-1 bg-gray-700 hover:bg-gray-600 text-white py-3">
                 EQUIP
               </Button>
-              <Button className="flex-1 bg-secondary hover:bg-cyan-300 text-black font-bold py-3">
+              <Button className="flex-1 bg-secondary hover:bg-cyan-300 text-black py-3">
                 DISMANTLE
               </Button>
             </div>
