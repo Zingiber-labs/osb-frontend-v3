@@ -21,7 +21,7 @@ const weapons = [
   { name: "GOLDEN STAFF", src: "/img/gun.svg", level: "5", id: 6 },
   { name: "GREEN BOW", src: "/img/gun.svg", level: "5", id: 7 },
   { name: "BLACK AXE", src: "/img/gun.svg", level: "5", id: 8 },
-  { name: "GOLDEN STAFF", src: "/img/gun.svg", level: "5", id: 9 },
+  { name: "GOLDEN STAFF", src: "/img/gun.svg", level: "5", id: 9, locked: true },
 ];
 
 const Inventory = () => {

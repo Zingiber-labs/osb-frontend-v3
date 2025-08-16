@@ -43,6 +43,7 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
+  --color-grey-dark: var(--grey-dark);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -50,9 +51,9 @@
 }
 
 :root {
-  --font-apex: 'ApexMk2', sans-serif;
-  --font-geist: 'Geist', sans-serif;
-  --font-geist-mono: 'Geist Mono', monospace;
+  --font-apex: "ApexMk2", sans-serif;
+  --font-geist: "Geist", sans-serif;
+  --font-geist-mono: "Geist Mono", monospace;
   --radius: 0.625rem;
   --card: #ffffff;
   --card-foreground: oklch(0.145 0 0);
@@ -61,7 +62,7 @@
   --primary: oklch(0.205 0 0);
   --primary-foreground: #fafafa;
   --secondary: #f5f5f5;
-  --secondary-cyan: #2DFFFE;
+  --secondary-cyan: #2dfffe;
   --secondary-foreground: oklch(0.205 0 0);
   --muted: #f5f5f5;
   --muted-foreground: oklch(0.556 0 0);
@@ -84,13 +85,15 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
-  --primary-orange: #FF6B2F;
+  --primary-orange: #ff6b2f;
   --orange-dark: #732100;
-  --orange-24: #FF6B2F3D;
-  --orange-32: #A67864;
-  --card-bg: #EDEFEF;
+  --orange-24: #ff6b2f3d;
+  --orange-32: #a67864;
+  --card-bg: #edefef;
   --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0)}
+  --foreground: oklch(0.145 0 0);
+  --grey-dark: #282626;
+}
 
 .dark {
   --background: oklch(0.145 0 0);
@@ -146,7 +149,7 @@
 .overlay {
   position: fixed;
   inset: 0;
-  background-image: url('/img/stars.png');
+  background-image: url("/img/stars.png");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -168,7 +171,6 @@
   scrollbar-width: thin; /* Firefox */
   scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
 }
-
 
 @layer base {
   * {
