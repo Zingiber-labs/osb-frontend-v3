@@ -1,4 +1,6 @@
-import React from "react";
+"use client"
+
+import React, { useState } from "react";
 import {
   Select,
   SelectContent,
@@ -8,20 +10,33 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import InventoryCard from "@/components/inventory/InventoryCard";
+import InventoryDetail from "@/components/inventory/InventoryDetail";
 
 const weapons = [
-  { name: "BLUE ORB", src: "/img/gun.svg", level: "5" },
-  { name: "BLUE SHIELD", src: "/img/gun.svg", level: "5" },
-  { name: "RED SWORD", src: "/img/gun.svg", level: "5" },
-  { name: "GREEN BOW", src: "/img/gun.svg", level: "5" },
-  { name: "BLACK AXE", src: "/img/gun.svg", level: "5" },
-  { name: "GOLDEN STAFF", src: "/img/gun.svg", level: "5" },
-  { name: "GREEN BOW", src: "/img/gun.svg", level: "5" },
-  { name: "BLACK AXE", src: "/img/gun.svg", level: "5" },
-  { name: "GOLDEN STAFF", src: "/img/gun.svg", level: "5" },
+  { name: "BLUE ORB", src: "/img/gun.svg", level: "5", id: 1 },
+  { name: "BLUE SHIELD", src: "/img/gun.svg", level: "5", id: 2 },
+  { name: "RED SWORD", src: "/img/gun.svg", level: "5", id: 3 },
+  { name: "GREEN BOW", src: "/img/gun.svg", level: "5", id: 4 },
+  { name: "BLACK AXE", src: "/img/gun.svg", level: "5", id: 5 },
+  { name: "GOLDEN STAFF", src: "/img/gun.svg", level: "5", id: 6 },
+  { name: "GREEN BOW", src: "/img/gun.svg", level: "5", id: 7 },
+  { name: "BLACK AXE", src: "/img/gun.svg", level: "5", id: 8 },
+  { name: "GOLDEN STAFF", src: "/img/gun.svg", level: "5", id: 9 },
 ];
 
 const Inventory = () => {
+  const [selectedInventory, setSelectedInventory] = useState(null);
+
+  const handleInventoryDetail = (inventory: any) => {
+    setSelectedInventory(
+      selectedInventory?.id === inventory.id ? null : inventory
+    );
+  };
+
+  const handleCloseInventoryDetail = () => {
+    setSelectedInventory(null);
+  };
+
   return (
     <div>
       <p className="text-secondary text-5xl font-bold mt-14 mb-6">
@@ -46,9 +61,23 @@ const Inventory = () => {
         </Select>
       </div>
 
+      {selectedInventory && (
+        <InventoryDetail 
+          weapon={selectedInventory} 
+          onClose={handleCloseInventoryDetail}
+        />
+      )}
+
       <div className="mt-20 mb-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {weapons.map((weapon, index) => {
-          return <InventoryCard key={index} weapon={weapon} />;
+          return (
+            <InventoryCard
+              key={index}
+              inventory={weapon}
+              onClick={handleInventoryDetail}
+              isSelected={selectedInventory?.id === weapon.id}
+            />
+          );
         })}
       </div>
     </div>
