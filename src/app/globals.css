@@ -37,6 +37,7 @@
   --color-orange-dark: var(--orange-dark);
   --color-orange-24: var(--orange-24);
   --color-orange-32: var(--orange-32);
+  --color-green-32: var(--green-32);
   --color-secondary-cyan: var(--secondary-cyan);
   --color-card-bg: var(--card-bg);
   --color-popover-foreground: var(--popover-foreground);
@@ -92,6 +93,7 @@
   --orange-dark: #732100;
   --orange-24: #ff6b2f3d;
   --orange-32: #a67864;
+  --green-32: #00a460;
   --card-bg: #edefef;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
@@ -176,6 +178,14 @@
 .custom-scroll-thin {
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+}
+
+.text-green-32 {
+  color: var(--green-32);
+}
+
+.bg-orange-32 {
+  background-color: var(--orange-32);
 }
 
 @layer base {
