@@ -43,7 +43,7 @@ export default function ProfileSidebar({
   onEditProfile,
 }: ProfileSidebarProps) {
   return (
-    <div className="relative text-white">
+    <div className="flex flex-col gap-4 w-full">
       <Card
         className="
          w-full h-fit rounded-[16px] border border-primary p-4
@@ -110,6 +110,26 @@ export default function ProfileSidebar({
             ))}
         </div>
       </Card>
+      <div className="flex flex-col gap-4">
+        {/* title payment */}
+        <div className="flex justify-between items-center">
+          <h2 className="text-lg font-medium text-secondary">
+            My Payment Method
+          </h2>
+          <button
+            aria-label="Edit Payment Method"
+            onClick={() => {}}
+            className="
+                size-[24px]
+                inline-flex items-center justify-center rounded-full
+                hover:cursor-pointer hover:text-black
+                transition
+              "
+          >
+            <Pencil className="size-[18px] text-secondary" />
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

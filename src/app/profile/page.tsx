@@ -19,8 +19,8 @@ const ProfilePage = () => {
     payments: [
       { type: "VISA", last4: "7812", expiry: "10/22", default: true },
       { type: "PayPal", email: "richardstone000@gmail.com" },
-      { type: "ID", value: "XXXX689 richardstone000@gmail.com" },
       { type: "VISA", last4: "7812", expiry: "10/22" },
+      { type: "ID", value: "XXXX689 richardstone000@gmail.com" },
     ],
     avatarUrl: "/img/user.png",
   };
