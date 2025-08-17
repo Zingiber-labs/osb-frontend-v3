@@ -1,5 +1,5 @@
 "use client";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import React from "react";
 import Button from "../button/Button";
 
@@ -13,6 +13,7 @@ interface NavLinkProps {
 const NavLink = (props: NavLinkProps) => {
   const { label, href, onClick, className = "" } = props;
   const router = useRouter();
+  const pathname = usePathname();
 
   const handleClick = (e: React.MouseEvent) => {
     if (onClick) {
@@ -25,9 +26,11 @@ const NavLink = (props: NavLinkProps) => {
     }
   };
 
+  const isActive = href === pathname;
+
   return (
     <Button
-      variant="link"
+      variant={`${isActive ? "primary" : "link"}`}
       onClick={handleClick}
       className={`text-white hover:text-white/90 transition-colors ${className}`}
     >
