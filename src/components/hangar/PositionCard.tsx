@@ -7,17 +7,19 @@ interface PositionCardProps {
   alt: string;
   srcUrl: string;
   label: string;
+  isSelected?: boolean;
+  onSelect?: () => void;
 }
 
-const PositionCard = ({ alt, srcUrl, label }: PositionCardProps) => {
+const PositionCard = ({ alt, srcUrl, label, isSelected, onSelect }: PositionCardProps) => {
   return (
     <Card
-      className="
-        group 
-        bg-orange-24 border-0 h-full 
-        transition-colors 
-        hover:bg-grey-dark-40
-      "
+      onClick={onSelect}
+      className={`group h-full transition-colors cursor-pointer 
+        ${isSelected 
+          ? "bg-grey-dark-40 border-secondary" 
+          : "bg-orange-24 border-0 hover:bg-grey-dark-40"}`
+      }
     >
       <CardContent className="flex flex-col items-center text-center p-4">
         <Image
@@ -33,13 +35,13 @@ const PositionCard = ({ alt, srcUrl, label }: PositionCardProps) => {
         <Button
           size="sm"
           variant="ghost"
-          className="
-            bg-orange-dark text-white 
-            transition-colors
-            group-hover:bg-gray-600 group-hover:text-white
-          "
+          className={`transition-colors
+            ${isSelected 
+              ? "bg-grey-dark-40 text-white border-primary" 
+              : "bg-orange-dark text-white group-hover:bg-gray-600 group-hover:text-white"}`
+          }
         >
-          Select your position
+          {isSelected ? "Selected" : "Select your position"}
         </Button>
       </CardContent>
     </Card>

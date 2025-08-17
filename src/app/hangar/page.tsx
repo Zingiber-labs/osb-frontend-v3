@@ -1,4 +1,3 @@
-// app/(hangar)/page.tsx
 "use client";
 
 import { useMemo, useState } from "react";
@@ -34,9 +33,11 @@ export default function HangarPage() {
     Object.fromEntries(LEAGUES.map((l) => [l, false]))
   );
 
+  const [selectedPosition, setSelectedPosition] = useState<number | null>(null);
+
   const canStart = useMemo(
-    () => Object.values(leagueState).some(Boolean),
-    [leagueState]
+    () => Object.values(leagueState).some(Boolean) && selectedPosition !== null,
+    [leagueState, selectedPosition]
   );
 
   return (
@@ -55,6 +56,8 @@ export default function HangarPage() {
               srcUrl={position.img}
               alt={position.label}
               label={position.label}
+              isSelected={selectedPosition === position.id}
+              onSelect={() => setSelectedPosition(position.id)}
             />
           ))}
         </div>
