@@ -11,8 +11,15 @@ interface PositionCardProps {
 
 const PositionCard = ({ alt, srcUrl, label }: PositionCardProps) => {
   return (
-    <Card className="bg-orange-24 border-0 h-full">
-      <CardContent className="flex flex-col items-center text-center">
+    <Card
+      className="
+        group 
+        bg-orange-24 border-0 h-full 
+        transition-colors 
+        hover:bg-grey-dark-40
+      "
+    >
+      <CardContent className="flex flex-col items-center text-center p-4">
         <Image
           alt={alt}
           src={srcUrl}
@@ -26,7 +33,11 @@ const PositionCard = ({ alt, srcUrl, label }: PositionCardProps) => {
         <Button
           size="sm"
           variant="ghost"
-          className="bg-orange-dark text-white hover:bg-orange-dark hover:text-white"
+          className="
+            bg-orange-dark text-white 
+            transition-colors
+            group-hover:bg-gray-600 group-hover:text-white
+          "
         >
           Select your position
         </Button>
