@@ -1,0 +1,115 @@
+"use client";
+
+import { Card } from "@/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  Mail,
+  Facebook,
+  Instagram,
+  Youtube,
+  X as XIcon,
+  Pencil,
+} from "lucide-react";
+import * as React from "react";
+
+export type Payment =
+  | { type: "VISA"; last4: string; expiry: string; default?: boolean }
+  | { type: "PayPal"; email: string; default?: boolean }
+  | { type: "ID"; value: string; default?: boolean };
+
+export type ProfileSidebarProps = {
+  user: {
+    name: string;
+    username: string;
+    status: "online" | "offline";
+    memberSince: string;
+    email: string;
+    socials?: {
+      x?: string;
+      instagram?: string;
+      youtube?: string;
+      facebook?: string;
+    };
+    payments: Payment[];
+    avatarUrl?: string;
+  };
+  onSetDefaultPayment?: (index: number) => void;
+  onEditProfile?: () => void;
+};
+
+export default function ProfileSidebar({
+  user,
+  onSetDefaultPayment,
+  onEditProfile,
+}: ProfileSidebarProps) {
+  return (
+    <div className="relative text-white">
+      <Card
+        className="
+         w-full h-fit rounded-[16px] border border-primary p-4
+          bg-primary/24 text-white flex flex-col gap-4
+        "
+      >
+        <div className="flex items-stretch justify-between gap-4 min-w-0">
+          <Avatar className="size-[85px] border-none">
+            <AvatarImage src={user.avatarUrl} alt={`${user.name} avatar`} />
+            <AvatarFallback className="bg-black/30">
+              {user.name?.[0]?.toUpperCase() ?? "?"}
+            </AvatarFallback>
+          </Avatar>
+          <div className="flex w-14 flex-col items-end justify-between self-stretch pl-2">
+            <button
+              onClick={onEditProfile}
+              aria-label="Edit profile"
+              className="
+                size-[24px]
+                inline-flex items-center justify-center rounded-full
+                hover:cursor-pointer hover:text-black
+                transition
+              "
+            >
+              <Pencil className="size-[18px] text-secondary" />
+            </button>
+            <span
+              className={`
+              text-sm tracking-wide uppercase
+              ${
+                user.status === "online"
+                  ? "text-green-32 font-semibold"
+                  : "bg-zinc-600 text-white"
+              }
+            `}
+            >
+              {user.status}
+            </span>
+          </div>
+        </div>
+        <p className="text-[34px] font-bold">{user.name}</p>
+        <p className="text-xl font-bold">{user.username}</p>
+        <p className="text-xs font-light">Members since: {user.memberSince}</p>
+        <div className="text-sm font-medium flex items-center gap-2">
+          <Mail className="inline-block" />
+          <span>{user.email}</span>
+        </div>
+        <div className="flex justify-between items-center text-sm font-medium gap-4">
+          {user.socials &&
+            Object.entries(user.socials).map(([key, value]) => (
+              <span className="inline-flex items-center gap-1" key={key}>
+                {key === "facebook" && (
+                  <Facebook className="h-4 w-4 text-white/80" />
+                )}
+                {key === "instagram" && (
+                  <Instagram className="h-4 w-4 text-white/80" />
+                )}
+                {key === "youtube" && (
+                  <Youtube className="h-4 w-4 text-white/80" />
+                )}
+                {key === "x" && <XIcon className="h-4 w-4 text-white/80" />}
+                <span className="text-white/80">{value}</span>
+              </span>
+            ))}
+        </div>
+      </Card>
+    </div>
+  );
+}
