@@ -196,6 +196,29 @@
   isolation: isolate;    
 }
 
+/* Background for root (menu) */
+.layout--menu {
+  background-image: url("/img/menu.png");
+}
+
+.layout--menu {
+  background-image: url("/img/menu.png");
+  position: relative;
+}
+
+.layout--menu::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #11111180; 
+  z-index: 0;
+}
+
+.layout--menu > * {
+  position: relative;
+  z-index: 1;
+}
+
 /* Background by default */
 .layout--default {
   background-image: url("/img/planets.jpg");
@@ -206,7 +229,7 @@
   background-image: url("/img/hangar.png");
 }
 
-.layout--hangar .overlay {
-  display: none !important;
+.layout--hangar .overlay,
+.layout--menu .overlay {
+  display: none;
 }
-

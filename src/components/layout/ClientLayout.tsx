@@ -10,9 +10,19 @@ type Props = {
 
 export default function ClientLayout({ children, className = "" }: Props) {
   const pathname = usePathname();
-  const isHangar = pathname?.toLowerCase().startsWith("/hangar");
+  
+  let layoutClass = "layout";
 
-  const layoutClass = `layout ${isHangar ? "layout--hangar" : "layout--default"}`;
+  switch (true) {
+    case pathname?.toLowerCase().startsWith("/hangar"):
+      layoutClass += " layout--hangar";
+      break;
+    case pathname === "/":
+      layoutClass += " layout--menu";
+      break;
+    default:
+      layoutClass += " layout--default";
+  }
 
   return <div className={`${layoutClass} ${className}`}>{children}</div>;
 }
