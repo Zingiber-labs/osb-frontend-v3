@@ -1,5 +1,6 @@
 "use client";
 
+import * as React from "react";
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -10,12 +11,22 @@ import {
   X as XIcon,
   Pencil,
 } from "lucide-react";
-import * as React from "react";
+import Image from "next/image";
+import { CreditCard } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export type Payment =
   | { type: "VISA"; last4: string; expiry: string; default?: boolean }
-  | { type: "PayPal"; email: string; default?: boolean }
-  | { type: "ID"; value: string; default?: boolean };
+  | { type: "MASTERCARD"; last4: string; expiry: string; default?: boolean }
+  | { type: "PayPal"; email: string; name: string; default?: boolean }
+  | { type: "Binance"; id: string; email: string; default?: boolean };
+
+const PM_ICONS: Record<string, string> = {
+  VISA: "/icons/payments/visa.svg",
+  MASTERCARD: "/icons/payments/mastercard.svg",
+  PayPal: "/icons/payments/paypal.svg",
+  BINANCE: "/icons/payments/binance.svg",
+};
 
 export type ProfileSidebarProps = {
   user: {
@@ -47,7 +58,7 @@ export default function ProfileSidebar({
       <Card
         className="
          w-full h-fit rounded-[16px] border border-primary p-4
-          bg-primary/24 text-white flex flex-col gap-4
+          bg-primary/35 text-white flex flex-col gap-4
         "
       >
         <div className="flex items-stretch justify-between gap-4 min-w-0">
@@ -110,8 +121,7 @@ export default function ProfileSidebar({
             ))}
         </div>
       </Card>
-      <div className="flex flex-col gap-4">
-        {/* title payment */}
+      <div className="flex flex-col gap-4 mt-3">
         <div className="flex justify-between items-center">
           <h2 className="text-lg font-medium text-secondary">
             My Payment Method
@@ -128,6 +138,64 @@ export default function ProfileSidebar({
           >
             <Pencil className="size-[18px] text-secondary" />
           </button>
+        </div>
+        {/* payment methods */}
+        <div className="space-y-3">
+          {user.payments.map((p, i) => {
+            const isDefault = "default" in p && !!(p as any).default;
+            const type = (p as any).type as string;
+            const iconSrc = PM_ICONS[type];
+
+            return (
+              <div
+                key={i}
+                className="rounded-[16px] border border-primary bg-primary/35 px-4 py-3"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    {iconSrc ? (
+                      <Image
+                        src={iconSrc}
+                        alt={type}
+                        width={22}
+                        height={22}
+                        className="brightness-0 invert"
+                      />
+                    ) : (
+                      <CreditCard className="h-5 w-5 text-white" />
+                    )}
+                  </div>
+
+                  {isDefault ? (
+                    <span className="rounded-full bg-secondary text-black text-xs font-bold uppercase tracking-widest px-3 py-1">
+                      Default
+                    </span>
+                  ) : (
+                    <Button
+                      type="button"
+                      onClick={() => onSetDefaultPayment?.(i)}
+                      className="rounded-full bg-primary/35 text-white hover:bg-primary/60 h-7 text-xs uppercase tracking-widest px-3 py-1"
+                      variant="secondary"
+                      size="sm"
+                    >
+                      Set as default
+                    </Button>
+                  )}
+                </div>
+
+                <div className="mt-2 text-xs text-white/85 tracking-wide">
+                  {"last4" in p && (
+                    <>
+                      XXXX XXXX XXXX {p.last4} | Expiry {p.expiry}
+                    </>
+                  )}
+                  {"name" in p && <>{p.name} </>}
+                  {"email" in p && <>{p.email}</>}
+                  {"value" in p && <>ID: {p.value}</>}
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>

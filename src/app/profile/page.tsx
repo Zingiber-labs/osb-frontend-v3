@@ -8,7 +8,6 @@ import ProfileStats, { StatItem } from "@/components/profile/ProfileStats";
 import ProfileRank from "@/components/profile/ProfileRank";
 
 const ProfilePage = () => {
-  // ← Estos mocks luego vendrán del backend
   const user: ProfileSidebarProps["user"] = {
     name: "Richard Stone",
     username: "@R.STONE44",
@@ -18,11 +17,15 @@ const ProfilePage = () => {
     socials: { facebook: "RichardStone", instagram: "richardStone90" },
     payments: [
       { type: "VISA", last4: "7812", expiry: "10/22", default: true },
-      { type: "PayPal", email: "richardstone000@gmail.com" },
-      { type: "VISA", last4: "7812", expiry: "10/22" },
-      { type: "ID", value: "XXXX689 richardstone000@gmail.com" },
+      {
+        type: "PayPal",
+        name: "Richard Stone",
+        email: "richardstone000@gmail.com",
+      },
+      { type: "Binance", id: "XXXX689", email: "richardstone000@gmail.com" },
+      { type: "MASTERCARD", last4: "7812", expiry: "10/22", default: false },
     ],
-    avatarUrl: "/img/user.png",
+    avatarUrl: "/img/user-example.jpg",
   };
 
   const stats: StatItem[] = [
@@ -34,7 +37,6 @@ const ProfilePage = () => {
 
   return (
     <div className="pt-8 gap-8">
-      {/* Contenedor y grid como en store */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-13">
         <aside className="lg:col-span-3">
           <ProfileSidebar user={user} />
