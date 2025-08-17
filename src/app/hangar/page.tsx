@@ -115,7 +115,11 @@ export default function HangarPage() {
         </p>
         <Button
           disabled={!canStart}
-          className="rounded-full mt-2 cursor-pointer bg-green hover:bg-green-500 disabled:bg-grey-light"
+          className={`rounded-full mt-2 cursor-pointer${
+            canStart
+              ? "bg-green hover:bg-green-500"
+              : "bg-grey-light cursor-not-allowed"
+          }`}
         >
           Start mission
         </Button>
