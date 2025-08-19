@@ -21,7 +21,7 @@ const UserProfile = (props: UserProfileProps) => {
       onClick={onClick}
       role="button"
       tabIndex={0}
-      aria-label="Perfil de usuario"
+      aria-label="user-profile"
     >
       <div className="relative w-10 h-10 rounded-full overflow-hidden">
         <Image

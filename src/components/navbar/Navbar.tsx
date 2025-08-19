@@ -10,13 +10,13 @@ const Navbar = () => {
   const onClickProfile = () => {
     router.push("/profile");
   };
-  
+
   return (
     <header className="flex h-[6.5rem] items-center justify-between p-4 bg-transparent">
       <SiteLogo size="medium" imageSrc="/img/logo_horizontal.svg" />
       <NavMenu links={navLinks} />
       <UserProfile
-        name="Usuario"
+        name="User"
         avatar="/img/user-example.jpg"
         onClick={onClickProfile}
       />
