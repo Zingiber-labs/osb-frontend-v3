@@ -6,7 +6,7 @@ import { Instagram, Youtube, X } from "lucide-react"; // Usa iconos de lucide-re
 
 const Footer = () => {
   return (
-    <footer className="relative w-full bg-gradient-to-t from-black via-black/90 to-transparent text-white py-6">
+    <footer className="relative w-full bg-gradient-to-t from-black via-black/90 to-transparent text-white py-6 mt-auto">
       <div className="container mx-auto flex flex-col sm:flex-row justify-between items-center gap-6 px-4">
         
         <div className="flex-shrink-0">

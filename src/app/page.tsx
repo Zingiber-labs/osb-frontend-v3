@@ -1,10 +1,10 @@
 "use client";
 
-import { HoverImage } from "@/components/commons/HoverImage"; // <-- tu componente
+import { HoverImage } from "@/components/commons/HoverImage";
 
 export default function Home() {
   return (
-      <div className="relative mx-auto w-full max-w-[1200px] aspect-[1084/763] overflow-hidden rounded-2xl border-0 shadow">
+      <div className="relative mx-auto w-full max-w-[1200px] overflow-hidden rounded-2xl border-0 shadow min-h-[calc(100dvh-104px-91.83px)]">
         {/* Profile */}
         <HoverImage
           src="/img/menu/avatar.svg"
@@ -14,7 +14,7 @@ export default function Home() {
           height={500}
           className="absolute z-30"
           href="/profile"
-          style={{ left: "5%", bottom: "1%" }}
+          style={{ left: "5%", bottom: "0%" }}
         />
 
         {/* Hangar */}
@@ -26,7 +26,7 @@ export default function Home() {
           height={320}
           className="absolute z-20"
           href="/hangar"
-          style={{ right: "19%", bottom: "24%" }}
+          style={{ right: "19%", bottom: "15%" }}
         />
 
         {/* Inventory */}
@@ -38,7 +38,7 @@ export default function Home() {
           height={160}
           className="absolute z-20"
           href="/inventory"
-          style={{ right: "40%", bottom: "14%" }}
+          style={{ right: "40%", bottom: "1%" }}
         />
 
         {/* Store */}
@@ -50,7 +50,7 @@ export default function Home() {
           height={130}
           className="absolute z-20"
           href="/store"
-          style={{ right: "48%", bottom: "30%" }}
+          style={{ right: "48%", bottom: "20%" }}
         />
       </div>
   );

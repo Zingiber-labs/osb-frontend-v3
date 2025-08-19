@@ -24,7 +24,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body
-        className={`${apexMk2.variable} ${geist.variable} ${geistMono.variable} font-apex relative min-h-screen`}
+        className={`${apexMk2.variable} ${geist.variable} ${geistMono.variable} font-apex relative`}
       >
         <ClientLayout>
           <div className="px-[5.625rem]">
