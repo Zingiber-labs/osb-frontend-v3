@@ -10,8 +10,8 @@ export default function Home() {
           src="/img/menu/avatar.svg"
           activeSrc="/img/menu/avatar-active.png"
           alt="Profile / Robot"
-          width={450}
-          height={500}
+          width={350}
+          height={400}
           className="absolute z-30"
           href="/profile"
           style={{ left: "5%", bottom: "0%" }}
