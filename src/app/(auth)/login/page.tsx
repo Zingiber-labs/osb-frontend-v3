@@ -57,7 +57,7 @@ const Login = () => {
         {/* Background Image */}
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: "url('/img/hangar.png')" }}
+          style={{ backgroundImage: "url('/img/menu.png')" }}
         />
 
         {/* Dark overlay for better text readability */}
@@ -66,7 +66,7 @@ const Login = () => {
         {/* Content */}
         <div className="relative z-10 flex flex-col justify-center items-center h-full p-12">
           {/* Logo */}
-          <div className="text-center mb-8">
+          <div className="text-center items-center mb-8">
             <Image
               src="/img/logo_horizontal.svg"
               alt="Outer Sports Ballers"
@@ -77,9 +77,9 @@ const Login = () => {
           </div>
 
           {/* Tagline */}
-          <h1 className="text-4xl md:text-5xl font-bold text-white text-center leading-tight">
+          {/* <h1 className="text-4xl md:text-5xl font-bold text-white text-center leading-tight">
             ONE MISSION, ONE MATCH, ONE DESTINY!
-          </h1>
+          </h1> */}
         </div>
       </div>
 
@@ -239,9 +239,14 @@ const Login = () => {
             <div className="flex justify-center">
               <Button
                 variant="outline"
-                className="w-12 h-12 rounded-full bg-red-600 hover:bg-red-700 border-red-600 hover:border-red-700"
+                className="w-12 h-12 rounded-full bg-[#FF6B2F3D] hover:bg-red-700 border-red-600 hover:border-red-700"
               >
-                <Facebook className="w-5 h-5 text-white" />
+                <Image
+                  src="/img/google.svg"
+                  alt="google-icon"
+                  width={100}
+                  height={100}
+                />
               </Button>
             </div>
 
