@@ -5,7 +5,6 @@ import { AuthStatus } from "@/components/auth/AuthStatus";
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import Link from "next/link";
-import { Warehouse, Package, ShoppingCart, User } from "lucide-react";
 import Image from "next/image";
 
 export default function Home() {
