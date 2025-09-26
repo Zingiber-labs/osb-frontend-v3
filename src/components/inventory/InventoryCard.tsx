@@ -2,6 +2,7 @@ import React from "react";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import Image from "next/image";
 import { Lock } from "lucide-react";
+import { Label } from "../ui/label";
 
 interface Inventory {
   id: string;
@@ -29,7 +30,7 @@ const InventoryCard = ({
         ${
           isSelected
             ? "shadow-lg bg-transparent border-secondary"
-            : "bg-orange-24 border-transparent hover:shadow-lg hover:bg-transparent hover:border-secondary"
+            : "bg-orange-24 border-transparent hover:shadow-lg hover:bg-[#10101099] hover:border-secondary"
         }
         ${
           locked
@@ -58,7 +59,15 @@ const InventoryCard = ({
         <CardContent className="px-2">
           <div className="flex justify-between pt-10">
             <p className="text-2xl">{inventory.name}</p>
+          </div>
+          <div className="flex justify-between items-end">
             <p className="text-secondary">{`lvl ${inventory.level}`}</p>
+            <Label
+              htmlFor="quantity"
+              className="text-white rounded-2xl p-2 text-[10px] bg-orange-dark tracking-widest"
+            >
+              Quantity: 06
+            </Label>
           </div>
         </CardContent>
       </CardHeader>
