@@ -3,7 +3,7 @@
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { StoreItem } from "@/hooks/store-page/useStoreItems";
+import { StoreItem } from "@/types/store-items";
 
 interface WeaponPreviewProps {
   open: boolean;
@@ -26,7 +26,7 @@ export default function WeaponPreview({
       >
         <div className="absolute inset-0 z-0 opacity-20">
           <Image
-            src={weapon.image}
+            src={"/img/gun.svg"}
             alt="background"
             fill
             className="object-cover"
@@ -35,7 +35,7 @@ export default function WeaponPreview({
         <div className="p-6 space-y-6">
           <div className="flex justify-center">
             <Image
-              src={weapon.image}
+              src={"/img/gun.svg"}
               alt={weapon.name}
               width={300}
               height={200}
