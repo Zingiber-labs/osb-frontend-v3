@@ -1,5 +1,4 @@
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
 import { useAuth } from "@/contexts/AuthContext";
 import { api } from "@/lib/axios";
 
