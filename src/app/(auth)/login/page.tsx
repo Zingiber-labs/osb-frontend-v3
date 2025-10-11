@@ -39,7 +39,7 @@ const Login = () => {
     setIsSubmitting(true);
     try {
       await login(data.email, data.password);
-      router.push("/profile");
+      router.push("/");
     } catch (e: any) {
       setSubmitError(e?.message || "Login failed");
     } finally {

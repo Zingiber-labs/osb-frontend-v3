@@ -21,11 +21,7 @@ interface UserProfileProps {
 }
 
 const UserProfile = (props: UserProfileProps) => {
-  const {
-    name,
-    avatar = "/img/user-example.jpg",
-    className = "",
-  } = props;
+  const { name, avatar = "/img/user-example.jpg", className = "" } = props;
   const router = useRouter();
 
   const { isAuthenticated, logout } = useAuth();
@@ -42,7 +38,10 @@ const UserProfile = (props: UserProfileProps) => {
             Play as a Guest
           </Link>
         )}
-        <Link href={"/login"} className="block text-sm text-white">
+        <Link
+          href={`${isAuthenticated ? "/profile" : "/login"}`}
+          className="block text-sm text-white"
+        >
           {name}
         </Link>
       </div>
@@ -60,7 +59,7 @@ const UserProfile = (props: UserProfileProps) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" forceMount>
           <DropdownMenuLabel className="font-normal">
-            <div className="flex gap-4">
+            <div className="flex gap-4" onClick={() => router.push("/profile")}>
               <Avatar className="h-9 w-9">
                 <AvatarImage src={avatar} alt="avatar" />
               </Avatar>
