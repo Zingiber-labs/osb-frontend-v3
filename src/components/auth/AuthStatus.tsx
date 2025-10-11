@@ -5,7 +5,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "../ui/button";
 
 export const AuthPanel = () => {
-  const { isAuthenticated, isGuest, isLoading, logout } = useAuth();
+  const { isAuthenticated, isGuest, isLoading } = useAuth();
 
   const status = isLoading
     ? "loading"
@@ -81,16 +81,6 @@ export const AuthPanel = () => {
           <div className="absolute inset-[14%_10%] scanlines rounded-md" />
         </div>
       </div>
-      {isAuthenticated && (
-        <Button
-          onClick={logout}
-          variant="outline"
-          size="sm"
-          className="text-xs"
-        >
-          Logout
-        </Button>
-      )}
     </>
   );
 };
