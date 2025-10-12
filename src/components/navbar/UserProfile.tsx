@@ -40,7 +40,7 @@ const UserProfile = (props: UserProfileProps) => {
         )}
         <Link
           href={`${isAuthenticated ? "/profile" : "/login"}`}
-          className="block text-sm text-white"
+          className="block text-sm text-white hover:text-primary hover:underline transition-colors"
         >
           {name}
         </Link>
