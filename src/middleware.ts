@@ -7,6 +7,7 @@ const PUBLIC_ROUTES = new Set<string>([
   "/login",
   "/signup",
   "/forgot-password",
+  "/store"
 ]);
 
 export function middleware(req: NextRequest) {

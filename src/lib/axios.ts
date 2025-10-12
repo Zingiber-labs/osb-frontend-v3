@@ -9,10 +9,10 @@ api.interceptors.request.use(
   (config) => {
     if (typeof window !== "undefined") {
       const token = localStorage.getItem("access_token");
-      if (!token) {
-        window.location.assign("/");
-        return Promise.reject(new Error("No token found"));
-      }
+      // if (!token) {
+      //   window.location.assign("/");
+      //   return Promise.reject(new Error("No token found"));
+      // }
 
       config.headers.Authorization = `Bearer ${token}`;
     }

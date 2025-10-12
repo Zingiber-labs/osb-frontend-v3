@@ -14,6 +14,5 @@ export const useStoreItems = ({ type }: { type?: ItemType } = {}) => {
       });
       return data;
     },
-    enabled: isAuthenticated && !authLoading,
   });
 };
