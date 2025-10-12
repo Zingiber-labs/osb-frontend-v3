@@ -13,10 +13,12 @@ import WeaponPreview from "./WeaponPreview";
 import { useState } from "react";
 import { useStoreItems } from "@/hooks/store-page/useStoreItems";
 import { StoreItem } from "@/types/store-items";
+import { Minus, Plus } from "lucide-react";
 
 const Weapons = () => {
   const [open, setOpen] = useState(false);
   const [selectedWeapon, setSelectedWeapon] = useState<any>(null);
+  const [quantities, setQuantities] = useState<Record<string, number>>({});
 
   // Use the hook to fetch store items
   const { data, isLoading, error } = useStoreItems();
@@ -87,7 +89,7 @@ const Weapons = () => {
   return (
     <div className="h-screen flex flex-col mt-6 mb-6">
       <div className="flex-1 overflow-y-auto custom-scroll-thin pr-2">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {data.items.map((item: StoreItem) => (
             <Card
               key={item.id}
@@ -104,10 +106,51 @@ const Weapons = () => {
                     className="object-contain"
                   />
                 </div>
-                <CardTitle className="text-xl">{item.name}</CardTitle>
-                <CardDescription className="text-xs text-white font-light">
-                  {item.description}
-                </CardDescription>
+
+                <div>
+                  <CardTitle className="text-xl">{item.name}</CardTitle>
+                  <div className="flex items-center justify-between mt-2 gap-2">
+                    <CardDescription className="text-xs text-white font-light">
+                      {item.description}
+                    </CardDescription>
+                    {/* Sección de cantidad */}
+                    <div className="flex items-center gap-2">
+                      <button
+                        aria-label="Decrease quantity"
+                        className="grid place-items-center w-5 h-5 rounded-full border-2 border-white/90 text-white
+               hover:bg-white hover:text-black transition-colors cursor-pointer"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setQuantities((prev) => ({
+                            ...prev,
+                            [item.id]: Math.max((prev[item.id] || 0) - 1, 0),
+                          }));
+                        }}
+                      >
+                        <Minus className="w-3 h-3 stroke-[3]" />
+                      </button>
+
+                      <span className="w-4 text-center text-sm">
+                        {quantities[item.id] || 0}
+                      </span>
+
+                      <button
+                        aria-label="Increase quantity"
+                        className="grid place-items-center w-5 h-5 rounded-full border-2 border-white/90 text-white
+               hover:bg-white hover:text-black transition-colors cursor-pointer"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setQuantities((prev) => ({
+                            ...prev,
+                            [item.id]: (prev[item.id] || 0) + 1,
+                          }));
+                        }}
+                      >
+                        <Plus className="w-3 h-3 stroke-[3]" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </CardHeader>
 
               <CardFooter className="mt-auto gap-8 justify-between px-2">
