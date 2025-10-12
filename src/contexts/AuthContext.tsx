@@ -132,6 +132,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const data = await resp.json();
       if (data?.access_token) {
         localStorage.setItem("access_token", data.access_token);
+        document.cookie = `access_token=${data.access_token}; Path=/; Max-Age=${60 * 60 * 24}; SameSite=Lax`
       }
 
       if (data?.user) {
@@ -149,6 +150,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const logout = async () => {
     localStorage.removeItem("access_token");
+    document.cookie = "access_token=; Path=/; Max-Age=0; SameSite=Lax";
     // Clear session cookies and reset state
     try {
       clearSessionCookie();
