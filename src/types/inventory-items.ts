@@ -51,3 +51,5 @@ export interface UpgradeAttributes {
   currentLevel: number
 }
 
+export type ItemType = "SKIN" | "REWARD" | "UPGRADE" | "BOOSTER" | "PART";
+

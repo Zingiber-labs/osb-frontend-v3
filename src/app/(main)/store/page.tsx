@@ -12,11 +12,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Search } from "lucide-react";
-import React from "react";
+import React, { useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Autoplay } from "swiper/modules";
+import { ItemType } from "@/types/inventory-items";
 
 const Store = () => {
+  const [selectedType, setSelectedType] = useState<ItemType | undefined>();
+
   const banners = [
     {
       taglinePrimary: "BEST",
@@ -59,16 +62,7 @@ const Store = () => {
       >
         {banners.map((banner, idx) => (
           <SwiperSlide key={idx}>
-            <Banner
-              showTagline
-              taglinePrimary={banner.taglinePrimary}
-              taglineSecondary={banner.taglineSecondary}
-              title={banner.title}
-              description={banner.description}
-              imageUrl={banner.imageUrl}
-              contentImageUrl={banner.contentImageUrl}
-              overlayClassName="bg-transparent"
-            />
+            <Banner {...banner} showTagline overlayClassName="bg-transparent" />
           </SwiperSlide>
         ))}
       </Swiper>
@@ -77,16 +71,20 @@ const Store = () => {
         Select Your Loadouts
       </p>
       <div className="mt-4 flex justify-between">
-        <Select>
+        <Select
+          value={selectedType}
+          onValueChange={(v) => setSelectedType(v as ItemType)}
+        >
           <SelectTrigger className="w-[300px] text-white bg-orange-dark cursor-pointer">
-            <SelectValue className="text-white" placeholder="Weapons" />
+            <SelectValue className="text-white" placeholder="Type" />
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
-              <SelectItem value="ships">Ships</SelectItem>
-              <SelectItem value="skills">Skills</SelectItem>
-              <SelectItem value="weapons">Weapons</SelectItem>
-              <SelectItem value="ammunition">Ammunition</SelectItem>
+              <SelectItem value="SKIN">Skin</SelectItem>
+              <SelectItem value="REWARD">Reward</SelectItem>
+              <SelectItem value="UPGRADE">Upgrade</SelectItem>
+              <SelectItem value="BOOSTER">Booster</SelectItem>
+              <SelectItem value="PART">Part</SelectItem>
             </SelectGroup>
           </SelectContent>
         </Select>
@@ -100,7 +98,7 @@ const Store = () => {
           />
         </div>
       </div>
-      <Weapons />
+      <Weapons type={selectedType} />
     </div>
   );
 };

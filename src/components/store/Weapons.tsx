@@ -14,18 +14,17 @@ import { useState } from "react";
 import { useStoreItems } from "@/hooks/store-page/useStoreItems";
 import { StoreItem } from "@/types/store-items";
 import { Minus, Plus } from "lucide-react";
+import { ItemType } from "@/types/inventory-items";
 
-const Weapons = () => {
+const Weapons = ({ type }: { type?: ItemType }) => {
   const [open, setOpen] = useState(false);
-  const [selectedWeapon, setSelectedWeapon] = useState<any>(null);
+  const [selectedWeapon, setSelectedWeapon] = useState<StoreItem | null>(null);
   const [quantities, setQuantities] = useState<Record<string, number>>({});
 
-  // Use the hook to fetch store items
-  const { data, isLoading, error } = useStoreItems();
+  const { data, isLoading, error } = useStoreItems({ type });
 
   const inc = (id: string) =>
     setQuantities((p) => ({ ...p, [id]: (p[id] || 0) + 1 }));
-
   const dec = (id: string) =>
     setQuantities((p) => ({ ...p, [id]: Math.max((p[id] || 0) - 1, 0) }));
 
@@ -96,7 +95,7 @@ const Weapons = () => {
     <div className="h-screen flex flex-col mt-6 mb-6">
       <div className="flex-1 overflow-y-auto custom-scroll-thin pr-2">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {data.items.map((item: StoreItem) => (
+          {data?.items?.map((item: StoreItem) => (
             <Card
               key={item.id}
               className="py-2 group bg-orange-24 hover:shadow-lg transition-shadow text-white font-bold border-2 border-transparent hover:bg-transparent hover:border-secondary duration-300 cursor-pointer flex flex-col"
@@ -122,22 +121,24 @@ const Weapons = () => {
                     <div className="flex items-center gap-2">
                       <button
                         aria-label="Decrease quantity"
-                        className="grid place-items-center w-5 h-5 rounded-full border-2 border-white/90 text-white
-               hover:bg-white hover:text-black transition-colors cursor-pointer"
-                        onClick={(e) => { e.stopPropagation(); dec(item.id); }}
+                        className="grid place-items-center w-5 h-5 rounded-full border-2 border-white/90 text-white hover:bg-white hover:text-black transition-colors cursor-pointer"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          dec(item.id);
+                        }}
                       >
                         <Minus className="w-3 h-3 stroke-[3]" />
                       </button>
-
                       <span className="w-4 text-center text-sm">
                         {quantities[item.id] || 0}
                       </span>
-
                       <button
                         aria-label="Increase quantity"
-                        className="grid place-items-center w-5 h-5 rounded-full border-2 border-white/90 text-white
-               hover:bg-white hover:text-black transition-colors cursor-pointer"
-                        onClick={(e) => { e.stopPropagation(); inc(item.id); }}
+                        className="grid place-items-center w-5 h-5 rounded-full border-2 border-white/90 text-white hover:bg-white hover:text-black transition-colors cursor-pointer"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          inc(item.id);
+                        }}
                       >
                         <Plus className="w-3 h-3 stroke-[3]" />
                       </button>
@@ -148,14 +149,7 @@ const Weapons = () => {
 
               <CardFooter className="mt-auto gap-8 justify-between px-2">
                 <p className="text-2xl font-bold">${item.price || 0}</p>
-                <Button
-                  className="
-                    bg-black text-white rounded-full w-fit
-                    hover:bg-secondary hover:text-black
-                    group-hover:bg-cyan-400 group-hover:text-black
-                    transition-colors duration-300
-                  "
-                >
+                <Button className="bg-black text-white rounded-full w-fit hover:bg-secondary hover:text-black group-hover:bg-cyan-400 group-hover:text-black transition-colors duration-300">
                   BUY ITEM
                 </Button>
               </CardFooter>
@@ -163,6 +157,7 @@ const Weapons = () => {
           ))}
         </div>
       </div>
+
       {selectedWeapon && (
         <WeaponPreview
           open={open}
