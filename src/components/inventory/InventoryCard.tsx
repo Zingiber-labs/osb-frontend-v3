@@ -8,14 +8,6 @@ import { Lock } from "lucide-react";
 import Image from "next/image";
 import { Label } from "../ui/label";
 
-interface Inventory {
-  id: string;
-  name: string;
-  level?: string;
-  src: string;
-  locked?: boolean;
-  equipped?: boolean;
-}
 interface InventoryCardProps {
   inventory: MyInventory;
   isSelected: boolean;
