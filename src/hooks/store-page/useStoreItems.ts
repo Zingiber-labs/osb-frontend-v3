@@ -19,7 +19,7 @@ export const useBuyStoreItem = () => {
 
   return useMutation({
     mutationFn: async (payload: { itemId: string; quantity: number }) => {
-      return await api.post("/store/purchase/prepare", payload);
+      return await api.post("/store/purchase", payload);
     },
     onSettled: () =>
       queryClient.invalidateQueries({ queryKey: ["inventory-items"] }),
