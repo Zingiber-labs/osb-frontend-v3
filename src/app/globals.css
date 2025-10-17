@@ -210,6 +210,7 @@
 .layout {
   min-height: 100svh;
   background: no-repeat center / cover;
+  background-attachment: fixed;
   position: relative;
   isolation: isolate;    
 }
@@ -217,10 +218,7 @@
 /* Background for root (menu) */
 .layout--menu {
   background-image: url("/img/menu.png");
-}
-
-.layout--menu {
-  background-image: url("/img/menu.png");
+  background-attachment: fixed;
   position: relative;
 }
 
@@ -240,11 +238,14 @@
 /* Background by default */
 .layout--default {
   background-image: url("/img/planets.jpg");
+  background-attachment: fixed;
+  background-position: top;
 }
 
 /* Background for hangar */
 .layout--hangar {
   background-image: url("/img/hangar.png");
+  background-attachment: fixed;
 }
 
 .layout--hangar .overlay,
