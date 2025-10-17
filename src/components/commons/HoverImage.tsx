@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { Tooltip, TooltipTrigger, TooltipContent } from "../ui/tooltip";
 
 type HoverImageProps = {
   src: string;
@@ -13,6 +14,7 @@ type HoverImageProps = {
   href: string;
   className?: string;
   style?: React.CSSProperties;
+  tooltipOffset?: number;
 };
 
 export function HoverImage({
@@ -24,6 +26,7 @@ export function HoverImage({
   href,
   className,
   style,
+  tooltipOffset = -height / 7,
 }: HoverImageProps) {
   const [hover, setHover] = useState(false);
 
@@ -34,13 +37,21 @@ export function HoverImage({
       style={{ ...style, width, height }}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
+      title={alt}
     >
-      <Image
-        src={hover ? activeSrc : src}
-        alt={alt}
-        fill
-        className="object-contain select-none"
-      />
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Image
+            src={hover ? activeSrc : src}
+            alt={alt}
+            fill
+            className="object-contain select-none"
+          />
+        </TooltipTrigger>
+        <TooltipContent sideOffset={tooltipOffset}>
+          <p>{alt}</p>
+        </TooltipContent>
+      </Tooltip>
     </Link>
   );
 }

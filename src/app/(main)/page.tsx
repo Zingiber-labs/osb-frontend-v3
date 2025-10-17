@@ -8,7 +8,7 @@ import Link from "next/link";
 import Image from "next/image";
 
 export default function Home() {
-  const isMobile = useIsMobile();
+  const isMobile = useIsMobile(1200);
 
   return (
     <div className="relative mx-auto w-full max-w-[1200px] overflow-hidden rounded-2xl border-0 shadow min-h-[calc(100dvh-104px-91.83px)]">
@@ -38,7 +38,8 @@ export default function Home() {
                 alt="Profile / Robot"
                 width={50}
                 height={50}
-              /> <p className="text-3xl">INVENTORY</p>
+              />{" "}
+              <p className="text-3xl">INVENTORY</p>
             </Button>
           </Link>
           <Link href="/store" passHref>
@@ -51,7 +52,8 @@ export default function Home() {
                 alt="Profile / Robot"
                 width={50}
                 height={50}
-              /> <p className="text-3xl">STORE</p>
+              />{" "}
+              <p className="text-3xl">STORE</p>
             </Button>
           </Link>
           <Link href="/login" passHref>
@@ -64,7 +66,8 @@ export default function Home() {
                 alt="Profile / Robot"
                 width={50}
                 height={50}
-              /> <p className="text-3xl">PROFILE</p>
+              />{" "}
+              <p className="text-3xl">PROFILE</p>
             </Button>
           </Link>
           <Link href="/guest" passHref>
@@ -84,7 +87,8 @@ export default function Home() {
             height={400}
             className="absolute z-30"
             href="/profile"
-            style={{ left: "5%", bottom: "0%" }}
+            style={{ left: "6%", bottom: "0%" }}
+            tooltipOffset={0}
           />
           <HoverImage
             src="/img/menu/hangar.svg"
@@ -95,6 +99,7 @@ export default function Home() {
             className="absolute z-20"
             href="/hangar"
             style={{ right: "19%", bottom: "15%" }}
+            tooltipOffset={-70}
           />
           <HoverImage
             src="/img/menu/inventory.svg"
