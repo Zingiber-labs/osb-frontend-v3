@@ -38,7 +38,7 @@ const Inventory = () => {
   // Loading state
   if (isLoading) {
     return (
-      <div>
+      <div className="px-4">
         <p className="text-secondary text-5xl font-bold mt-14 mb-6">
           My inventory
         </p>
@@ -61,7 +61,7 @@ const Inventory = () => {
   // Error state
   if (error) {
     return (
-      <div>
+      <div className="px-4">
         <p className="text-secondary text-5xl font-bold mt-14 mb-6">
           My inventory
         </p>
@@ -80,7 +80,7 @@ const Inventory = () => {
   // No data state
   if (!data?.items || data.items.length === 0) {
     return (
-      <div>
+      <div className="px-4">
         <p className="text-secondary text-5xl font-bold mt-14 mb-6">
           My inventory
         </p>
@@ -95,7 +95,7 @@ const Inventory = () => {
   }
 
   return (
-    <div>
+    <div className="px-4">
       <p className="text-secondary text-5xl font-bold mt-14 mb-6">
         My inventory
       </p>

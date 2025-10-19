@@ -10,7 +10,7 @@ export default function MainLayout({
   return (
     <ClientLayout>
       <div className="flex flex-col min-h-screen">
-        <div className="px-7 lg:px-[5.625rem] flex-1">
+        <div className="lg:px-[5.625rem] flex-1">
           <div className="overlay" />
           <Navbar />
           {children}

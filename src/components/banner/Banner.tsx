@@ -60,6 +60,7 @@ export default function WeaponBanner({
 }: WeaponBannerProps) {
   return (
     <section className="relative w-full rounded-2xl overflow-hidden">
+      {/* Background */}
       <Image
         src={imageUrl}
         alt={title}
@@ -72,14 +73,25 @@ export default function WeaponBanner({
       {/* Overlay */}
       <div className={`absolute inset-0 ${overlayClassName}`} />
 
-      <div className="relative z-10 p-6 sm:p-8 md:p-12">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-10 items-stretch">
-          <div className="flex flex-col justify-center gap-5 max-w-2xl">
+      <div className="relative z-10 p-5 sm:p-8 md:p-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-10 items-center">
+          {contentImageUrl && (
+            <div className="order-1 lg:order-2 flex items-center justify-center">
+              <div className="w-full max-w-sm sm:max-w-md lg:max-w-lg aspect-[4/3] sm:aspect-[16/10] lg:aspect-auto">
+                <Image
+                  alt={contentImageAlt}
+                  src={contentImageUrl}
+                  width={800}
+                  height={800}
+                  className="h-full w-full object-contain"
+                />
+              </div>
+            </div>
+          )}
+
+          <div className="order-2 lg:order-1 flex flex-col justify-center gap-4 sm:gap-5 max-w-2xl">
             {showTagline && (
-              <TaglineMark
-                primary={taglinePrimary}
-                secondary={taglineSecondary}
-              />
+              <TaglineMark primary={taglinePrimary} secondary={taglineSecondary} />
             )}
 
             {subtitle && (
@@ -87,33 +99,19 @@ export default function WeaponBanner({
                 {subtitle}
               </p>
             )}
-            <h2 className="font-bold tracking-widest text-orange-500 text-3xl sm:text-4xl md:text-5xl">
+            <h2 className="font-bold tracking-widest text-orange-500 text-3xl sm:text-4xl md:text-5xl leading-tight">
               {title}
             </h2>
-            <p className="text-gray-300 text-sm md:text-base leading-relaxed">
+            <p className="text-gray-200 text-sm md:text-base leading-relaxed">
               {description}
             </p>
             <Button
               onClick={onButtonClick}
-              className="bg-cyan-400 hover:bg-cyan-500 text-black px-6 py-2 rounded-full w-fit"
+              className="bg-cyan-400 hover:bg-cyan-500 text-black px-6 py-2 rounded-full w-full sm:w-fit"
             >
               {buttonText.toUpperCase()}
             </Button>
           </div>
-
-          {contentImageUrl && (
-            <div className="flex items-center justify-center h-full">
-              <div className=" w-full h-full flex items-center justify-center">
-                <Image
-                  alt={contentImageAlt}
-                  src={contentImageUrl}
-                  width={500}
-                  height={500}
-                  className="object-contain max-w-full max-h-full"
-                />
-              </div>
-            </div>
-          )}
         </div>
       </div>
     </section>

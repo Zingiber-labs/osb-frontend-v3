@@ -51,14 +51,14 @@ const Store = () => {
   ];
 
   return (
-    <div className="pt-8 gap-8">
+    <div className="pt-8 gap-8 px-4">
       <Swiper
         modules={[Pagination, Autoplay]}
         navigation
         pagination={{ clickable: false }}
         autoplay={{ delay: 4000 }}
         loop
-        className="w-full h-[400px]"
+        className="w-full"
       >
         {banners.map((banner, idx) => (
           <SwiperSlide key={idx}>

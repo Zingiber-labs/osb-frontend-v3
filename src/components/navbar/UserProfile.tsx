@@ -12,6 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
+import { useIsMobile } from "@/hooks/useIsMobile";
 
 interface UserProfileProps {
   name: string;
@@ -22,6 +23,7 @@ interface UserProfileProps {
 
 const UserProfile = (props: UserProfileProps) => {
   const { name, avatar = "/img/user-example.jpg", className = "" } = props;
+  const isMobile = useIsMobile(1200);
   const router = useRouter();
 
   const { isAuthenticated, logout } = useAuth();
@@ -33,7 +35,7 @@ const UserProfile = (props: UserProfileProps) => {
   return (
     <div className={`${className} flex items-center gap-4`}>
       <div className="flex gap-3 items-center">
-        {!isAuthenticated && (
+        {!isAuthenticated && !isMobile && (
           <Link className="text-secondary" href={"#"}>
             Play as a Guest
           </Link>
