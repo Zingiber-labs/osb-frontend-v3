@@ -41,7 +41,7 @@ const Login = () => {
     setIsSubmitting(true);
     try {
       await login(data.email, data.password);
-      // Small delay to ensure cookie is set before navigation
+      // Small delay to ensure cookie is set before navigation!
       await new Promise((resolve) => setTimeout(resolve, 100));
       router.refresh(); // Refresh to ensure middleware runs with new cookie
       router.push("/");
