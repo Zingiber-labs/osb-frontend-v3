@@ -12,7 +12,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { useIsMobile } from "@/hooks/useIsMobile";
 
 interface UserProfileProps {
   name: string;
@@ -23,7 +22,7 @@ interface UserProfileProps {
 
 const UserProfile = (props: UserProfileProps) => {
   const { name, avatar = "/img/user-example.jpg", className = "" } = props;
-  const isMobile = useIsMobile(1200);
+  // const isMobile = useIsMobile(1200);
   const router = useRouter();
 
   const { isAuthenticated, logout } = useAuth();
