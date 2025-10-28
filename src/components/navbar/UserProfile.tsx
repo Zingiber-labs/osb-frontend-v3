@@ -1,3 +1,5 @@
+"use client";
+
 import { useAuth } from "@/contexts/AuthContext";
 import { LogOut } from "lucide-react";
 import Link from "next/link";
@@ -14,38 +16,38 @@ import {
 } from "../ui/dropdown-menu";
 
 interface UserProfileProps {
-  name: string;
-  avatar?: string;
   className?: string;
-  href: string;
+  href?: string;
 }
 
-const UserProfile = (props: UserProfileProps) => {
-  const { name, avatar = "/img/user-example.jpg", className = "" } = props;
-  // const isMobile = useIsMobile(1200);
+const UserProfile = ({ className = "", href = "/profile" }: UserProfileProps) => {
   const router = useRouter();
+  const { isAuthenticated, user, logout } = useAuth();
 
-  const { isAuthenticated, logout } = useAuth();
   const handleLogout = async () => {
     await logout();
     router.push("/");
   };
 
+  const displayName = isAuthenticated
+    ? user?.username || user?.email?.split("@")[0] || "User"
+    : "Login";
+
+  const avatarSrc =
+    user?.avatar ||
+    (isAuthenticated ? "/img/user-example.jpg" : "/img/guest-avatar.png");
+
   return (
     <div className={`${className} flex items-center gap-4`}>
       <div className="flex gap-3 items-center">
-        {/* {!isAuthenticated && !isMobile && (
-          <Link className="text-secondary" href={"#"}>
-            Play as a Guest
-          </Link>
-        )} */}
         <Link
-          href={`${isAuthenticated ? "/profile" : "/login"}`}
+          href={isAuthenticated ? href : "/login"}
           className="block text-sm text-white hover:text-primary hover:underline transition-colors"
         >
-          {name}
+          {displayName}
         </Link>
       </div>
+
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
@@ -54,21 +56,31 @@ const UserProfile = (props: UserProfileProps) => {
             className="relative h-8 w-8 rounded-full"
           >
             <Avatar className="h-9 w-9">
-              <AvatarImage src={avatar} alt="avatar" />
+              <AvatarImage src={avatarSrc} alt={displayName} />
             </Avatar>
           </Button>
         </DropdownMenuTrigger>
+
         <DropdownMenuContent align="end" forceMount>
           <DropdownMenuLabel className="font-normal">
-            <div className="flex gap-4" onClick={() => router.push("/profile")}>
+            <div
+              className="flex gap-4 items-center cursor-pointer"
+              onClick={() => router.push("/profile")}
+            >
               <Avatar className="h-9 w-9">
-                <AvatarImage src={avatar} alt="avatar" />
+                <AvatarImage src={avatarSrc} alt={displayName} />
               </Avatar>
-              <div className="flex justify-center items-center">
-                <p className="text-sm font-medium leading-none">{name}</p>
+              <div>
+                <p className="text-sm font-medium leading-none">{displayName}</p>
+                {user?.email && (
+                  <p className="text-xs text-gray-400 truncate max-w-[150px]">
+                    {user.email}
+                  </p>
+                )}
               </div>
             </div>
           </DropdownMenuLabel>
+
           <DropdownMenuSeparator />
 
           <DropdownMenuItem
