@@ -1,4 +1,3 @@
-import { api } from "@/lib/axios";
 import { useQuery } from "@tanstack/react-query";
 
 export const usePlayByPlay = () => {
