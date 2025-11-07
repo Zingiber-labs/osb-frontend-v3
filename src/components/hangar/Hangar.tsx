@@ -7,7 +7,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import PositionCard from "@/components/hangar/PositionCard";
 import { X } from "lucide-react";
-import { PseudoPlay } from "./PseudoPlay";
+import { BoxScoreCard } from "./BoxScoreCard";
+import { sections } from "./sectionsMockData";
 
 const positions = [
   { id: 1, label: "Shooting Guard", img: "/img/positions/shooting-guard.svg" },
@@ -47,8 +48,12 @@ export default function Hangar({ onClose }: HangarProps) {
 
   return (
     <>
-      <div className="my-4">
-        <PseudoPlay onClose={onClose} />
+      {/* <PseudoPlay onClose={onClose} /> */}
+      <div className="my-4 w-full overflow-x-auto custom-scroll-thin">
+        <div className="flex">
+          <BoxScoreCard teamName="Miami Heat" sections={sections} />
+          <BoxScoreCard teamName="Orlando Magic" sections={sections} />
+        </div>
       </div>
       <Card className="relative h-full border-primary bg-orange-24 p-6 text-orange-100">
         {onClose && (
