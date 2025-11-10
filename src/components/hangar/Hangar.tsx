@@ -1,12 +1,10 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
 import PositionCard from "@/components/hangar/PositionCard";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { X } from "lucide-react";
+import { useState } from "react";
 import { BoxScoreCard } from "./BoxScoreCard";
 import { sectionsMock01, sectionsMock02 } from "./sectionsMockData";
 
