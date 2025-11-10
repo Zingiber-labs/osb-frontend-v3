@@ -36,27 +36,23 @@ interface HangarProps {
 }
 
 export default function Hangar({ onClose }: HangarProps) {
-  const [leagueState, setLeagueState] = useState<Record<string, boolean>>(() =>
-    Object.fromEntries(LEAGUES.map((l) => [l, false]))
-  );
+  // const [leagueState, setLeagueState] = useState<Record<string, boolean>>(() =>
+  //   Object.fromEntries(LEAGUES.map((l) => [l, false]))
+  // );
   const [selectedPosition, setSelectedPosition] = useState<number | null>(null);
+  const [showBoxCard, setShowBoxCard] = useState<boolean>(false);
 
-  const canStart = useMemo(
-    () => Object.values(leagueState).some(Boolean) && selectedPosition !== null,
-    [leagueState, selectedPosition]
-  );
+  // const canStart = useMemo(
+  //   () => Object.values(leagueState).some(Boolean) && selectedPosition !== null,
+  //   [leagueState, selectedPosition]
+  // );
+
+  const canStart = selectedPosition !== null;
 
   return (
     <>
       {/* <PseudoPlay onClose={onClose} /> */}
-      <div className="my-4 w-full overflow-x-auto custom-scroll-thin">
-        <BoxScoreCard
-          teams={[
-            { teamName: "Miami Heat", sections: sectionsMock01 },
-            { teamName: "Orlando Magic", sections: sectionsMock02 },
-          ]}
-        />
-      </div>
+
       <Card className="relative h-full border-primary bg-orange-24 p-6 text-orange-100">
         {onClose && (
           <Button
@@ -90,7 +86,7 @@ export default function Hangar({ onClose }: HangarProps) {
           ))}
         </div>
 
-        <Card className="mt-6 border-primary bg-orange-24">
+        {/* <Card className="mt-6 border-primary bg-orange-24">
           <CardContent className="p-6">
             <p className="text-[22px] text-secondary">Choose your league</p>
             <p className="text-card-bg">
@@ -130,7 +126,7 @@ export default function Hangar({ onClose }: HangarProps) {
               })}
             </div>
           </CardContent>
-        </Card>
+        </Card> */}
       </Card>
 
       <div className="mt-4 text-right">
@@ -144,10 +140,22 @@ export default function Hangar({ onClose }: HangarProps) {
               ? "bg-green-600 hover:bg-green-500"
               : "bg-grey-light cursor-not-allowed"
           }`}
+          onClick={() => setShowBoxCard(true)}
         >
           Start mission
         </Button>
       </div>
+
+      {showBoxCard && (
+        <div className="my-4 mt-14 w-full overflow-x-auto custom-scroll-thin">
+          <BoxScoreCard
+            teams={[
+              { teamName: "Miami Heat", sections: sectionsMock01 },
+              { teamName: "Orlando Magic", sections: sectionsMock02 },
+            ]}
+          />
+        </div>
+      )}
     </>
   );
 }
