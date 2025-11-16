@@ -1,8 +1,7 @@
 import { api } from "@/lib/axios";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 
 export const useSpin = (leagueSlug: string) => {
-  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (payload: { username: string }) => {
