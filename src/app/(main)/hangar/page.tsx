@@ -26,7 +26,7 @@ export default function HangarPage() {
   const { user } = useAuth();
   const [showHangar, setShowHangar] = useState(false);
 
-  const { mutate, isPending } = useSpin("generalist");
+  const { isPending } = useSpin("generalist");
 
   const level = 5;
   const nextLevel = level + 1;
