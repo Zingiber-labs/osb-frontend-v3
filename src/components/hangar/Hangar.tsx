@@ -28,7 +28,6 @@ const positions = [
 //   "CBA",
 //   "EuroLeague",
 //   "ABL",
-//   "LNB",
 // ] as const;
 
 interface HangarProps {
