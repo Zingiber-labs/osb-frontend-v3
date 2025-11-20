@@ -3,9 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { io, type Socket } from "socket.io-client";
-import {
-    BoxScoreCard
-} from "./BoxScoreCard";
+import { BoxScoreCard } from "./BoxScoreCard";
 import { mapBoxScoreToTeams, type BoxScoreTeam } from "./mapBoxScoreToTeams";
 
 const SOCKET_URL = "http://154.53.37.70:8080";
@@ -13,21 +11,21 @@ const SOCKET_URL = "http://154.53.37.70:8080";
 type ConnectionStatus = "disconnected" | "connecting" | "connected" | "error";
 type SubscriptionStatus = "idle" | "subscribing" | "subscribed";
 
-type TodayGame = {
-  gameId: number;
-  homeTeamName?: string;
-  awayTeamName?: string;
-  status?: string;
+type ServerGame = {
+  idGame: number;
+  date: string;
+  dateUtc: string;
+  status: string;
+  homeTeam: string;
+  visitorTeam: string;
 };
 
-const FALLBACK_GAMES: TodayGame[] = [
-  { gameId: 18447031 },
-  { gameId: 18447030 },
-  { gameId: 18447029 },
-  { gameId: 18447028 },
-  { gameId: 18447027 },
-  { gameId: 18447026 },
-];
+type TodayGame = {
+  gameId: number;
+  homeTeamName: string;
+  awayTeamName: string;
+  status: string;
+};
 
 export function SocketScoreBoard() {
   const [socket, setSocket] = useState<Socket | null>(null);
@@ -79,9 +77,17 @@ export function SocketScoreBoard() {
       setError(err.message || "Unknown socket error");
     });
 
-    s.on("todayGames", (payload: TodayGame[]) => {
+    s.on("todayGamesList", (payload: ServerGame[]) => {
       console.log("[SCOREBOARD] todayGames", payload);
-      setGames(payload || []);
+
+      const mappedGames: TodayGame[] = (payload || []).map((game) => ({
+        gameId: game.idGame,
+        homeTeamName: game.homeTeam,
+        awayTeamName: game.visitorTeam,
+        status: game.status,
+      }));
+
+      setGames(mappedGames);
     });
 
     s.on("boxScoreUpdate", (payload: any) => {
@@ -143,7 +149,7 @@ export function SocketScoreBoard() {
     }
   };
 
-  const gamesToRender = games.length > 0 ? games : FALLBACK_GAMES;
+  const gamesToRender = games;
 
   return (
     <div className="space-y-6">
@@ -201,13 +207,15 @@ export function SocketScoreBoard() {
                 }
               >
                 <option value="">Select a game</option>
+                {}
                 {gamesToRender.map((g) => (
                   <option key={g.gameId} value={g.gameId}>
-                    {g.homeTeamName && g.awayTeamName
-                      ? `${g.awayTeamName} @ ${g.homeTeamName} (#${g.gameId})`
-                      : `Game #${g.gameId}`}
+                    {`${g.awayTeamName} @ ${g.homeTeamName} (${g.status})`}
                   </option>
                 ))}
+                {gamesToRender.length === 0 && status === "connected" && (
+                  <option disabled>No games found</option>
+                )}
               </select>
 
               <Button
