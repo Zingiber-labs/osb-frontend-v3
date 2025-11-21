@@ -4,7 +4,7 @@ import { io, Socket } from "socket.io-client";
 import { useEffect, useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 
-const SOCKET_URL = "http://154.53.37.70:8080/nba/playbyplay";
+const SOCKET_URL = `${process.env.NEXT_PUBLIC_SOCKET_URL}/nba/playbyplay`;
 const GAME_ID = "401810092";
 const UPDATE_INTERVAL = 10;
 const PSEUDO_REPLAY_INTERVAL = 5;

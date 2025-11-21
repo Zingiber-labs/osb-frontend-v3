@@ -5,9 +5,16 @@ import { useEffect, useState } from "react";
 import { io, type Socket } from "socket.io-client";
 import { BoxScoreCard } from "./BoxScoreCard";
 import { mapBoxScoreToTeams, type BoxScoreTeam } from "./mapBoxScoreToTeams";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
 
-const SOCKET_URL = "http://154.53.37.70:8080";
+const SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL;
 
 type ConnectionStatus = "disconnected" | "connecting" | "connected" | "error";
 type SubscriptionStatus = "idle" | "subscribing" | "subscribed";
@@ -193,7 +200,6 @@ export function SocketScoreBoard() {
                 <SelectContent className="">
                   <SelectGroup>
                     {games.map((op: TodayGame) => {
-                      console.log("op", op);
                       return (
                         <SelectItem key={op.idGame} value={String(op.idGame)}>
                           {`${op.homeTeam} vs ${op.visitorTeam}`}
