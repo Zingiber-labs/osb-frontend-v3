@@ -3,10 +3,9 @@
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { io, type Socket } from "socket.io-client";
-import {
-    BoxScoreCard
-} from "./BoxScoreCard";
+import { BoxScoreCard } from "./BoxScoreCard";
 import { mapBoxScoreToTeams, type BoxScoreTeam } from "./mapBoxScoreToTeams";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 
 const SOCKET_URL = "http://154.53.37.70:8080";
 
@@ -14,20 +13,13 @@ type ConnectionStatus = "disconnected" | "connecting" | "connected" | "error";
 type SubscriptionStatus = "idle" | "subscribing" | "subscribed";
 
 type TodayGame = {
-  gameId: number;
-  homeTeamName?: string;
-  awayTeamName?: string;
-  status?: string;
+  date: string;
+  dateUtc: string;
+  homeTeam: string;
+  idGame: number;
+  status: string;
+  visitorTeam: string;
 };
-
-const FALLBACK_GAMES: TodayGame[] = [
-  { gameId: 18447031 },
-  { gameId: 18447030 },
-  { gameId: 18447029 },
-  { gameId: 18447028 },
-  { gameId: 18447027 },
-  { gameId: 18447026 },
-];
 
 export function SocketScoreBoard() {
   const [socket, setSocket] = useState<Socket | null>(null);
@@ -79,9 +71,9 @@ export function SocketScoreBoard() {
       setError(err.message || "Unknown socket error");
     });
 
-    s.on("todayGames", (payload: TodayGame[]) => {
-      console.log("[SCOREBOARD] todayGames", payload);
-      setGames(payload || []);
+    s.on("todayGamesList", (payload: TodayGame[]) => {
+      console.log("[SCOREBOARD] todayGamesList", payload);
+      setGames(payload);
     });
 
     s.on("boxScoreUpdate", (payload: any) => {
@@ -92,7 +84,7 @@ export function SocketScoreBoard() {
     });
 
     s.onAny((eventName, ...args) => {
-      if (!["todayGames", "boxScoreUpdate"].includes(eventName)) {
+      if (!["boxScoreUpdate"].includes(eventName)) {
         console.log(`[SCOREBOARD] ${eventName}`, ...args);
       }
     });
@@ -143,8 +135,6 @@ export function SocketScoreBoard() {
     }
   };
 
-  const gamesToRender = games.length > 0 ? games : FALLBACK_GAMES;
-
   return (
     <div className="space-y-6">
       <div className="rounded-2xl border border-primary-orange/80 bg-orange-24/95 p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_8px_24px_rgba(0,0,0,0.35)]">
@@ -191,24 +181,28 @@ export function SocketScoreBoard() {
               Select game to subscribe
             </label>
             <div className="flex flex-wrap gap-2">
-              <select
-                className="min-w-[220px] flex-1 rounded-lg bg-black/40 px-3 py-2 text-sm text-white outline-none"
-                value={selectedGameId ?? ""}
-                onChange={(e) =>
-                  setSelectedGameId(
-                    e.target.value ? Number(e.target.value) : null
-                  )
-                }
+              <Select
+                onValueChange={(value) => {
+                  setSelectedGameId(Number(value));
+                }}
               >
-                <option value="">Select a game</option>
-                {gamesToRender.map((g) => (
-                  <option key={g.gameId} value={g.gameId}>
-                    {g.homeTeamName && g.awayTeamName
-                      ? `${g.awayTeamName} @ ${g.homeTeamName} (#${g.gameId})`
-                      : `Game #${g.gameId}`}
-                  </option>
-                ))}
-              </select>
+                <SelectTrigger className="min-w-[500px] text-white bg-orange-dark cursor-pointer">
+                  <SelectValue placeholder="Select a game" />
+                </SelectTrigger>
+
+                <SelectContent className="">
+                  <SelectGroup>
+                    {games.map((op: TodayGame) => {
+                      console.log("op", op);
+                      return (
+                        <SelectItem key={op.idGame} value={String(op.idGame)}>
+                          {`${op.homeTeam} vs ${op.visitorTeam}`}
+                        </SelectItem>
+                      );
+                    })}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
 
               <Button
                 onClick={subscribeToSelectedGame}
