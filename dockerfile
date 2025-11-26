@@ -1,6 +1,13 @@
 # --- Builder ---
 FROM node:20-alpine AS builder
 WORKDIR /app
+
+ARG NEXT_PUBLIC_API_URL
+ARG NEXT_PUBLIC_SOCKET_URL
+
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_SOCKET_URL=$NEXT_PUBLIC_SOCKET_URL
+
 COPY package.json package-lock.json* pnpm-lock.yaml* yarn.lock* ./
 RUN npm install --frozen-lockfile
 COPY . .
@@ -12,6 +19,11 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 ENV PORT=3000
+
+ARG NEXT_PUBLIC_API_URL
+ARG NEXT_PUBLIC_SOCKET_URL
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_SOCKET_URL=$NEXT_PUBLIC_SOCKET_URL
 
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next ./.next
