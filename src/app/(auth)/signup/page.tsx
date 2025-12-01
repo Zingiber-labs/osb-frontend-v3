@@ -15,7 +15,8 @@ import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 
 type SignupFormData = {
-  username: string;
+  firstName: string;
+  lastName: string;
   email: string;
   password: string;
   confirmPassword: string;
@@ -29,6 +30,7 @@ export default function Signup() {
   const { registerUser } = useAuth();
 
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
@@ -39,7 +41,8 @@ export default function Signup() {
     formState: { errors },
   } = useForm<SignupFormData>({
     defaultValues: {
-      username: "",
+      firstName: "",
+      lastName: "",
       email: "",
       password: "",
       confirmPassword: "",
@@ -48,6 +51,11 @@ export default function Signup() {
   });
 
   const passwordValue = watch("password");
+  const confirmPasswordValue = watch("confirmPassword");
+  const firstName = watch("firstName");
+  const lastName = watch("lastName");
+  const email = watch("email");
+
   const passwordScore = useMemo(() => {
     let score = 0;
     if (passwordValue?.length >= MIN_PASSWORD) score++;
@@ -58,11 +66,33 @@ export default function Signup() {
     return score; // 0 - 5
   }, [passwordValue]);
 
+  const passwordsMatch = useMemo(() => {
+    if (!confirmPasswordValue) return true;
+    return passwordValue === confirmPasswordValue;
+  }, [passwordValue, confirmPasswordValue]);
+
+  const isFormValid = useMemo(() => {
+    return (
+      firstName?.trim().length >= 3 &&
+      lastName?.trim().length >= 3 &&
+      email?.trim().length > 0 &&
+      /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(email) &&
+      passwordValue?.length >= MIN_PASSWORD &&
+      confirmPasswordValue?.length > 0 &&
+      passwordsMatch
+    );
+  }, [firstName, lastName, email, passwordValue, confirmPasswordValue, passwordsMatch]);
+
   const onSubmit = async (data: SignupFormData) => {
     setSubmitError(null);
     setIsSubmitting(true);
     try {
-      await registerUser(data.username, data.email, data.password);
+      await registerUser(
+        data.firstName,
+        data.lastName,
+        data.email,
+        data.password
+      );
       router.push("/login");
     } catch (e: any) {
       setSubmitError(e?.message || "Signup failed");
@@ -111,26 +141,50 @@ export default function Signup() {
             </h2>
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-              {/* Username */}
+              {/* Firstname */}
               <div className="space-y-2">
                 <Label
-                  htmlFor="username"
+                  htmlFor="firstname"
                   className="font-helvetica text-orange-200"
                 >
-                  Username
+                  Firstname
                 </Label>
                 <Input
-                  id="username"
-                  placeholder="Your username"
+                  id="firstname"
+                  placeholder="Your firstname"
                   className="font-helvetica bg-orange-800/50 border-orange-600 text-orange-100 placeholder:text-orange-300 focus:border-cyan-400 focus:ring-cyan-400"
-                  {...register("username", {
-                    required: "Username is required",
+                  {...register("firstName", {
+                    required: "Firstname is required",
                     minLength: { value: 3, message: "At least 3 characters" },
                   })}
                 />
-                {errors.username && (
+                {errors.firstName && (
                   <p className="text-red-400 font-helvetica text-sm">
-                    {errors.username.message}
+                    {errors.firstName.message}
+                  </p>
+                )}
+              </div>
+
+              {/* Lastname */}
+              <div className="space-y-2">
+                <Label
+                  htmlFor="lastname"
+                  className="font-helvetica text-orange-200"
+                >
+                  Lastname
+                </Label>
+                <Input
+                  id="lastname"
+                  placeholder="Your lastname"
+                  className="font-helvetica bg-orange-800/50 border-orange-600 text-orange-100 placeholder:text-orange-300 focus:border-cyan-400 focus:ring-cyan-400"
+                  {...register("lastName", {
+                    required: "Lastname is required",
+                    minLength: { value: 3, message: "At least 3 characters" },
+                  })}
+                />
+                {errors.lastName && (
+                  <p className="text-red-400 font-helvetica text-sm">
+                    {errors.lastName.message}
                   </p>
                 )}
               </div>
@@ -229,6 +283,56 @@ export default function Signup() {
                 )}
               </div>
 
+              {/* Confirm Password */}
+              <div className="space-y-2">
+                <Label
+                  htmlFor="confirmPassword"
+                  className="font-helvetica text-orange-200"
+                >
+                  Confirm Password
+                </Label>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-orange-300 w-4 h-4" />
+                  <Input
+                    id="confirmPassword"
+                    type={showConfirmPassword ? "text" : "password"}
+                    placeholder="Confirm your password"
+                    className="font-helvetica bg-orange-800/50 border-orange-600 text-orange-100 placeholder:text-orange-300 focus:border-cyan-400 focus:ring-cyan-400 pl-10 pr-10"
+                    {...register("confirmPassword", {
+                      required: "Please confirm your password",
+                      validate: (value) =>
+                        value === passwordValue || "Passwords do not match",
+                    })}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-orange-300 hover:text-orange-100"
+                    aria-label={
+                      showConfirmPassword ? "Hide password" : "Show password"
+                    }
+                  >
+                    {showConfirmPassword ? (
+                      <EyeOff className="w-4 h-4" />
+                    ) : (
+                      <Eye className="w-4 h-4" />
+                    )}
+                  </button>
+                </div>
+
+                {!passwordsMatch && confirmPasswordValue && (
+                  <p className="text-red-400 font-helvetica text-sm">
+                    Passwords do not match
+                  </p>
+                )}
+
+                {errors.confirmPassword && (
+                  <p className="text-red-400 font-helvetica text-sm">
+                    {errors.confirmPassword.message}
+                  </p>
+                )}
+              </div>
+
               {/* Terms & Conditions */}
               <p className="font-helvetica text-card-bg text-sm font-extralight">
                 By signing up you agree to our{" "}
@@ -254,8 +358,8 @@ export default function Signup() {
 
               <Button
                 type="submit"
-                disabled={isSubmitting}
-                className="w-full bg-cyan-400 hover:bg-cyan-500 text-white font-bold py-3 text-lg rounded-lg transition-colors disabled:opacity-50"
+                disabled={isSubmitting || !isFormValid}
+                className="w-full bg-cyan-400 hover:bg-cyan-500 text-white font-bold py-3 text-lg rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isSubmitting ? "CREATING ACCOUNT..." : "CREATE ACCOUNT"}
               </Button>

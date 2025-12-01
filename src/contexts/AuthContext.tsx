@@ -19,7 +19,8 @@ interface AuthContextType {
   logout: () => Promise<void>;
   checkAuthStatus: () => Promise<void>;
   registerUser: (
-    username: string,
+    firstname: string,
+    lastname: string,
     email: string,
     password: string,
     options?: { autoLogin?: boolean }
@@ -211,7 +212,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   const registerUser = async (
-    username: string,
+    firstName: string,
+    lastName: string,
     email: string,
     password: string,
     options?: { autoLogin?: boolean }
@@ -221,7 +223,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({ username, email, password }),
+        body: JSON.stringify({ firstName, lastName, email, password }),
       });
 
       if (!resp.ok) {
