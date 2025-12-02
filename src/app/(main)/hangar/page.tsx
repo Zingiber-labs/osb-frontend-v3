@@ -2,7 +2,6 @@
 
 import Hangar from "@/components/hangar/Hangar";
 import { Button } from "@/components/ui/button";
-import { useAuth } from "@/contexts/AuthContext";
 import { useSpin } from "@/hooks/hangar/useSpin";
 import { useMemo, useState } from "react";
 
@@ -23,7 +22,6 @@ function ProgressBar({ value }: { value: number }) {
 }
 
 export default function HangarPage() {
-  const { user } = useAuth();
   const [showHangar, setShowHangar] = useState(false);
 
   const { isPending } = useSpin("generalist");
@@ -133,7 +131,7 @@ export default function HangarPage() {
 
               <Button
                 onClick={handlePlay}
-                disabled={isPending || !user?.username}
+                disabled={isPending}
                 className="mt-5 w-full rounded-full bg-cyan-300 px-8 py-6 text-sm font-extrabold uppercase tracking-widest text-black shadow-[0_14px_34px_rgba(0,255,255,0.35)] hover:bg-cyan-200 disabled:cursor-not-allowed disabled:opacity-70"
               >
                 {isPending ? "Loading..." : "Play"}
