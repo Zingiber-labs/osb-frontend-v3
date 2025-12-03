@@ -8,7 +8,8 @@ const PUBLIC_ROUTES = new Set<string>([
   "/signup",
   "/forgot-password",
   "/store",
-  "/hangar"
+  "/hangar",
+  "/gameplay",
 ]);
 
 export function middleware(req: NextRequest) {
