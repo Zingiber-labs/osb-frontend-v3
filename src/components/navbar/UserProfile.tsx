@@ -1,7 +1,7 @@
 "use client";
 
-import { useAuth } from "@/contexts/AuthContext";
 import { Bell, LogOut } from "lucide-react";
+import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -25,11 +25,16 @@ const UserProfile = ({
   href = "/profile",
 }: UserProfileProps) => {
   const router = useRouter();
-  const { isAuthenticated, user, logout } = useAuth();
 
-  const handleLogout = async () => {
-    await logout();
-    router.push("/");
+  const { data: session, status } = useSession();
+  const isAuthenticated = status === "authenticated";
+
+  if (status === "loading") return <p>Loading...</p>;
+
+  const user = session?.user as any;
+
+  const handleLogout = () => {
+    signOut({ callbackUrl: "/" });
   };
 
   const mockCoins = 125;
