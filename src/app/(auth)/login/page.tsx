@@ -84,6 +84,10 @@ const Login = () => {
     }
   };
 
+  const handleGoogleLogin = () => {
+    window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/google`;
+  };
+
   return (
     <div className="h-screen flex overflow-hidden">
       {/* Left Section - Branding/Promotional */}
@@ -260,7 +264,9 @@ const Login = () => {
             {/* Social Login */}
             <div className="flex justify-center">
               <Button
+                type="button"
                 variant="outline"
+                onClick={handleGoogleLogin}
                 className="w-12 h-12 rounded-full bg-[#FF6B2F3D] hover:bg-red-700 border-red-600 hover:border-red-700"
               >
                 <Image

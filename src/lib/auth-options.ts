@@ -13,16 +13,19 @@ export const authOptions: AuthOptions = {
         if (!credentials?.email || !credentials?.password) return null;
 
         try {
-          const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              email: credentials.email,
-              password: credentials.password,
-            }),
-          });
+          const res = await fetch(
+            `${process.env.NEXT_PUBLIC_API_URL}/auth/login`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                email: credentials.email,
+                password: credentials.password,
+              }),
+            }
+          );
 
           if (!res.ok) {
             // 401 -> invalid credentials, etc.
@@ -30,20 +33,14 @@ export const authOptions: AuthOptions = {
           }
 
           const data = await res.json();
-
-          if (!data.access_token) {
-            return null;
-          }
-
-          const user = {
+          if (!data.access_token) return null;
+          return {
             id: credentials.email,
             name: credentials.email.split("@")[0],
             email: credentials.email,
             accessToken: data.access_token,
             refreshToken: data.refresh_token,
           };
-
-          return user;
         } catch (err) {
           console.error("Error en authorize()", err);
           return null;
@@ -55,7 +52,6 @@ export const authOptions: AuthOptions = {
     strategy: "jwt",
   },
   callbacks: {
-    // Meter tokens en el JWT
     async jwt({ token, user }) {
       if (user) {
         token.accessToken = (user as any).accessToken;
@@ -63,8 +59,6 @@ export const authOptions: AuthOptions = {
       }
       return token;
     },
-
-    // Exponer tokens en session.user
     async session({ session, token }) {
       if (session.user) {
         (session.user as any).accessToken = token.accessToken;
@@ -72,5 +66,8 @@ export const authOptions: AuthOptions = {
       }
       return session;
     },
+  },
+  pages: {
+    signIn: "/login",
   },
 };
