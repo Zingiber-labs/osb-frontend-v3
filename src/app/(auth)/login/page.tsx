@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { Eye, EyeOff, Lock } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/contexts/AuthContext";
+import { signIn } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -18,12 +18,10 @@ import Link from "next/link";
 interface LoginFormData {
   email: string;
   password: string;
-  rememberMe: boolean;
 }
 
 const Login = () => {
   const router = useRouter();
-  const { login, loginAsGuest } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [isGuestLoading, setIsGuestLoading] = useState(false);
@@ -40,11 +38,18 @@ const Login = () => {
     setSubmitError(null);
     setIsSubmitting(true);
     try {
-      await login(data.email, data.password);
-      // Small delay to ensure cookie is set before navigation!
-      await new Promise((resolve) => setTimeout(resolve, 100));
-      router.refresh(); // Refresh to ensure middleware runs with new cookie
+      const res = await signIn("credentials", {
+        redirect: false,
+        email: data.email,
+        password: data.password,
+      });
+
+      if (res?.error) {
+        setSubmitError("Invalid email or password");
+        return;
+      }
       router.push("/");
+      router.refresh();
     } catch (e: any) {
       setSubmitError(e?.message || "Login failed");
     } finally {
@@ -54,36 +59,46 @@ const Login = () => {
 
   const handleGuestLogin = async () => {
     setIsGuestLoading(true);
+    setSubmitError(null);
+
     try {
-      await loginAsGuest();
-      // Small delay to ensure session is established before navigation
-      await new Promise((resolve) => setTimeout(resolve, 100));
-      router.refresh(); // Refresh to ensure middleware runs with new session
+      const res = await signIn("credentials", {
+        redirect: false,
+        email: process.env.NEXT_PUBLIC_GUEST_EMAIL,
+        password: process.env.NEXT_PUBLIC_GUEST_PASSWORD,
+        isGuest: true,
+      });
+
+      if (res?.error) {
+        setSubmitError("Unable to create guest session");
+        return;
+      }
+
       router.push("/");
+      router.refresh();
     } catch (error) {
       console.error("Error creating guest session:", error);
-      // Handle error - you might want to show a toast notification here
+      setSubmitError("Error creating guest session");
     } finally {
       setIsGuestLoading(false);
     }
+  };
+
+  const handleGoogleLogin = () => {
+    window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/google`;
   };
 
   return (
     <div className="h-screen flex overflow-hidden">
       {/* Left Section - Branding/Promotional */}
       <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden">
-        {/* Background Image */}
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{ backgroundImage: "url('/img/menu.png')" }}
         />
-
-        {/* Dark overlay for better text readability */}
         <div className="absolute inset-0 bg-black/40" />
 
-        {/* Content */}
         <div className="relative z-10 flex flex-col justify-center items-center h-full p-12">
-          {/* Logo */}
           <div className="text-center items-center mb-8">
             <Image
               src="/img/logo_horizontal.svg"
@@ -94,30 +109,21 @@ const Login = () => {
               onClick={() => router.push("/")}
             />
           </div>
-
-          {/* Tagline */}
-          {/* <h1 className="text-4xl md:text-5xl font-bold text-white text-center leading-tight">
-            ONE MISSION, ONE MATCH, ONE DESTINY!
-          </h1> */}
         </div>
       </div>
 
       {/* Right Section - Login Form */}
       <div className="w-full lg:w-1/2 flex items-center justify-center p-6 lg:p-12 relative overflow-hidden">
-        {/* Background with nebula effect */}
         <div className="absolute inset-0 bg-gradient-to-br from-orange-900 via-red-900 to-orange-800">
           <Starfield />
         </div>
 
-        {/* Login Form Container */}
         <Card className="w-full max-w-md bg-orange-900/80 backdrop-blur-sm border-orange-700/50 shadow-2xl">
           <CardContent className="p-8">
-            {/* Title */}
             <h2 className="text-3xl font-bold text-cyan-300 text-center mb-8">
               LOGIN
             </h2>
 
-            {/* Form */}
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               {/* Email Field */}
               <div className="space-y-2">
@@ -258,7 +264,9 @@ const Login = () => {
             {/* Social Login */}
             <div className="flex justify-center">
               <Button
+                type="button"
                 variant="outline"
+                onClick={handleGoogleLogin}
                 className="w-12 h-12 rounded-full bg-[#FF6B2F3D] hover:bg-red-700 border-red-600 hover:border-red-700"
               >
                 <Image
