@@ -23,6 +23,10 @@ export function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
+  if (pathname.startsWith("/auth")) {
+    return NextResponse.next();
+  }
+
   const isPublic = PUBLIC_ROUTES.has(pathname);
   const token = req.cookies.get("access_token")?.value;
 
