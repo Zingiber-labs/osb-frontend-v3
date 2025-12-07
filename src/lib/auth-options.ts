@@ -4,6 +4,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 export const authOptions: AuthOptions = {
   providers: [
     CredentialsProvider({
+      id: "credentials",
       name: "Credentials",
       credentials: {
         email: { label: "Email", type: "email" },
@@ -28,12 +29,12 @@ export const authOptions: AuthOptions = {
           );
 
           if (!res.ok) {
-            // 401 -> invalid credentials, etc.
             return null;
           }
 
           const data = await res.json();
           if (!data.access_token) return null;
+
           return {
             id: credentials.email,
             name: credentials.email.split("@")[0],
@@ -42,20 +43,50 @@ export const authOptions: AuthOptions = {
             refreshToken: data.refresh_token,
           };
         } catch (err) {
-          console.error("Error en authorize()", err);
+          console.error("Error en authorize() credentials", err);
           return null;
         }
       },
     }),
+
+    CredentialsProvider({
+      id: "backend-token",
+      name: "Backend Token",
+      credentials: {
+        token: { label: "Token", type: "text" },
+      },
+      async authorize(credentials) {
+        console.log("backend-token authorize() credentials:", credentials);
+
+        if (!credentials?.token) {
+          console.error("No viene token en credentials");
+          return null;
+        }
+
+        return {
+          id: "google-user",
+          name: "Google User",
+          email: "google-user@example.com",
+          accessToken: credentials.token,
+          refreshToken: null,
+        };
+      },
+    }),
   ],
+
   session: {
     strategy: "jwt",
   },
+
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.accessToken = (user as any).accessToken;
-        token.refreshToken = (user as any).refreshToken;
+        if ((user as any).accessToken) {
+          token.accessToken = (user as any).accessToken;
+        }
+        if ((user as any).refreshToken) {
+          token.refreshToken = (user as any).refreshToken;
+        }
       }
       return token;
     },
@@ -67,6 +98,7 @@ export const authOptions: AuthOptions = {
       return session;
     },
   },
+
   pages: {
     signIn: "/login",
   },
