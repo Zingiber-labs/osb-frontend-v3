@@ -162,7 +162,7 @@
   font-family: var(--font-geist-mono);
 }
 
-.overlay {
+/* .overlay {
   position: fixed;
   inset: 0;
   background-image: url("/img/stars.png");
@@ -172,7 +172,7 @@
   opacity: 0.6;
   z-index: -1;
   pointer-events: none;
-}
+} */
 
 .custom-scroll-thin::-webkit-scrollbar {
   width: 6px;
@@ -245,6 +245,11 @@
 /* Background for hangar */
 .layout--hangar {
   background-image: url("/img/hangar.png");
+  background-attachment: fixed;
+}
+
+.layout--missions {
+  background-image: url("/img/missions.png");
   background-attachment: fixed;
 }
 
