@@ -1,10 +1,10 @@
 "use client";
 
-import {
-  Accordion
-} from "@/components/ui/accordion";
+import { Accordion } from "@/components/ui/accordion";
 import { useSession } from "next-auth/react";
 import MissionRow from "./MissionRow";
+import { useMissions } from "@/hooks/missions/useMission";
+import { Loader } from "lucide-react";
 
 export type Mission = {
   value: string;
@@ -14,33 +14,23 @@ export type Mission = {
   author: string;
 };
 
-const MISSIONS: Mission[] = [
-  {
-    value: "big-space",
-    label: "BIG SPACE",
-    title: "BIG SPACE",
-    missionId: "3",
-    author: "Fennella",
-  },
-  {
-    value: "nebula-drills",
-    label: "NEBULA DRILLS",
-    title: "Nebula Drills",
-    missionId: "4",
-    author: "Fennella",
-  },
-  {
-    value: "orbital-match",
-    label: "ORBITAL MATCH",
-    title: "Orbital Match",
-    missionId: "5",
-    author: "Fennella",
-  },
-];
-
 export function MissionTerminal() {
   const { data: session } = useSession();
-  console.log("session", session)
+  const userId = (session?.user as any)?.backendUserId;
+
+  const { data, isPending } = useMissions({ userId });
+  console.log("missions data", data);
+
+  const missions: Mission[] =
+    data?.map((userMission: any) => ({
+      value: `mission-${userMission.mission.id}`,
+      label: userMission.mission.name.toUpperCase(),
+      title: userMission.mission.name,
+      missionId: String(userMission.mission.id),
+      author: userMission.mission.author ?? "Unknown",
+    })) ?? [];
+
+  const availableMissionsCount = missions.length;
 
   return (
     <section className="w-full max-w-4xl px-4">
@@ -59,25 +49,38 @@ export function MissionTerminal() {
             MISSION TERMINAL
           </h1>
           <p className="mt-1 text-[11px] text-cyan-100">
-            Available missions: <span className="font-semibold">4</span>
+            Available missions:{" "}
+            <span className="font-semibold">
+              {isPending ? "..." : availableMissionsCount}
+            </span>
           </p>
         </header>
 
         <div className="px-6 pb-5 pt-4">
-          <Accordion
-            type="single"
-            collapsible
-            defaultValue="big-space"
-            className="space-y-3"
-          >
-            {MISSIONS.map((mission) => (
-              <MissionRow key={mission.value} mission={mission} />
-            ))}
-          </Accordion>
+          {isPending ? (
+            <div className="flex items-center justify-center py-10">
+              <Loader className="h-8 w-8 animate-spin text-cyan-300" />
+            </div>
+          ) : (
+            <Accordion
+              type="single"
+              collapsible
+              defaultValue={missions[0]?.value}
+              className="space-y-3"
+            >
+              {missions.map((mission) => (
+                <MissionRow key={mission.value} mission={mission} />
+              ))}
+
+              {missions.length === 0 && (
+                <p className="text-xs text-cyan-100/70">
+                  No missions available for this pilot yet.
+                </p>
+              )}
+            </Accordion>
+          )}
         </div>
       </div>
     </section>
   );
 }
-
-

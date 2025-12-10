@@ -2,6 +2,16 @@
 
 import Hangar from "@/components/hangar/Hangar";
 import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { usePlayers } from "@/hooks/hangar/usePlayers";
 import { useSpin } from "@/hooks/hangar/useSpin";
 import { useMemo, useState } from "react";
 
@@ -23,6 +33,10 @@ function ProgressBar({ value }: { value: number }) {
 
 export default function HangarPage() {
   const [showHangar, setShowHangar] = useState(false);
+  const { data } = usePlayers();
+  const [selectedPlayer, setSelectedPlayer] = useState("");
+
+  console.log("players data", data);
 
   const { isPending } = useSpin("generalist");
 
@@ -69,55 +83,22 @@ export default function HangarPage() {
     <div className="relative mx-auto max-w-[1240px] px-4 py-8 md:py-12">
       <div className="relative grid grid-cols-1 gap-6 md:grid-cols-[360px_1fr]">
         <div className="text-white">
-          <div className="rounded-2xl border border-primary-orange/80 bg-orange-24/95 p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_8px_24px_rgba(0,0,0,0.35)]">
-            <h2 className="text-[22px] font-extrabold tracking-wider text-cyan-300">
-              SHIP CONTROL
-            </h2>
-            <p className="mt-1 text-sm text-white/80">
-              You have your ship at 100% speed.
-            </p>
+          <Label className="text-sm font-helvetica">Select your Player</Label>
+          <Select value={selectedPlayer} onValueChange={setSelectedPlayer}>
+            <SelectTrigger className="w-[300px] text-white bg-orange-dark cursor-pointer mt-4">
+              <SelectValue className="text-white font-helvetica" placeholder="Select Player" />
+            </SelectTrigger>
 
-            {/* Weapon level */}
-            <div className="mt-6">
-              <p className="text-[13px] font-bold tracking-widest text-white/90">
-                WEAPON LEVEL
-              </p>
-
-              <div className="mt-1 flex items-center gap-2 text-[11px] text-white/75">
-                <span className="tabular-nums">LVL {level}</span>
-                <span className="opacity-60">▸</span>
-                <span className="tabular-nums">LVL {nextLevel}</span>
-                <span className="ml-auto tabular-nums">
-                  {xp}/{xpMax} XP
-                </span>
-              </div>
-
-              <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-white/10">
-                <div
-                  className="h-1.5 bg-orange-400"
-                  style={{ width: `${(xp / xpMax) * 100}%` }}
-                />
-              </div>
-            </div>
-
-            {/* Stats */}
-            <div className="mt-6 space-y-3">
-              {stats.map((s) => (
-                <div
-                  key={s.label}
-                  className="grid grid-cols-[110px_1fr_42px] items-center gap-3"
-                >
-                  <span className="text-[13px] font-semibold text-white/90">
-                    {s.label}
-                  </span>
-                  <ProgressBar value={s.value} />
-                  <span className="text-right text-[12px] tabular-nums text-white/70">
-                    {s.value}%
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
+            <SelectContent>
+              <SelectGroup>
+                {data?.map((player: any) => (
+                  <SelectItem className="font-helvetica" key={player.id} value={String(player.id)}>
+                    {player.fullName} – {player.teamName}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
         </div>
 
         <div className="md:col-start-2 md:row-start-1">
