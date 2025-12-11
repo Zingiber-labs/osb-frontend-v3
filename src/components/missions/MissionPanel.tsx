@@ -5,32 +5,15 @@ import { useSession } from "next-auth/react";
 import MissionRow from "./MissionRow";
 import { useMissions } from "@/hooks/missions/useMission";
 import { Loader } from "lucide-react";
-
-export type Mission = {
-  value: string;
-  label: string;
-  title: string;
-  missionId: string;
-  author: string;
-};
+import { Mission } from "@/types/mission";
 
 export function MissionTerminal() {
   const { data: session } = useSession();
   const userId = (session?.user as any)?.backendUserId;
 
-  const { data, isPending } = useMissions({ userId });
-  console.log("missions data", data);
+  const { data: missions, isPending } = useMissions({ userId });
 
-  const missions: Mission[] =
-    data?.map((userMission: any) => ({
-      value: `mission-${userMission.mission.id}`,
-      label: userMission.mission.name.toUpperCase(),
-      title: userMission.mission.name,
-      missionId: String(userMission.mission.id),
-      author: userMission.mission.author ?? "Unknown",
-    })) ?? [];
-
-  const availableMissionsCount = missions.length;
+  const availableMissionsCount = missions?.length;
 
   return (
     <section className="w-full max-w-4xl px-4">
@@ -68,8 +51,8 @@ export function MissionTerminal() {
               defaultValue={missions[0]?.value}
               className="space-y-3"
             >
-              {missions.map((mission) => (
-                <MissionRow key={mission.value} mission={mission} />
+              {missions.map((mission: Mission) => (
+                <MissionRow key={String(mission.id)} mission={mission} />
               ))}
 
               {missions.length === 0 && (

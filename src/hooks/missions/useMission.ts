@@ -5,7 +5,7 @@ export const useMissions = ({ userId }: { userId?: string } = {}) => {
   return useQuery({
     queryKey: ["missions"],
     queryFn: async () => {
-      const { data } = await api.get(`/missions/user/${userId}`);
+      const { data } = await api.get(`/missions/available/${userId}`);
       return data;
     },
   });

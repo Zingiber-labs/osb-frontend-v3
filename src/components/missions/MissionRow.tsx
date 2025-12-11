@@ -1,14 +1,15 @@
 import { ChevronDown } from "lucide-react";
 import { AccordionContent, AccordionItem, AccordionTrigger } from '../ui/accordion';
 import MissionDetailsCard from './MissionDetailsCard';
-import { Mission } from './MissionPanel';
+import { Mission } from "@/types/mission";
+
 type MissionRowProps = {
   mission: Mission;
 };
 
 const MissionRow = ({ mission }: MissionRowProps) => {
    return (
-    <AccordionItem value={mission.value} className="border-none">
+    <AccordionItem value={String(mission.id)} className="border-none">
       <AccordionTrigger
         className="
           group relative flex w-full items-center
@@ -24,21 +25,17 @@ const MissionRow = ({ mission }: MissionRowProps) => {
           data-[state=open]:bg-[#0c3958]
         "
       >
-        <span>{mission.label}</span>
-        <ChevronDown
-          className="
-            ml-auto h-4 w-4 text-cyan-200
-            transition-transform
-            group-data-[state=open]:rotate-180
-          "
-        />
+        <span>{mission.name}</span>
       </AccordionTrigger>
 
       <AccordionContent className="pt-3">
         <MissionDetailsCard
-          title={mission.title}
-          missionId={mission.missionId}
-          author={mission.author}
+          title={mission.name}
+          missionId={String(mission.id)}
+          author={mission.author || "Unknown"}
+          description={mission.description || "No description available."}
+          requirements={mission.requirements || {}}
+          rewards={mission.rewards || {}}
         />
       </AccordionContent>
     </AccordionItem>

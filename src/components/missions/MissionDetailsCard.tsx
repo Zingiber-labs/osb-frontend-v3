@@ -2,12 +2,18 @@ type MissionDetailsCardProps = {
   title: string;
   missionId: string;
   author: string;
+  description: string;
+  requirements: any;
+  rewards: any;
 };
 
 const MissionDetailsCard = ({
   title,
   missionId,
   author,
+  description,
+  requirements,
+  rewards,
 }: MissionDetailsCardProps) => {
   return (
     <div
@@ -39,32 +45,38 @@ const MissionDetailsCard = ({
         <p className="font-semibold uppercase text-[11px] text-[#ffb86b]">
           Description:
         </p>
-        <p className="leading-snug">
-          Try to make all the points! You need 100 career points to qualify
-        </p>
+        <p className="leading-snug">{description}</p>
       </div>
 
-      <div className="mt-4 grid gap-8 pr-10 sm:grid-cols-[1.1fr_1.2fr]">
+      <div className="mt-4 grid gap-8 pr-10 sm:grid-cols-[1.1fr_1.2fr_1fr]">
+        {/* COLUMN 1 */}
         <div>
           <p className="font-semibold uppercase text-[11px] text-[#ffb86b]">
-            Requirements:
+            Requirements to access the mission:
           </p>
-          <p className="mt-[2px]">Points: 100</p>
-          <p>Rebounds: 10</p>
+          <p className="mt-[2px]">XP Level: ---</p>
+          <p>Days on OSB: ---</p>
+          <p>Players: ---</p>
         </div>
-        <div className="grid grid-cols-[1.1fr_auto] gap-x-4 gap-y-0">
-          <div>
-            <p className="font-semibold uppercase text-[11px] text-[#ffb86b]">
-              Rewards &amp; Stats:
-            </p>
-            <p className="mt-[2px]">Ballers: 20</p>
-            <p>Gems: 3</p>
-            <p>Players: 1</p>
-          </div>
-          <div className="self-center text-right text-[11px] leading-snug">
-            <p>Points: 40</p>
-            <p>FT: 1</p>
-          </div>
+
+        {/* COLUMN 2 */}
+        <div>
+          <p className="font-semibold uppercase text-[11px] text-[#ffb86b]">
+            Requirements to approve the mission:
+          </p>
+          <p className="mt-[2px]">Points: {requirements.points}</p>
+          <p>Rebounds: ---</p>
+          <p>FT: ---</p>
+        </div>
+
+        {/* COLUMN 3 */}
+        <div>
+          <p className="font-semibold uppercase text-[11px] text-[#ffb86b]">
+            Rewards:
+          </p>
+          <p className="mt-[2px]">XP: {rewards.xp}</p>
+          <p>Coins: ---</p>
+          <p>Gems: {rewards.gems}</p>
         </div>
       </div>
     </div>
