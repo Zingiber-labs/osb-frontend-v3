@@ -1,12 +1,14 @@
 "use client";
 
 import { Accordion } from "@/components/ui/accordion";
-import { useMissions } from "@/hooks/missions/useMission";
+import { useMissions, useAcceptMission } from "@/hooks/missions/useMission";
 import { Mission } from "@/types/mission";
 import { Loader } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import MissionRow from "./MissionRow";
+import { useEffect, useMemo, useState } from "react";
+import toast from "react-hot-toast";
 
 export function MissionTerminal() {
   const { data: session } = useSession();
@@ -16,17 +18,67 @@ export function MissionTerminal() {
 
   const availableMissionsCount = missions.length;
 
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
+  useEffect(() => {
+    if (missions.length === 0) {
+      setSelectedIndex(0);
+      return;
+    }
+
+    if (selectedIndex > missions.length - 1) {
+      setSelectedIndex(0);
+    }
+  }, [missions.length, selectedIndex]);
+
+  const selectedMission: Mission | undefined = useMemo(
+    () => missions[selectedIndex],
+    [missions, selectedIndex]
+  );
+
+  const { mutate: acceptMission, isPending: isAccepting } = useAcceptMission({
+    userId,
+  });
+
   const handlePrev = () => {
-    console.log("Prev mission");
+    if (!missions.length) return;
+    setSelectedIndex((prev) =>
+      prev === 0 ? missions.length - 1 : prev - 1
+    );
   };
 
   const handleNext = () => {
-    console.log("Next mission");
+    if (!missions.length) return;
+    setSelectedIndex((prev) =>
+      prev === missions.length - 1 ? 0 : prev + 1
+    );
   };
 
   const handleAccept = () => {
-    console.log("Accept mission");
+    if (!selectedMission) {
+      toast.error("There is no mission selected.");
+      return;
+    }
+
+    if (!userId) {
+      toast.error("User not found.");
+      return;
+    }
+
+    acceptMission(String(selectedMission.id), {
+      onSuccess: () => {
+        toast.success("Mission accepted!");
+      },
+      onError: () => {
+        toast.error("Error accepting the mission.");
+      },
+    });
   };
+
+  // To control which Accordion item is open
+  const accordionValue = selectedMission
+    ? String(selectedMission.id)
+    : undefined;
 
   return (
     <section className="w-full px-4 flex flex-col items-center">
@@ -61,11 +113,23 @@ export function MissionTerminal() {
               <Accordion
                 type="single"
                 collapsible
-                defaultValue={missions[0]?.value}
+                value={accordionValue}
+                onValueChange={(val) => {
+                  if (!val) return;
+                  const idx = missions.findIndex(
+                    (m: Mission) => String(m.id) === val
+                  );
+                  if (idx !== -1) setSelectedIndex(idx);
+                }}
                 className="space-y-3"
               >
-                {missions.map((mission: Mission) => (
-                  <MissionRow key={String(mission.id)} mission={mission} />
+                {missions.map((mission: Mission, index: number) => (
+                  <MissionRow
+                    key={String(mission.id)}
+                    mission={mission}
+                    isSelected={index === selectedIndex}
+                    onSelect={() => setSelectedIndex(index)}
+                  />
                 ))}
 
                 {missions.length === 0 && (
@@ -95,7 +159,7 @@ export function MissionTerminal() {
               width={300}
               height={300}
               className="w-[70%] h-auto cursor-pointer hover:scale-105 transition-transform"
-              onClick={() => console.log("Prev mission")}
+              onClick={handlePrev}
             />
           </div>
 
@@ -106,7 +170,7 @@ export function MissionTerminal() {
               width={300}
               height={300}
               className="w-[70%] h-auto cursor-pointer hover:scale-105 transition-transform"
-              onClick={() => console.log("Next mission")}
+              onClick={handleNext}
             />
           </div>
 
@@ -116,8 +180,10 @@ export function MissionTerminal() {
               alt="Accept mission"
               width={600}
               height={600}
-              className="w-[65%] h-auto cursor-pointer hover:scale-105 transition-transform"
-              onClick={() => console.log("Accept mission")}
+              className={`w-[65%] h-auto cursor-pointer hover:scale-105 transition-transform ${
+                isAccepting ? "opacity-60 pointer-events-none" : ""
+              }`}
+              onClick={handleAccept}
             />
           </div>
         </div>
