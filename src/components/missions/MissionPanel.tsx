@@ -9,8 +9,10 @@ import Image from "next/image";
 import MissionRow from "./MissionRow";
 import { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 export function MissionTerminal() {
+  const router = useRouter();
   const { data: session } = useSession();
   const userId = (session?.user as any)?.backendUserId;
 
@@ -159,22 +161,22 @@ export function MissionTerminal() {
           <div className="w-[22%] flex justify-center">
             <Image
               src="/img/missions/arrow_hover_left.svg"
-              alt="Previous mission"
+              alt="Go home"
               width={300}
               height={300}
               className="w-[70%] h-auto cursor-pointer hover:scale-105 transition-transform"
-              onClick={handlePrev}
+              onClick={() => router.push("/")}
             />
           </div>
 
           <div className="w-[22%] flex justify-center">
             <Image
               src="/img/missions/arrow_hover_right.svg"
-              alt="Next mission"
+              alt="Go to hangar"
               width={300}
               height={300}
               className="w-[70%] h-auto cursor-pointer hover:scale-105 transition-transform"
-              onClick={handleNext}
+              onClick={() => router.push("/hangar")}
             />
           </div>
 
