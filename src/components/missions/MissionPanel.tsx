@@ -1,26 +1,25 @@
 "use client";
 
 import { Accordion } from "@/components/ui/accordion";
-import { useMissions, useAcceptMission } from "@/hooks/missions/useMission";
+import { useAcceptMission, useMissions } from "@/hooks/missions/useMission";
 import { Mission } from "@/types/mission";
 import { Loader } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
-import MissionRow from "./MissionRow";
+import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
+import MissionRow from "./MissionRow";
 
 export function MissionTerminal() {
-  const router = useRouter();
   const { data: session } = useSession();
+  const router = useRouter();
   const userId = (session?.user as any)?.backendUserId;
 
   const { data: missions = [], isPending } = useMissions({ userId });
-
+  const [selectedIndex, setSelectedIndex] = useState(0);
   const availableMissionsCount = missions.length;
 
-  const [selectedIndex, setSelectedIndex] = useState(0);
 
   useEffect(() => {
     if (missions.length === 0) {
@@ -66,6 +65,7 @@ export function MissionTerminal() {
     acceptMission(String(selectedMission.id), {
       onSuccess: () => {
         toast.success("Mission accepted!");
+        router.push("/hangar");
       },
       onError: () => {
         toast.error("Error accepting the mission.");
@@ -161,22 +161,22 @@ export function MissionTerminal() {
           <div className="w-[22%] flex justify-center">
             <Image
               src="/img/missions/arrow_hover_left.svg"
-              alt="Go home"
+              alt="Previous mission"
               width={300}
               height={300}
               className="w-[70%] h-auto cursor-pointer hover:scale-105 transition-transform"
-              onClick={() => router.push("/")}
+              onClick={handlePrev}
             />
           </div>
 
           <div className="w-[22%] flex justify-center">
             <Image
               src="/img/missions/arrow_hover_right.svg"
-              alt="Go to hangar"
+              alt="Next mission"
               width={300}
               height={300}
               className="w-[70%] h-auto cursor-pointer hover:scale-105 transition-transform"
-              onClick={() => router.push("/hangar")}
+              onClick={handleNext}
             />
           </div>
 
