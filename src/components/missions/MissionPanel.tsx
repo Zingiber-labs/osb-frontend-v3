@@ -42,16 +42,12 @@ export function MissionTerminal() {
 
   const handlePrev = () => {
     if (!missions.length) return;
-    setSelectedIndex((prev) =>
-      prev === 0 ? missions.length - 1 : prev - 1
-    );
+    setSelectedIndex((prev) => (prev === 0 ? missions.length - 1 : prev - 1));
   };
 
   const handleNext = () => {
     if (!missions.length) return;
-    setSelectedIndex((prev) =>
-      prev === missions.length - 1 ? 0 : prev + 1
-    );
+    setSelectedIndex((prev) => (prev === missions.length - 1 ? 0 : prev + 1));
   };
 
   const handleAccept = () => {
@@ -75,7 +71,6 @@ export function MissionTerminal() {
     });
   };
 
-  // To control which Accordion item is open
   const accordionValue = selectedMission
     ? String(selectedMission.id)
     : undefined;
@@ -110,34 +105,43 @@ export function MissionTerminal() {
                 <Loader className="h-8 w-8 animate-spin text-cyan-300" />
               </div>
             ) : (
-              <Accordion
-                type="single"
-                collapsible
-                value={accordionValue}
-                onValueChange={(val) => {
-                  if (!val) return;
-                  const idx = missions.findIndex(
-                    (m: Mission) => String(m.id) === val
-                  );
-                  if (idx !== -1) setSelectedIndex(idx);
-                }}
-                className="space-y-3"
+              <div
+                className="
+                  max-h-[320px]
+                  overflow-y-auto
+                  custom-scroll-thin
+                  pr-1
+                "
               >
-                {missions.map((mission: Mission, index: number) => (
-                  <MissionRow
-                    key={String(mission.id)}
-                    mission={mission}
-                    isSelected={index === selectedIndex}
-                    onSelect={() => setSelectedIndex(index)}
-                  />
-                ))}
+                <Accordion
+                  type="single"
+                  collapsible
+                  value={accordionValue}
+                  onValueChange={(val) => {
+                    if (!val) return;
+                    const idx = missions.findIndex(
+                      (m: Mission) => String(m.id) === val
+                    );
+                    if (idx !== -1) setSelectedIndex(idx);
+                  }}
+                  className="space-y-3"
+                >
+                  {missions.map((mission: Mission, index: number) => (
+                    <MissionRow
+                      key={String(mission.id)}
+                      mission={mission}
+                      isSelected={index === selectedIndex}
+                      onSelect={() => setSelectedIndex(index)}
+                    />
+                  ))}
 
-                {missions.length === 0 && (
-                  <p className="text-xs text-cyan-100/70">
-                    No missions available for this pilot yet.
-                  </p>
-                )}
-              </Accordion>
+                  {missions.length === 0 && (
+                    <p className="text-xs text-cyan-100/70">
+                      No missions available for this pilot yet.
+                    </p>
+                  )}
+                </Accordion>
+              </div>
             )}
           </div>
         </div>
@@ -188,6 +192,23 @@ export function MissionTerminal() {
           </div>
         </div>
       </div>
+      {isAccepting && (
+        <div
+          className="
+          fixed inset-0 
+          bg-black/70 backdrop-blur-sm
+          flex items-center justify-center
+          z-[9999]
+        "
+        >
+          <div className="flex flex-col items-center space-y-4">
+            <Loader className="h-12 w-12 animate-spin text-cyan-300" />
+            <p className="text-cyan-200 font-semibold tracking-wide">
+              Accepting mission...
+            </p>
+          </div>
+        </div>
+      )}
     </section>
   );
 }
