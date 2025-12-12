@@ -20,7 +20,6 @@ export function MissionTerminal() {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const availableMissionsCount = missions.length;
 
-
   useEffect(() => {
     if (missions.length === 0) {
       setSelectedIndex(0);
@@ -157,8 +156,8 @@ export function MissionTerminal() {
           className="w-full h-auto select-none"
         />
 
-        <div className="absolute inset-0 flex items-center px-[8%]">
-          <div className="w-[22%] flex justify-center">
+        <div className="absolute inset-0 flex items-center">
+          <div className="w-[22%] flex justify-center translate-x-25 -translate-y-5">
             <Image
               src="/img/missions/arrow_hover_left.svg"
               alt="Previous mission"
@@ -169,7 +168,10 @@ export function MissionTerminal() {
             />
           </div>
 
-          <div className="w-[22%] flex justify-center">
+          <div
+            className="w-[22%] flex justify-center translate-x-5 -translate-y-5
+"
+          >
             <Image
               src="/img/missions/arrow_hover_right.svg"
               alt="Next mission"
@@ -180,7 +182,7 @@ export function MissionTerminal() {
             />
           </div>
 
-          <div className="flex-1 flex justify-center">
+          <div className="flex-1 flex justify-center -translate-x-6 -translate-y-6">
             <Image
               src="/img/missions/button_hover_accept.svg"
               alt="Accept mission"
