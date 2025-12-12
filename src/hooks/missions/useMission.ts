@@ -19,7 +19,7 @@ export const useAcceptMission = ({ userId }: { userId?: string }) => {
       return await api.post(`/missions/${missionId}/assign/${userId}`);
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["missions", userId] });
+      queryClient.invalidateQueries({ queryKey: ["missions"] });
     },
   });
 };
