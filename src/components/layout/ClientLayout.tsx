@@ -18,6 +18,9 @@ export default function ClientLayout({ children, className = "" }: Props) {
     case pathname?.toLowerCase().startsWith("/hangar"):
       layoutClass += " layout--hangar";
       break;
+    case pathname?.toLowerCase().startsWith("/missions"):
+      layoutClass += " layout--missions";
+      break;
     case pathname === "/":
       layoutClass += " layout--menu";
       break;
