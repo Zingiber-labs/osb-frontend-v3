@@ -6,7 +6,7 @@ export const useStoreItems = ({ type }: { type?: ItemType } = {}) => {
   return useQuery({
     queryKey: ["store-items", { type }],
     queryFn: async () => {
-      const { data } = await api.get("/store/items", {
+      const { data } = await api.get("/store", {
         params: { ...(type ? { type } : {}) },
       });
       return data;
