@@ -16,19 +16,12 @@ import { useSpin } from "@/hooks/hangar/useSpin";
 import Image from "next/image";
 import { useState } from "react";
 
-type Stat = { label: string; value: number };
-
 export default function HangarPage() {
   const [showHangar, setShowHangar] = useState(false);
   const { data: players } = usePlayers();
   const [selectedPlayer, setSelectedPlayer] = useState("");
 
   const { isPending } = useSpin("generalist");
-
-  const level = 5;
-  const nextLevel = level + 1;
-  const xp = 230;
-  const xpMax = 600;
 
   const selectedPlayerData = players?.find(
     (p: any) => String(p.id) === selectedPlayer

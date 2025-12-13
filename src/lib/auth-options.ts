@@ -109,6 +109,7 @@ export const authOptions: AuthOptions = {
             isGuest: profile.isGuest,
           };
         } catch (err) {
+          console.error("Error in backend-token authorize()", err);
           return null;
         }
       },
