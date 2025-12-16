@@ -13,12 +13,18 @@ import InventoryCard from "@/components/inventory/InventoryCard";
 import InventoryDetail from "@/components/inventory/InventoryDetail";
 import { useMyInventory } from "@/hooks/inventory/useMyInventory";
 import { ItemType, MyInventory } from "@/types/inventory-items";
+import { useSession } from "next-auth/react";
 
 const Inventory = () => {
+  const { data: session } = useSession();
   const [selectedInventory, setSelectedInventory] = useState<any>(null);
   const [selectedType, setSelectedType] = useState<ItemType | undefined>();
 
-  const { data, isLoading, error } = useMyInventory({ type: selectedType });
+  const userId = (session?.user as any)?.backendUserId;
+  const { data, isLoading, error } = useMyInventory({
+    type: selectedType,
+    userId: userId ?? "",
+  });
 
   const handleInventoryDetail = (inventory: any) => {
     const newSelection =
@@ -99,7 +105,9 @@ const Inventory = () => {
       <p className="text-secondary text-5xl font-bold mt-14 mb-6">
         My inventory
       </p>
-      <p className="font-helvetica text-white text-sm normal-case mt-10">Select Item Types</p>
+      <p className="font-helvetica text-white text-sm normal-case mt-10">
+        Select Item Types
+      </p>
       <div className="mt-4 flex justify-between">
         <Select
           value={selectedType}
