@@ -1,16 +1,17 @@
 "use client";
 
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { useBuyStoreItem } from "@/hooks/store-page/useStoreItems";
 import { StoreItem } from "@/types/store-items";
 import { Minus, Plus } from "lucide-react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
-import DialogSuccessfull from "./DialogSuccessfull";
+import toast from "react-hot-toast";
 import DialogConfirmation from "./DialogConfirmation";
 import DialogError from "./DialogError";
-import { useRouter } from "next/navigation";
-import { useBuyStoreItem } from "@/hooks/store-page/useStoreItems";
+import DialogSuccessfull from "./DialogSuccessfull";
 
 interface WeaponPreviewProps {
   open: boolean;
@@ -35,8 +36,17 @@ export default function WeaponPreview({
   const [openConfirm, setOpenConfirm] = useState(false);
   const [openSuccess, setOpenSuccess] = useState(false);
   const [openError, setOpenError] = useState(false);
+  const [showQtyError, setShowQtyError] = useState(false);
 
-  const openConfirmation = () => setOpenConfirm(true);
+  const openConfirmation = () => {
+    if (quantity < 1) {
+      setShowQtyError(true);
+      toast.error("Quantity must be at least 1 item.");
+      return;
+    }
+    setShowQtyError(false);
+    setOpenConfirm(true);
+  };
 
   const closeAll = () => {
     setOpenConfirm(false);
@@ -60,6 +70,11 @@ export default function WeaponPreview({
         },
       }
     );
+  };
+
+  const handleIncrease = () => {
+    setShowQtyError(false);
+    onIncrease();
   };
 
   return (
@@ -107,14 +122,20 @@ export default function WeaponPreview({
 
                 <button
                   aria-label="Increase quantity"
+                  onClick={handleIncrease}
                   className="grid place-items-center w-8 h-8 rounded-full border-2 border-white/90 text-white
                              hover:bg-white hover:text-black transition-colors"
-                  onClick={onIncrease}
                 >
                   <Plus className="w-4 h-4 stroke-[3]" />
                 </button>
               </div>
             </div>
+            {showQtyError && (
+              <p className="text-sm text-red-400 text-center mt-2">
+                You must select at least 1 item.
+              </p>
+            )}
+
             <Button
               onClick={openConfirmation}
               className="w-full bg-secondary hover:bg-secondary-500 text-black rounded-full px-6 py-2"
@@ -125,7 +146,6 @@ export default function WeaponPreview({
         </DialogContent>
       </Dialog>
 
-      {/* CONFIRMATION */}
       <DialogConfirmation
         open={openConfirm}
         quantity={quantity}
@@ -135,7 +155,6 @@ export default function WeaponPreview({
         isLoading={isPending}
       />
 
-      {/* SUCCESS */}
       <DialogSuccessfull
         open={openSuccess}
         quantity={quantity}
@@ -150,7 +169,6 @@ export default function WeaponPreview({
         onBackToStore={closeAll}
       />
 
-      {/* ERROR */}
       <DialogError
         open={openError}
         onOpenChange={(isOpen) => {
