@@ -61,9 +61,9 @@ function Scene() {
       const mesh3 = new THREE.Mesh(torus, material2);
       mesh3.position.set(-1000 + i * 4000, -1000 + i * 4000, -1000 + i * 4000);
       mesh3.rotation.set(
-        THREE.MathUtils.degToRad(90),
-        THREE.MathUtils.degToRad(90),
-        THREE.MathUtils.degToRad(90)
+        THREE.MathUtils.degToRad(100),
+        THREE.MathUtils.degToRad(120),
+        THREE.MathUtils.degToRad(100)
       );
       mesh3.matrixAutoUpdate = false;
       mesh3.updateMatrix();
