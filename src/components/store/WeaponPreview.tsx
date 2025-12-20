@@ -13,6 +13,14 @@ import DialogConfirmation from "./DialogConfirmation";
 import DialogError from "./DialogError";
 import DialogSuccessfull from "./DialogSuccessfull";
 
+function getApiErrorMessage(err: unknown) {
+  const anyErr = err as any;
+  const msgFromData = anyErr?.response?.data?.message;
+
+
+  return msgFromData || "Something went wrong.";
+}
+
 interface WeaponPreviewProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -37,6 +45,7 @@ export default function WeaponPreview({
   const [openSuccess, setOpenSuccess] = useState(false);
   const [openError, setOpenError] = useState(false);
   const [showQtyError, setShowQtyError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
   const openConfirmation = () => {
     if (quantity < 1) {
@@ -52,6 +61,7 @@ export default function WeaponPreview({
     setOpenConfirm(false);
     setOpenSuccess(false);
     setOpenError(false);
+    setErrorMessage("");
     onOpenChange(false);
   };
 
@@ -64,7 +74,8 @@ export default function WeaponPreview({
           setOpenSuccess(true);
         },
         onError: (err) => {
-          console.error("Buy failed", err);
+          const msg = getApiErrorMessage(err);
+          setErrorMessage(msg);
           setOpenConfirm(false);
           setOpenError(true);
         },
@@ -171,6 +182,7 @@ export default function WeaponPreview({
 
       <DialogError
         open={openError}
+        message={errorMessage}
         onOpenChange={(isOpen) => {
           setOpenError(isOpen);
           if (!isOpen) closeAll();

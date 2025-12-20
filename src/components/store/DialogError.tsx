@@ -1,14 +1,15 @@
 "use client";
 
+import { XCircle } from "lucide-react";
 import { Button } from "../ui/button";
 import { Dialog, DialogContent, DialogTitle } from "../ui/dialog";
-import { XCircle } from "lucide-react";
 
 interface DialogErrorProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onRetry?: () => void;
   onBackToStore?: () => void;
+  message?: string;
 }
 
 const DialogError = ({
@@ -16,6 +17,7 @@ const DialogError = ({
   onOpenChange,
   onRetry,
   onBackToStore,
+  message = "We couldn’t complete your purchase. Please try again or go back to the store.",
 }: DialogErrorProps) => {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -38,8 +40,7 @@ const DialogError = ({
               Something went wrong
             </p>
             <p className="text-base font-light text-card-bg font-helvetica mt-1">
-              We couldn’t complete your purchase. Please try again or go back to
-              the store.
+              {message}
             </p>
 
             {onRetry && (
