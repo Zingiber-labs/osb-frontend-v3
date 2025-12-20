@@ -1,155 +1,190 @@
 "use client";
-import React, { useRef, useState, useEffect } from "react";
+
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
-import { OrbitControls } from "@react-three/drei";
 
 function Scene() {
-  const cameraRef = useRef<THREE.PerspectiveCamera>(null);
-  const [mouse, setMouse] = useState({ x: 0, y: 0 });
+  const { scene, camera, size } = useThree();
 
-  // Create geometries
-  const sphereGeometry = new THREE.SphereGeometry(150, 32, 16);
-  const boxGeometry = new THREE.BoxGeometry(10, 10, 10);
-  const icosahedronGeometry = new THREE.IcosahedronGeometry(1, 0);
-  const cylinderGeometry = new THREE.CylinderGeometry(20, 20, 10);
-  const torusGeometry = new THREE.TorusGeometry(2000, 50, 16, 100);
-  const ringGeometry = new THREE.TorusGeometry(2500, 50, 16, 100);
+  const mouse = useRef({ x: 0, y: 0 });
+  const windowHalf = useRef({ x: size.width / 2, y: size.height / 2 });
 
-  // // Create materials
-  const colorfullMaterial = new THREE.MeshNormalMaterial(); // https://threejs.org/docs/#MeshNormalMaterial
+  const assets = useMemo(() => {
+    const sphere = new THREE.SphereGeometry(150, 32, 16);
+    const box = new THREE.BoxGeometry(10, 10, 10);
+    const icosahedron = new THREE.IcosahedronGeometry(1, 0);
+    const cylinder = new THREE.CylinderGeometry(20, 20, 10);
+    const torus = new THREE.TorusGeometry(2000, 50, 16, 100);
+    const material2 = new THREE.MeshNormalMaterial();
 
-  // Store all meshes in state if you want
-  const [groups, setGroups] = useState<THREE.Group[]>([]);
+    return { sphere, box, icosahedron, cylinder, torus, material2 };
+  }, []);
 
-  useEffect(() => {
-    const allGroups: THREE.Group[] = [];
-    const newGroup = new THREE.Group();
+  // Main groups from init()
+  const staticGroups = useMemo(() => {
+    const { sphere, box, icosahedron, cylinder, torus, material2 } = assets;
 
+    const groupMain = new THREE.Group();
+
+    // 7 spheres + 7 subgroups of 20 boxes
+    const boxSubgroups: THREE.Group[] = [];
     for (let i = 0; i < 7; i++) {
-      // Sphere
-      const mesh = new THREE.Mesh(sphereGeometry, colorfullMaterial);
+      const mesh = new THREE.Mesh(sphere, material2);
       mesh.position.set(
         Math.random() * 1000 - 500 + (i * 3000) / 7,
         Math.random() * 1000 - 500 + (i * 3000) / 7,
         Math.random() * 1000 - 500 + (i * 3000) / 7
       );
-      mesh.updateMatrix();
       mesh.matrixAutoUpdate = false;
+      mesh.updateMatrix();
+      groupMain.add(mesh);
 
-      // Sub-group of boxes
-      const subGroup = new THREE.Group();
+      const group2 = new THREE.Group();
       for (let j = 0; j < 20; j++) {
-        const mesh2 = new THREE.Mesh(boxGeometry, colorfullMaterial);
+        const mesh2 = new THREE.Mesh(box, material2);
         mesh2.position.set(
-          mesh.position.x + Math.random() * 2000 - 1000,
-          mesh.position.y + Math.random() * 2000 - 1000,
-          mesh.position.z + Math.random() * 2000 - 1000
+          mesh.position.x + (Math.random() * 2000 - 1000),
+          mesh.position.y + (Math.random() * 2000 - 1000),
+          mesh.position.z + (Math.random() * 2000 - 1000)
         );
         mesh2.matrixAutoUpdate = false;
         mesh2.updateMatrix();
-        subGroup.add(mesh2);
+        group2.add(mesh2);
       }
-      newGroup.add(mesh);
-      newGroup.add(subGroup);
+      boxSubgroups.push(group2);
     }
 
-    for (let g = 0; g < 3; g++) {
-      // Add extra geometries to the group
-      const icoMesh = new THREE.Mesh(icosahedronGeometry, colorfullMaterial);
-      icoMesh.position.set(0, 0, 0);
-      icoMesh.matrixAutoUpdate = false;
-      icoMesh.updateMatrix();
-
-      const torusMesh = new THREE.Mesh(torusGeometry, colorfullMaterial);
-      torusMesh.position.set(1000, 0, -500);
-      torusMesh.rotation.set(Math.PI / 2, Math.PI / 2, Math.PI / 2);
-      torusMesh.matrixAutoUpdate = false;
-      torusMesh.updateMatrix();
-
-      const cylinderMesh = new THREE.Mesh(cylinderGeometry, colorfullMaterial);
-      cylinderMesh.position.set(-500, -200, 500);
-      cylinderMesh.matrixAutoUpdate = false;
-      cylinderMesh.updateMatrix();
-
-      const ringMesh = new THREE.Mesh(ringGeometry, colorfullMaterial);
-      ringMesh.position.set(-1000, -1000, -1000);
-      ringMesh.matrixAutoUpdate = false;
-      ringMesh.updateMatrix();
-
-      newGroup.add(icoMesh, torusMesh, cylinderMesh, ringMesh);
-
-      allGroups.push(newGroup);
+    // group3: 2 torus meshes
+    const group3 = new THREE.Group();
+    for (let i = 0; i < 2; i++) {
+      const mesh3 = new THREE.Mesh(torus, material2);
+      mesh3.position.set(-1000 + i * 4000, -1000 + i * 4000, -1000 + i * 4000);
+      mesh3.rotation.set(
+        THREE.MathUtils.degToRad(90),
+        THREE.MathUtils.degToRad(90),
+        THREE.MathUtils.degToRad(90)
+      );
+      mesh3.matrixAutoUpdate = false;
+      mesh3.updateMatrix();
+      group3.add(mesh3);
     }
 
-    setGroups(allGroups);
-  }, []);
-
-  const { camera } = useThree();
-
-  // Scale down mouse influence
-  useFrame(() => {
-    if (cameraRef.current) {
-      camera.position.x += (mouse.x - camera.position.x) * 0.01;
-      camera.position.y += (mouse.y - camera.position.y) * 0.01;
-      camera.position.z += (mouse.x - camera.position.z) * 0.01;
+    // group4: 10 cylinders
+    const group4 = new THREE.Group();
+    for (let i = 0; i < 10; i++) {
+      const mesh4 = new THREE.Mesh(cylinder, material2);
+      mesh4.position.set(-1200 - i * 50, -1200, -1200 + i * 50);
+      mesh4.matrixAutoUpdate = false;
+      mesh4.updateMatrix();
+      group4.add(mesh4);
     }
-  });
 
-  const handleMouseMove = (event: MouseEvent) => {
-    const windowHalfX = window.innerWidth / 2;
-    const windowHalfY = window.innerHeight / 2;
-    setMouse({
-      x: (event.clientX - windowHalfX) * 10,
-      y: (event.clientY - windowHalfY) * 10,
-    });
-  };
+    return { groupMain, boxSubgroups, group3, group4 };
+  }, [assets]);
+
+  // Dynamic "bullets" (Space)
+  const [bullets, setBullets] = useState<THREE.Group[]>([]);
+
+  // init() scene setup
+  useEffect(() => {
+    scene.background = new THREE.Color(0x2b2b2b);
+    scene.fog = new THREE.Fog(0x2b2b2b, 1, 10000);
+
+    // Camera setup
+    const cam = camera as THREE.PerspectiveCamera;
+    cam.fov = 60;
+    cam.near = 1;
+    cam.far = 20000;
+    cam.position.set(-2000, 0, -2000);
+    cam.updateProjectionMatrix();
+
+    cam.lookAt(new THREE.Vector3(4000, 6000, 4000));
+  }, [scene, camera]);
 
   useEffect(() => {
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
+    windowHalf.current = { x: size.width / 2, y: size.height / 2 };
+  }, [size.width, size.height]);
+
+  useEffect(() => {
+    const onMove = (event: MouseEvent) => {
+      const half = windowHalf.current;
+      mouse.current.x = (event.clientX - half.x) * 10;
+      mouse.current.y = (event.clientY - half.y) * 10;
+    };
+
+    window.addEventListener("mousemove", onMove);
+    return () => window.removeEventListener("mousemove", onMove);
   }, []);
+
+  useEffect(() => {
+    const onKeyUp = (event: KeyboardEvent) => {
+      if (event.code !== "Space") return;
+
+      const { sphere, material2 } = assets;
+
+      const group = new THREE.Group();
+      for (let i = 0; i < 7; i++) {
+        const mesh = new THREE.Mesh(sphere, material2);
+        mesh.position.set(
+          Math.random() * 1000 - 500 + (i * 3000) / 6,
+          Math.random() * 1000 - 500 + (i * 3000) / 6,
+          Math.random() * 1000 - 500 + (i * 3000) / 6
+        );
+        mesh.matrixAutoUpdate = false;
+        mesh.updateMatrix();
+        group.add(mesh);
+      }
+
+      setBullets((prev) => [...prev, group]);
+    };
+
+    window.addEventListener("keyup", onKeyUp);
+    return () => window.removeEventListener("keyup", onKeyUp);
+  }, [assets]);
+
+  useFrame(() => {
+    const cam = camera as THREE.PerspectiveCamera;
+    const { x: mouseX } = mouse.current;
+
+    cam.position.x += (mouseX - cam.position.x) * 0.07;
+    cam.position.y += (mouseX - cam.position.y) * 0.04;
+    cam.position.z += (mouseX - cam.position.z) * 0.07;
+  });
 
   return (
     <>
-      <perspectiveCamera
-        ref={cameraRef}
-        fov={60}
-        near={0}
-        far={10000} // smaller far plane for better depth perception
-        position={[0, 0, 0]} // closer to the scene
-        lookAt={[0, 0, 0]} // center the view
-      />
-      <ambientLight />
-      <pointLight position={[10, 10, 10]} />
-      {groups.map((g, i) => (
-        <primitive object={g} key={i} />
+      {/* Equivalent to scene.add(group2) for each subgroup */}
+      {staticGroups.boxSubgroups.map((g, i) => (
+        <primitive key={`boxSub-${i}`} object={g} />
+      ))}
+
+      {/* scene.add(group) */}
+      <primitive object={staticGroups.groupMain} />
+
+      {/* scene.add(group3) */}
+      <primitive object={staticGroups.group3} />
+
+      {/* scene.add(group4) */}
+      <primitive object={staticGroups.group4} />
+
+      {/* bullets added with Space */}
+      {bullets.map((g, i) => (
+        <primitive key={`bullet-${i}`} object={g} />
       ))}
     </>
   );
 }
 
-export default function App() {
+export default function ThreeVanillaReplica() {
   return (
     <Canvas
       style={{ height: "100vh", width: "100vw" }}
       gl={{ antialias: false }}
-      onCreated={({ scene }) => {
-        scene.background = new THREE.Color(0x2b2b2b);
-        scene.fog = new THREE.Fog(0x2b2b2b, 1, 10000);
-      }}
     >
       <Scene />
-      <OrbitControls
-        enablePan={true}
-        enableZoom={true}
-        enableRotate={true}
-        maxDistance={2000} // max zoom out
-        minDistance={200} // max zoom in
-        zoomSpeed={0.02} // lower = slower zoom
-        rotateSpeed={0.5} // optional, slows rotation
-        panSpeed={0.5} // optional, slows panning
-      />
+      {/* <ambientLight /> */}
+      <pointLight position={[10, 10, 10]} />
     </Canvas>
   );
 }
