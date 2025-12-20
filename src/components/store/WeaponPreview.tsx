@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 import { useBuyStoreItem } from "@/hooks/store-page/useStoreItems";
 import { StoreItem } from "@/types/store-items";
 import { Minus, Plus } from "lucide-react";
@@ -16,8 +17,6 @@ import DialogSuccessfull from "./DialogSuccessfull";
 function getApiErrorMessage(err: unknown) {
   const anyErr = err as any;
   const msgFromData = anyErr?.response?.data?.message;
-
-
   return msgFromData || "Something went wrong.";
 }
 
@@ -28,6 +27,7 @@ interface WeaponPreviewProps {
   quantity: number;
   onIncrease: () => void;
   onDecrease: () => void;
+  onQuantityChange: (qty: number) => void;
 }
 
 export default function WeaponPreview({
@@ -37,6 +37,7 @@ export default function WeaponPreview({
   quantity,
   onIncrease,
   onDecrease,
+  onQuantityChange,
 }: WeaponPreviewProps) {
   const router = useRouter();
   const { mutate: buyItem, isPending } = useBuyStoreItem();
@@ -46,6 +47,9 @@ export default function WeaponPreview({
   const [openError, setOpenError] = useState(false);
   const [showQtyError, setShowQtyError] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
+  const [qtyText, setQtyText] = useState<string>(String(quantity));
+
+  const syncQtyText = (nextQty: number) => setQtyText(String(nextQty));
 
   const openConfirmation = () => {
     if (quantity < 1) {
@@ -58,6 +62,7 @@ export default function WeaponPreview({
   };
 
   const closeAll = () => {
+    setQtyText("1");
     setOpenConfirm(false);
     setOpenSuccess(false);
     setOpenError(false);
@@ -86,15 +91,68 @@ export default function WeaponPreview({
   const handleIncrease = () => {
     setShowQtyError(false);
     onIncrease();
+    syncQtyText(quantity + 1);
+  };
+
+  const handleDecrease = () => {
+    setShowQtyError(false);
+    onDecrease();
+    syncQtyText(Math.max(0, quantity - 1));
+  };
+
+  const handleQtyInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const raw = e.target.value;
+
+    if (raw === "") {
+      setQtyText("");
+      setShowQtyError(false);
+      onQuantityChange(0);
+      return;
+    }
+
+    // just numbers
+    if (!/^\d+$/.test(raw)) return;
+    const next = parseInt(raw, 10);
+
+    setQtyText(String(next));
+    setShowQtyError(false);
+    onQuantityChange(next);
+  };
+
+  const handleQtyBlur = () => {
+    const parsed = parseInt(qtyText, 10);
+    const normalized = Number.isFinite(parsed) ? parsed : 0;
+
+    if (normalized < 1) {
+      setShowQtyError(true);
+      syncQtyText(1);
+      onQuantityChange(1);
+      return;
+    }
+
+    syncQtyText(normalized);
+    onQuantityChange(normalized);
   };
 
   return (
     <>
-      <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogTitle></DialogTitle>
+      <Dialog
+        open={open}
+        onOpenChange={(isOpen) => {
+          onOpenChange(isOpen);
+
+          if (!isOpen) {
+            setQtyText("1");
+            onQuantityChange(1);
+            setShowQtyError(false);
+          } else {
+            setQtyText(String(quantity));
+          }
+        }}
+      >
         <DialogContent
-          className="max-w-[500px] rounded-[1.5rem] border-none 
-                   bg-gradient-to-b from-[#531700] to-black 
+          className="max-w-[500px] rounded-[1.5rem] border-none
+                   bg-gradient-to-b from-[#531700] to-black
                    text-white p-0"
         >
           <div className="p-6 space-y-6">
@@ -122,14 +180,20 @@ export default function WeaponPreview({
                   aria-label="Decrease quantity"
                   className="grid place-items-center w-8 h-8 rounded-full border-2 border-white/90 text-white
                              hover:bg-white hover:text-black transition-colors"
-                  onClick={onDecrease}
+                  onClick={handleDecrease}
                 >
                   <Minus className="w-4 h-4 stroke-[3]" />
                 </button>
 
-                <div className="grid place-items-center w-7 h-9 text-sm">
-                  {quantity}
-                </div>
+                <Input
+                  inputMode="numeric"
+                  value={qtyText}
+                  onChange={handleQtyInputChange}
+                  onBlur={handleQtyBlur}
+                  aria-label="Quantity"
+                  className="w-16 h-9 text-center text-sm bg-black/30 border-white/30 text-white
+                             focus-visible:ring-0 focus-visible:ring-offset-0"
+                />
 
                 <button
                   aria-label="Increase quantity"
