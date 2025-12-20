@@ -1,23 +1,23 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { useBuyStoreItem } from "@/hooks/store-page/useStoreItems";
 import { StoreItem } from "@/types/store-items";
 import { Minus, Plus } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import React, { useState } from "react";
 import toast from "react-hot-toast";
 import DialogConfirmation from "./DialogConfirmation";
 import DialogError from "./DialogError";
 import DialogSuccessfull from "./DialogSuccessfull";
 
-function getApiErrorMessage(err: unknown) {
-  const anyErr = err as any;
-  const msgFromData = anyErr?.response?.data?.message;
-  return msgFromData || "Something went wrong.";
+function getApiErrorMessage(error: unknown) {
+  const errorAny = error as any;
+  const messageFromResponse = errorAny?.response?.data?.message;
+  return messageFromResponse || "Something went wrong.";
 }
 
 interface WeaponPreviewProps {
@@ -30,6 +30,8 @@ interface WeaponPreviewProps {
   onQuantityChange: (qty: number) => void;
 }
 
+const DEFAULT_QUANTITY = 1;
+
 export default function WeaponPreview({
   open,
   onOpenChange,
@@ -40,98 +42,117 @@ export default function WeaponPreview({
   onQuantityChange,
 }: WeaponPreviewProps) {
   const router = useRouter();
-  const { mutate: buyItem, isPending } = useBuyStoreItem();
+  const { mutate: buyStoreItem, isPending: isBuying } = useBuyStoreItem();
 
-  const [openConfirm, setOpenConfirm] = useState(false);
-  const [openSuccess, setOpenSuccess] = useState(false);
-  const [openError, setOpenError] = useState(false);
-  const [showQtyError, setShowQtyError] = useState(false);
+  const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
+  const [isSuccessDialogOpen, setIsSuccessDialogOpen] = useState(false);
+  const [isErrorDialogOpen, setIsErrorDialogOpen] = useState(false);
+  const [showQuantityValidationError, setShowQuantityValidationError] =
+    useState(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
-  const [qtyText, setQtyText] = useState<string>(String(quantity));
+  const [quantityInputValue, setQuantityInputValue] = useState<string>(
+    String(quantity)
+  );
 
-  const syncQtyText = (nextQty: number) => setQtyText(String(nextQty));
+  const setQuantityInputFromNumber = (nextQuantity: number) => {
+    setQuantityInputValue(String(nextQuantity));
+  };
 
-  const openConfirmation = () => {
+  const resetQuantityUI = () => {
+    setQuantityInputValue(String(DEFAULT_QUANTITY));
+    onQuantityChange(DEFAULT_QUANTITY);
+    setShowQuantityValidationError(false);
+  };
+
+  const openConfirmDialog = () => {
     if (quantity < 1) {
-      setShowQtyError(true);
+      setShowQuantityValidationError(true);
       toast.error("Quantity must be at least 1 item.");
       return;
     }
-    setShowQtyError(false);
-    setOpenConfirm(true);
+
+    setShowQuantityValidationError(false);
+    setIsConfirmDialogOpen(true);
   };
 
-  const closeAll = () => {
-    setQtyText("1");
-    setOpenConfirm(false);
-    setOpenSuccess(false);
-    setOpenError(false);
+  const closeAllDialogsAndModal = () => {
+    resetQuantityUI();
+
+    setIsConfirmDialogOpen(false);
+    setIsSuccessDialogOpen(false);
+    setIsErrorDialogOpen(false);
+
     setErrorMessage("");
     onOpenChange(false);
   };
 
-  const handleConfirm = () => {
-    buyItem(
+  const handleConfirmPurchase = () => {
+    buyStoreItem(
       { itemId: weapon.id, quantity },
       {
         onSuccess: () => {
-          setOpenConfirm(false);
-          setOpenSuccess(true);
+          setIsConfirmDialogOpen(false);
+          setIsSuccessDialogOpen(true);
         },
-        onError: (err) => {
-          const msg = getApiErrorMessage(err);
-          setErrorMessage(msg);
-          setOpenConfirm(false);
-          setOpenError(true);
+        onError: (error) => {
+          const errorText = getApiErrorMessage(error);
+          setErrorMessage(errorText);
+
+          setIsConfirmDialogOpen(false);
+          setIsErrorDialogOpen(true);
         },
       }
     );
   };
 
-  const handleIncrease = () => {
-    setShowQtyError(false);
+  const handleIncreaseQuantity = () => {
+    setShowQuantityValidationError(false);
     onIncrease();
-    syncQtyText(quantity + 1);
+    setQuantityInputFromNumber(quantity + 1);
   };
 
-  const handleDecrease = () => {
-    setShowQtyError(false);
+  const handleDecreaseQuantity = () => {
+    setShowQuantityValidationError(false);
     onDecrease();
-    syncQtyText(Math.max(0, quantity - 1));
+    setQuantityInputFromNumber(Math.max(0, quantity - 1));
   };
 
-  const handleQtyInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const raw = e.target.value;
+  const handleQuantityInputChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const inputValue = e.target.value;
 
-    if (raw === "") {
-      setQtyText("");
-      setShowQtyError(false);
+    // Allow empty while typing
+    if (inputValue === "") {
+      setQuantityInputValue("");
+      setShowQuantityValidationError(false);
       onQuantityChange(0);
       return;
     }
 
-    // just numbers
-    if (!/^\d+$/.test(raw)) return;
-    const next = parseInt(raw, 10);
+    // Only numbers
+    if (!/^\d+$/.test(inputValue)) return;
 
-    setQtyText(String(next));
-    setShowQtyError(false);
-    onQuantityChange(next);
+    const parsedQuantity = parseInt(inputValue, 10);
+
+    setQuantityInputValue(String(parsedQuantity));
+    setShowQuantityValidationError(false);
+    onQuantityChange(parsedQuantity);
   };
 
-  const handleQtyBlur = () => {
-    const parsed = parseInt(qtyText, 10);
-    const normalized = Number.isFinite(parsed) ? parsed : 0;
+  const normalizeQuantityOnBlur = () => {
+    const parsed = parseInt(quantityInputValue, 10);
+    const normalizedQuantity = Number.isFinite(parsed) ? parsed : 0;
 
-    if (normalized < 1) {
-      setShowQtyError(true);
-      syncQtyText(1);
-      onQuantityChange(1);
+    if (normalizedQuantity < 1) {
+      setShowQuantityValidationError(true);
+      setQuantityInputFromNumber(DEFAULT_QUANTITY);
+      onQuantityChange(DEFAULT_QUANTITY);
       return;
     }
 
-    syncQtyText(normalized);
-    onQuantityChange(normalized);
+    setQuantityInputFromNumber(normalizedQuantity);
+    onQuantityChange(normalizedQuantity);
   };
 
   return (
@@ -142,11 +163,9 @@ export default function WeaponPreview({
           onOpenChange(isOpen);
 
           if (!isOpen) {
-            setQtyText("1");
-            onQuantityChange(1);
-            setShowQtyError(false);
+            resetQuantityUI();
           } else {
-            setQtyText(String(quantity));
+            setQuantityInputValue(String(quantity));
           }
         }}
       >
@@ -180,16 +199,16 @@ export default function WeaponPreview({
                   aria-label="Decrease quantity"
                   className="grid place-items-center w-8 h-8 rounded-full border-2 border-white/90 text-white
                              hover:bg-white hover:text-black transition-colors"
-                  onClick={handleDecrease}
+                  onClick={handleDecreaseQuantity}
                 >
                   <Minus className="w-4 h-4 stroke-[3]" />
                 </button>
 
                 <Input
                   inputMode="numeric"
-                  value={qtyText}
-                  onChange={handleQtyInputChange}
-                  onBlur={handleQtyBlur}
+                  value={quantityInputValue}
+                  onChange={handleQuantityInputChange}
+                  onBlur={normalizeQuantityOnBlur}
                   aria-label="Quantity"
                   className="w-16 h-9 text-center text-sm bg-black/30 border-white/30 text-white
                              focus-visible:ring-0 focus-visible:ring-offset-0"
@@ -197,7 +216,7 @@ export default function WeaponPreview({
 
                 <button
                   aria-label="Increase quantity"
-                  onClick={handleIncrease}
+                  onClick={handleIncreaseQuantity}
                   className="grid place-items-center w-8 h-8 rounded-full border-2 border-white/90 text-white
                              hover:bg-white hover:text-black transition-colors"
                 >
@@ -205,14 +224,14 @@ export default function WeaponPreview({
                 </button>
               </div>
             </div>
-            {showQtyError && (
+            {showQuantityValidationError && (
               <p className="text-sm text-red-400 text-center mt-2">
                 You must select at least 1 item.
               </p>
             )}
 
             <Button
-              onClick={openConfirmation}
+              onClick={openConfirmDialog}
               className="w-full bg-secondary hover:bg-secondary-500 text-black rounded-full px-6 py-2"
             >
               Buy Item
@@ -222,40 +241,40 @@ export default function WeaponPreview({
       </Dialog>
 
       <DialogConfirmation
-        open={openConfirm}
+        open={isConfirmDialogOpen}
         quantity={quantity}
-        onOpenChange={(isOpen) => setOpenConfirm(isOpen)}
-        onConfirm={handleConfirm}
-        onCancel={() => setOpenConfirm(false)}
-        isLoading={isPending}
+        onOpenChange={setIsConfirmDialogOpen}
+        onConfirm={handleConfirmPurchase}
+        onCancel={() => setIsConfirmDialogOpen(false)}
+        isLoading={isBuying}
       />
 
       <DialogSuccessfull
-        open={openSuccess}
+        open={isSuccessDialogOpen}
         quantity={quantity}
         onOpenChange={(isOpen) => {
-          setOpenSuccess(isOpen);
-          if (!isOpen) closeAll();
+          setIsSuccessDialogOpen(isOpen);
+          if (!isOpen) closeAllDialogsAndModal();
         }}
         onGoInventory={() => {
-          closeAll();
+          closeAllDialogsAndModal();
           router.push("/inventory");
         }}
-        onBackToStore={closeAll}
+        onBackToStore={closeAllDialogsAndModal}
       />
 
       <DialogError
-        open={openError}
+        open={isErrorDialogOpen}
         message={errorMessage}
         onOpenChange={(isOpen) => {
-          setOpenError(isOpen);
-          if (!isOpen) closeAll();
+          setIsErrorDialogOpen(isOpen);
+          if (!isOpen) closeAllDialogsAndModal();
         }}
         onRetry={() => {
-          setOpenError(false);
-          openConfirmation();
+          setIsErrorDialogOpen(false);
+          openConfirmDialog();
         }}
-        onBackToStore={closeAll}
+        onBackToStore={closeAllDialogsAndModal}
       />
     </>
   );
