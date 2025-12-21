@@ -10,7 +10,8 @@ const PUBLIC_ROUTES = new Set<string>([
   "/store",
   "/inventory",
   "/hangar",
-  "/missions"
+  "/missions",
+  "/gameplay",
 ]);
 
 export function middleware(req: NextRequest) {

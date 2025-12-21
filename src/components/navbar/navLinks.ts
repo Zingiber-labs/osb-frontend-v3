@@ -1,6 +1,7 @@
 export const navLinks = [
-  { label: "Menu", href:"/" },
+  { label: "Menu", href: "/" },
   { label: "Store", href: "/store" },
   { label: "Inventory", href: "/inventory" },
   { label: "Hangar", href: "/missions" },
+  { label: "Gameplay", href: "/gameplay" },
 ];
