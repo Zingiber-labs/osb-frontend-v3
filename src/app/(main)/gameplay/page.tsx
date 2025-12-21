@@ -23,7 +23,7 @@ function Scene() {
 
   // Main groups from init()
   const staticGroups = useMemo(() => {
-    const { sphere, box, icosahedron, cylinder, torus, material2 } = assets;
+    const { sphere, box, cylinder, torus, material2 } = assets;
 
     const groupMain = new THREE.Group();
 
