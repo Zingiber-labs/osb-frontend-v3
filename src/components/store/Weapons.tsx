@@ -13,7 +13,6 @@ import WeaponPreview from "./WeaponPreview";
 import { useState } from "react";
 import { useStoreItems } from "@/hooks/store-page/useStoreItems";
 import { StoreItem } from "@/types/store-items";
-import { Minus, Plus } from "lucide-react";
 import { ItemType } from "@/types/inventory-items";
 
 const Weapons = ({ type }: { type?: ItemType }) => {
@@ -24,12 +23,22 @@ const Weapons = ({ type }: { type?: ItemType }) => {
   const { data, isLoading, error } = useStoreItems({ type });
 
   const inc = (id: string) =>
-    setQuantities((p) => ({ ...p, [id]: (p[id] || 0) + 1 }));
+    setQuantities((p) => ({ ...p, [id]: (p[id] ?? 1) + 1 }));
   const dec = (id: string) =>
-    setQuantities((p) => ({ ...p, [id]: Math.max((p[id] || 0) - 1, 0) }));
+    setQuantities((p) => ({
+      ...p,
+      [id]: Math.max((p[id] ?? 1) - 1, 0),
+    }));
+
+  const setQty = (id: string, qty: number) =>
+    setQuantities((p) => ({
+      ...p,
+      [id]: Math.max(0, Math.floor(qty || 0)),
+    }));
 
   const handleOpenDialog = (weapon: StoreItem) => {
     setSelectedWeapon(weapon);
+    setQuantities((p) => (p[weapon.id] == null ? { ...p, [weapon.id]: 1 } : p));
     setOpen(true);
   };
 
@@ -118,31 +127,6 @@ const Weapons = ({ type }: { type?: ItemType }) => {
                     <CardDescription className="text-xs text-white font-light">
                       {item.description}
                     </CardDescription>
-                    <div className="flex items-center gap-2">
-                      <button
-                        aria-label="Decrease quantity"
-                        className="grid place-items-center w-5 h-5 rounded-full border-2 border-white/90 text-white hover:bg-white hover:text-black transition-colors cursor-pointer"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          dec(item.id);
-                        }}
-                      >
-                        <Minus className="w-3 h-3 stroke-[3]" />
-                      </button>
-                      <span className="w-4 text-center text-sm">
-                        {quantities[item.id] || 0}
-                      </span>
-                      <button
-                        aria-label="Increase quantity"
-                        className="grid place-items-center w-5 h-5 rounded-full border-2 border-white/90 text-white hover:bg-white hover:text-black transition-colors cursor-pointer"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          inc(item.id);
-                        }}
-                      >
-                        <Plus className="w-3 h-3 stroke-[3]" />
-                      </button>
-                    </div>
                   </div>
                 </div>
               </CardHeader>
@@ -163,9 +147,10 @@ const Weapons = ({ type }: { type?: ItemType }) => {
           open={open}
           onOpenChange={setOpen}
           weapon={selectedWeapon}
-          quantity={quantities[selectedWeapon.id] || 0}
+          quantity={quantities[selectedWeapon.id] ?? 1}
           onIncrease={() => inc(selectedWeapon.id)}
           onDecrease={() => dec(selectedWeapon.id)}
+          onQuantityChange={(qty) => setQty(selectedWeapon.id, qty)}
         />
       )}
     </div>
