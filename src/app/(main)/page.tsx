@@ -14,7 +14,7 @@ export default function Home() {
     <div className="relative mx-auto w-full max-w-[1200px] overflow-hidden rounded-2xl border-0 shadow min-h-[calc(100dvh-104px-91.83px)]">
       {isMobile ? (
         <div className="flex flex-col gap-4 py-16 px-4 max-w-md mx-auto w-full text-white">
-          <Link href="/hangar" passHref>
+          <Link href="/missions" passHref>
             <Button
               variant="outline"
               className="w-full justify-start gap-3 text-lg h-[72] text-orange bg-[#FF6B2F3D] border-primary"
@@ -97,7 +97,7 @@ export default function Home() {
             width={380}
             height={320}
             className="absolute z-20"
-            href="/hangar"
+            href="/missions"
             style={{ right: "19%", bottom: "15%" }}
             tooltipOffset={-70}
           />
