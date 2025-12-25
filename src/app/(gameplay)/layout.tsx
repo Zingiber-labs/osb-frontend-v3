@@ -1,12 +1,16 @@
-"use client";
+import type { Metadata } from "next";
 
-import Footer from "@/components/footer/Footer";
-import ClientLayout from "@/components/layout/ClientLayout";
-import Navbar from "@/components/navbar/Navbar";
 import AuthSessionProvider from "@/providers/SessionProvider";
+import "../globals.css";
+import ClientLayout from "@/components/layout/ClientLayout";
 import { Toaster } from "react-hot-toast";
 
-export default function MainLayout({
+export const metadata: Metadata = {
+  title: "Gameplay - Outer Sports Ballers",
+  description: "Gameplay in Outer Sports Ballers",
+};
+
+export default function GameplayLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -24,14 +28,7 @@ export default function MainLayout({
             },
           }}
         />
-        <div className="flex flex-col min-h-screen">
-          <div className="lg:px-[5.625rem] flex-1">
-            <div className="overlay" />
-            <Navbar />
-            {children}
-          </div>
-          <Footer />
-        </div>
+        {children}
       </ClientLayout>
     </AuthSessionProvider>
   );

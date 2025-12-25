@@ -14,9 +14,12 @@ import {
 import { usePlayers } from "@/hooks/hangar/usePlayers";
 import { useSpin } from "@/hooks/hangar/useSpin";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function HangarPage() {
+  const router = useRouter();
+
   const [showHangar, setShowHangar] = useState(false);
   const { data: players } = usePlayers();
   const [selectedPlayer, setSelectedPlayer] = useState("");
@@ -28,8 +31,10 @@ export default function HangarPage() {
   );
 
   const handlePlay = () => {
-    if (!selectedPlayerData) return;
-    setShowHangar(true);
+    const teamId = selectedPlayerData?.teamId;
+    if (!teamId) return;
+
+    router.push(`/game-play?teamId=${encodeURIComponent(String(teamId))}`);
   };
 
   if (showHangar) {

@@ -3,6 +3,8 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
+import { useSearchParams } from "next/navigation";
+import { useGameTeam } from "@/hooks/gameplay/useGameplay";
 
 function Scene() {
   const { scene, camera, size } = useThree();
@@ -177,6 +179,12 @@ function Scene() {
 }
 
 export default function ThreeVanillaReplica() {
+  const searchParams = useSearchParams();
+  const teamId = searchParams.get("teamId") ?? "";
+
+  const { data: teamData, isLoading, isError } = useGameTeam(teamId)
+  console.log("Team Data:", teamData, isLoading, isError);
+
   return (
     <Canvas
       style={{ height: "100vh", width: "100vw" }}
