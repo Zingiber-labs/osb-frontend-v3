@@ -1,15 +1,14 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
 import { ThreeGameplayCanvas } from "@/components/gameplay/ThreeGameplayCanvas";
-import { useGameTeam } from "@/hooks/gameplay/useGameplay";
+import { Suspense } from "react";
 
-export default function GameplayPage() {
-  const searchParams = useSearchParams();
-  const teamId = searchParams.get("teamId") ?? "";
+const GameplayPage = () => {
+  return (
+    <Suspense fallback={<div className="p-6 text-white">Loading...</div>}>
+      <ThreeGameplayCanvas />
+    </Suspense>
+  );
+};
 
-  const { data: teamData, isLoading, isError } = useGameTeam(teamId);
-  console.log("Team Data:", teamData, isLoading, isError);
-
-  return <ThreeGameplayCanvas />;
-}
+export default GameplayPage;
