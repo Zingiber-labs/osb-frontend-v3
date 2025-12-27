@@ -10,11 +10,12 @@ import { useGameTeam } from "@/hooks/gameplay/useGameplay";
 
 export const ThreeGameplayCanvas = () => {
   const searchParams = useSearchParams();
-  const teamId = searchParams.get("teamId") ?? "";
+  const gameId = searchParams.get("gameId") ?? "";
+  const playerId = searchParams.get("playerId") ?? "";
   const assets = useMemo(() => createAssets(), []);
   const staticGroups = useMemo(() => createStaticGroups(assets), [assets]);
 
-  const { data: teamData, isLoading, isError } = useGameTeam(teamId);
+  const { data: teamData, isLoading, isError } = useGameTeam(gameId, playerId);
   console.log("Team Data:", teamData, isLoading, isError);
 
   return (

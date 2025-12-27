@@ -31,10 +31,11 @@ export default function HangarPage() {
   );
 
   const handlePlay = () => {
-    const teamId = selectedPlayerData?.teamId;
-    if (!teamId) return;
+    const gameId = selectedPlayerData?.gameId;
+    const playerId = selectedPlayerData?.id;
+    if (!gameId || !playerId) return;
 
-    router.push(`/game-play?teamId=${encodeURIComponent(String(teamId))}`);
+    router.push(`/game-play?gameId=${encodeURIComponent(String(gameId))}&playerId=${encodeURIComponent(String(playerId))}`);
   };
 
   if (showHangar) {
