@@ -15,15 +15,15 @@ export const ThreeGameplayCanvas = () => {
   const assets = useMemo(() => createAssets(), []);
   const staticGroups = useMemo(() => createStaticGroups(assets), [assets]);
 
-  const { data: teamData, isLoading, isError } = useGameTeam(gameId, playerId);
-  console.log("Team Data:", teamData, isLoading, isError);
+  const { data: playerData, isLoading, isError } = useGameTeam(gameId, playerId);
+  console.log("Team Data:", playerData, isLoading, isError);
 
   return (
     <Canvas
       style={{ height: "100vh", width: "100vw" }}
       gl={{ antialias: false }}
     >
-      <Scene assets={assets} staticGroups={staticGroups} />
+      <Scene assets={assets} staticGroups={staticGroups} playerData={playerData} />
       <pointLight position={[10, 10, 10]} />
     </Canvas>
   );
