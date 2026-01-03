@@ -41,6 +41,16 @@ const Inventory = () => {
     setSelectedInventory(null);
   };
 
+  const handleTypeChange = (value: string) => {
+    setSelectedInventory(null);
+
+    if (value === "ALL") {
+      setSelectedType(undefined);
+    } else {
+      setSelectedType(value as ItemType);
+    }
+  };
+
   // Loading state
   if (isLoading) {
     return (
@@ -109,15 +119,13 @@ const Inventory = () => {
         Select Item Types
       </p>
       <div className="mt-4 flex justify-between">
-        <Select
-          value={selectedType}
-          onValueChange={(v) => setSelectedType(v as ItemType)}
-        >
+        <Select value={selectedType ?? "ALL"} onValueChange={handleTypeChange}>
           <SelectTrigger className="w-[300px] text-white bg-orange-dark cursor-pointer">
             <SelectValue className="text-white" placeholder="Types" />
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
+              <SelectItem value="ALL">All</SelectItem>
               <SelectItem value="SKIN">Skin</SelectItem>
               <SelectItem value="REWARD">Reward</SelectItem>
               <SelectItem value="UPGRADE">Upgrade</SelectItem>
