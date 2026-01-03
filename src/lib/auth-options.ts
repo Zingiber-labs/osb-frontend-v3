@@ -51,7 +51,6 @@ export const authOptions: AuthOptions = {
 
           const profile = await profileRes.json();
 
-
           return {
             id: String(profile.userId),
             name: profile.username ?? credentials.email.split("@")[0],
@@ -110,6 +109,58 @@ export const authOptions: AuthOptions = {
           };
         } catch (err) {
           console.error("Error in backend-token authorize()", err);
+          return null;
+        }
+      },
+    }),
+    CredentialsProvider({
+      id: "guest",
+      name: "Guest",
+      credentials: {},
+      async authorize() {
+        try {
+          const res = await fetch(`${API_URL}/auth/guest`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+
+          if (!res.ok) {
+            console.error("Guest auth failed");
+            return null;
+          }
+
+          const data = await res.json();
+
+          if (!data.access_token) return null;
+
+          const accessToken = data.access_token as string;
+
+          const profileRes = await fetch(`${API_URL}/auth/profile`, {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          });
+
+          if (!profileRes.ok) return null;
+
+          const profile = await profileRes.json();
+
+          return {
+            id: String(profile.userId),
+            name: profile.username ?? "Guest",
+            email: profile.email ?? "guest@guest.local",
+            accessToken,
+            refreshToken: null,
+
+            backendUserId: profile.userId,
+            username: profile.username,
+            isGuest: true,
+          };
+        } catch (err) {
+          console.error("Error en authorize() guest", err);
           return null;
         }
       },
