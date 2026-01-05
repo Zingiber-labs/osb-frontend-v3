@@ -72,14 +72,21 @@ const Store = () => {
       </p>
       <div className="mt-4 flex justify-between">
         <Select
-          value={selectedType}
-          onValueChange={(v) => setSelectedType(v as ItemType)}
+          value={selectedType ?? "ALL"}
+          onValueChange={(value) => {
+            if (value === "ALL") {
+              setSelectedType(undefined);
+            } else {
+              setSelectedType(value as ItemType);
+            }
+          }}
         >
           <SelectTrigger className="w-[300px] text-white bg-orange-dark cursor-pointer">
-            <SelectValue className="text-white" placeholder="Type" />
+            <SelectValue placeholder="Type" />
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
+              <SelectItem value="ALL">All</SelectItem>
               <SelectItem value="SKIN">Skin</SelectItem>
               <SelectItem value="REWARD">Reward</SelectItem>
               <SelectItem value="UPGRADE">Upgrade</SelectItem>

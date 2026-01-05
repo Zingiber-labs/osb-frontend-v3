@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Eye, EyeOff, Lock } from "lucide-react";
 import Image from "next/image";
@@ -24,9 +24,12 @@ const Login = () => {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+
   const [isGuestLoading, setIsGuestLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+
+  const isAnyLoading = isSubmitting || isGuestLoading;
 
   const {
     register,
@@ -35,20 +38,25 @@ const Login = () => {
   } = useForm<LoginFormData>();
 
   const onSubmit = async (data: LoginFormData) => {
+    if (isAnyLoading) return;
+
     setSubmitError(null);
     setIsSubmitting(true);
+
     try {
       const res = await signIn("credentials", {
         redirect: false,
         email: data.email,
         password: data.password,
+        callbackUrl: "/",
       });
 
       if (res?.error) {
         setSubmitError("Invalid email or password");
         return;
       }
-      router.push("/");
+
+      router.push(res?.url ?? "/");
       router.refresh();
     } catch (e: any) {
       setSubmitError(e?.message || "Login failed");
@@ -58,15 +66,15 @@ const Login = () => {
   };
 
   const handleGuestLogin = async () => {
+    if (isAnyLoading) return;
+
     setIsGuestLoading(true);
     setSubmitError(null);
 
     try {
-      const res = await signIn("credentials", {
+      const res = await signIn("guest", {
         redirect: false,
-        email: process.env.NEXT_PUBLIC_GUEST_EMAIL,
-        password: process.env.NEXT_PUBLIC_GUEST_PASSWORD,
-        isGuest: true,
+        callbackUrl: "/",
       });
 
       if (res?.error) {
@@ -138,6 +146,7 @@ const Login = () => {
                   type="email"
                   placeholder="Your email"
                   className="bg-orange-800/50 font-helvetica border-orange-600 text-orange-100 placeholder:text-orange-300 focus:border-cyan-400 focus:ring-cyan-400"
+                  disabled={isAnyLoading}
                   {...register("email", {
                     required: "Email is required",
                     pattern: {
@@ -168,6 +177,7 @@ const Login = () => {
                     type={showPassword ? "text" : "password"}
                     placeholder="Your password"
                     className="bg-orange-800/50 font-helvetica border-orange-600 text-orange-100 placeholder:text-orange-300 focus:border-cyan-400 focus:ring-cyan-400 pl-10 pr-10"
+                    disabled={isAnyLoading}
                     {...register("password", {
                       required: "Password is required",
                       minLength: {
@@ -179,7 +189,8 @@ const Login = () => {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-orange-300 hover:text-orange-100"
+                    disabled={isAnyLoading}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-orange-300 hover:text-orange-100 disabled:opacity-50"
                   >
                     {showPassword ? (
                       <EyeOff className="w-4 h-4" />
@@ -205,6 +216,7 @@ const Login = () => {
                       setRememberMe(checked as boolean)
                     }
                     className="border-orange-600 data-[state=checked]:bg-cyan-400 data-[state=checked]:border-cyan-400"
+                    disabled={isAnyLoading}
                   />
                   <Label
                     htmlFor="rememberMe"
@@ -215,7 +227,8 @@ const Login = () => {
                 </div>
                 <button
                   type="button"
-                  className="text-orange-400 font-helvetica hover:text-orange-300 text-sm font-medium"
+                  disabled={isAnyLoading}
+                  className="text-orange-400 font-helvetica hover:text-orange-300 text-sm font-medium disabled:opacity-50"
                 >
                   Forgot Password?
                 </button>
@@ -229,7 +242,7 @@ const Login = () => {
 
               <Button
                 type="submit"
-                disabled={isSubmitting}
+                disabled={isAnyLoading}
                 className="w-full bg-cyan-400 hover:bg-cyan-500 text-white font-bold py-3 text-lg rounded-lg transition-colors disabled:opacity-50"
               >
                 {isSubmitting ? "SIGNING IN..." : "CONTINUE"}
@@ -242,7 +255,7 @@ const Login = () => {
                 type="button"
                 variant="outline"
                 onClick={handleGuestLogin}
-                disabled={isGuestLoading}
+                disabled={isAnyLoading}
                 className="w-full border-orange-600 text-orange-300 hover:bg-orange-800/50 hover:text-orange-200 font-bold py-3 text-lg rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isGuestLoading
@@ -267,7 +280,8 @@ const Login = () => {
                 type="button"
                 variant="outline"
                 onClick={handleGoogleLogin}
-                className="w-12 h-12 rounded-full bg-[#FF6B2F3D] hover:bg-red-700 border-red-600 hover:border-red-700"
+                disabled={isAnyLoading}
+                className="w-12 h-12 rounded-full bg-[#FF6B2F3D] hover:bg-red-700 border-red-600 hover:border-red-700 disabled:opacity-50"
               >
                 <Image
                   src="/img/google.svg"
@@ -285,7 +299,6 @@ const Login = () => {
               </span>
               <Link
                 href="/signup"
-                type="button"
                 className="text-green-400 font-helvetica hover:text-green-300 font-medium text-sm"
               >
                 Sign Up
