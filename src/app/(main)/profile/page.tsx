@@ -1,14 +1,13 @@
 "use client";
 
-import React from "react";
+import { Option } from "@/components/profile/ProfileRank";
 import ProfileSidebar, {
   ProfileSidebarProps,
 } from "@/components/profile/ProfileSidebar";
-import ProfileStats, { StatItem } from "@/components/profile/ProfileStats";
-import ProfileRank, { Option } from "@/components/profile/ProfileRank";
+import { StatItem } from "@/components/profile/ProfileStats";
+import ProfileStatsTabs from "@/components/profile/ProfileTabs";
 
 const ProfilePage = () => {
-
   const user: ProfileSidebarProps["user"] = {
     name: "Richard Stone",
     username: "@R.STONE44",
@@ -161,20 +160,19 @@ const ProfilePage = () => {
   return (
     <div className="pt-8 gap-8">
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-13">
-
         <aside className="lg:col-span-3">
           <ProfileSidebar user={user} />
         </aside>
 
         <section className="lg:col-span-9 space-y-6">
-          <ProfileStats stats={stats} />
+         <ProfileStatsTabs />
+          {/* <ProfileStats stats={stats} />
           <ProfileRank
             data={rankData}
             options={{ team: teamOpts, position: posOpts, score: scoreOpts }}
             defaultSelections={{ team: "all", position: "all", score: "all" }}
-          />
+          /> */}
         </section>
-        
       </div>
     </div>
   );
