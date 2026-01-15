@@ -36,7 +36,7 @@ export const ThreeGameplayCanvas = () => {
   } = useMissionProcess(payload, {
     enabled: Boolean(userId),
     refetchIntervalMs: 5000,
-    stopWhen: (data) => data?.done === true || data?.status === "completed", // ajusta a tu API
+    stopWhen: (data) => data?.done === true || data?.status === "completed",
   });
 
   console.log("Mission Process:", missionProcess);
