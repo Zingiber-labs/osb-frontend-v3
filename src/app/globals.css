@@ -104,7 +104,7 @@
   --grey-dark: #282626;
   --grey-dark-40: #28262666;
   --grey-light: #858383;
-  --green: #00A460;
+  --green: #00a460;
 }
 
 .dark {
@@ -212,7 +212,7 @@
   background: no-repeat center / cover;
   background-attachment: fixed;
   position: relative;
-  isolation: isolate;    
+  isolation: isolate;
 }
 
 /* Background for root (menu) */
@@ -226,7 +226,7 @@
   content: "";
   position: absolute;
   inset: 0;
-  background: #11111180; 
+  background: #11111180;
   z-index: 0;
 }
 
@@ -256,4 +256,22 @@
 .layout--hangar .overlay,
 .layout--menu .overlay {
   display: none;
+}
+
+.tab-trigger {
+  @apply
+    rounded-md
+    px-3 sm:px-4 py-2
+    text-xs sm:text-sm
+    uppercase tracking-widest
+    text-white/90
+
+    cursor-pointer
+    transition-colors duration-200 ease-out
+
+    hover:bg-white/10 hover:text-white
+
+    data-[state=active]:bg-orange-32/90
+    data-[state=active]:text-white
+    data-[state=active]:shadow;
 }

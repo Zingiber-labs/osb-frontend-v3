@@ -12,6 +12,7 @@ const PUBLIC_ROUTES = new Set<string>([
   "/hangar",
   "/missions",
   "/game-play",
+  "/profile"
 ]);
 
 export function middleware(req: NextRequest) {
