@@ -25,7 +25,7 @@ const ProfilePage = () => {
       { type: "Binance", id: "XXXX689", email: "richardstone000@gmail.com" },
       { type: "MASTERCARD", last4: "7812", expiry: "10/22", default: false },
     ],
-    avatarUrl: "/img/user-example.jpg",
+    avatarUrl: "/img/avatar.svg",
   };
 
   const stats: StatItem[] = [
@@ -159,10 +159,10 @@ const ProfilePage = () => {
 
   return (
     <div className="pt-8 gap-8">
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-13">
-        <aside className="lg:col-span-3">
+      {/* <div className="grid grid-cols-1 gap-6 lg:grid-cols-13"> */}
+        {/* <aside className="lg:col-span-3">
           <ProfileSidebar user={user} />
-        </aside>
+        </aside> */}
 
         <section className="lg:col-span-9 space-y-6">
          <ProfileStatsTabs />
@@ -174,7 +174,7 @@ const ProfilePage = () => {
           /> */}
         </section>
       </div>
-    </div>
+    // </div>
   );
 };
 

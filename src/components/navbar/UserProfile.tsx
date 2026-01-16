@@ -38,7 +38,7 @@ const UserProfile = ({
   };
 
   const mockCoins = 125;
-  const mockAvatar = "/img/user-example.jpg";
+  const mockAvatar = "/img/avatar.svg";
 
   const displayName =
     isAuthenticated && (user?.username || user?.email?.split("@")[0]);
