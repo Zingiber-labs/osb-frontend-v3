@@ -1,14 +1,14 @@
 "use client";
 
-import React, { useMemo } from "react";
-import { Canvas } from "@react-three/fiber";
+import { useGameTeam } from "@/hooks/gameplay/useGameplay";
+import { useMissionProcess } from "@/hooks/missions/useMission";
 import { createAssets } from "@/lib/three/assets";
 import { createStaticGroups } from "@/lib/three/static-groups";
-import { Scene } from "./Scene";
-import { useSearchParams } from "next/navigation";
-import { useGameTeam } from "@/hooks/gameplay/useGameplay";
-import { useMissionProcess } from "@/hooks/missions/useMission"; // ajusta el path
+import { Canvas } from "@react-three/fiber";
 import { useSession } from "next-auth/react";
+import { useSearchParams } from "next/navigation";
+import { useMemo } from "react";
+import { Scene } from "./Scene";
 
 export const ThreeGameplayCanvas = () => {
   const searchParams = useSearchParams();
@@ -29,15 +29,12 @@ export const ThreeGameplayCanvas = () => {
     rebounds: playerData?.statistics.reb || 0,
   };
 
-  const {
-    data: missionProcess,
-    isFetching: isPollingMissionProcess,
-    error,
-  } = useMissionProcess(payload, {
-    enabled: Boolean(userId),
-    refetchIntervalMs: 5000,
-    stopWhen: (data) => data?.done === true || data?.status === "completed",
-  });
+  const { data: missionProcess, isFetching: isPollingMissionProcess } =
+    useMissionProcess(payload, {
+      enabled: Boolean(userId),
+      refetchIntervalMs: 5000,
+      stopWhen: (data) => data?.done === true || data?.status === "completed",
+    });
 
   console.log("Mission Process:", missionProcess);
   console.log("Polling Status:", isPollingMissionProcess);
