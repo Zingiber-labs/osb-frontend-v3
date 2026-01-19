@@ -56,7 +56,7 @@ export default function Home() {
               <p className="text-3xl">STORE</p>
             </Button>
           </Link>
-          <Link href="/login" passHref>
+          <Link href="/profile" passHref>
             <Button
               variant="outline"
               className="w-full justify-start gap-3 text-lg h-[72] text-orange bg-[#FF6B2F3D] border-primary"
