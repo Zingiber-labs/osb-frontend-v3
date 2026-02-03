@@ -25,6 +25,8 @@ export const ThreeGameplayCanvas = () => {
   const payload = {
     userId,
     points: playerData?.statistics.pts || 0,
+    idPlayer: playerId,
+    idGame: gameId,
     blocks: playerData?.statistics.blk || 0,
     rebounds: playerData?.statistics.reb || 0,
   };
