@@ -1,3 +1,4 @@
+import { useProfileStats } from "@/hooks/profile/useProfile";
 import React from "react";
 
 export type StatRow = {
@@ -8,27 +9,41 @@ export type StatRow = {
 
 const pad5 = (v: string | number) => String(v).padStart(5, "0");
 
-const stats: StatRow[] = [
-  { id: 1, label: "Minutes", value: 240 },
-  { id: 2, label: "Points", value: 1023 },
-  { id: 3, label: "Rebounds", value: 430 },
-  { id: 4, label: "Defensive Rebounds", value: 300 },
-  { id: 5, label: "Offensive Rebounds", value: 130 },
-  { id: 6, label: "Assists", value: 210 },
-  { id: 7, label: "Steals", value: 55 },
-  { id: 8, label: "Blocks", value: 44 },
-  { id: 9, label: "Turnover", value: 60 },
-  { id: 10, label: "Field Goal", value: 380 },
-  { id: 11, label: "FG %", value: "48.5%" },
-  { id: 12, label: "3 Pointers", value: 120 },
-  { id: 13, label: "3PT %", value: "36.2%" },
-  { id: 14, label: "Free Throws", value: 200 },
-  { id: 15, label: "FT %", value: "82.1%" },
-  { id: 16, label: "Personal Fouls", value: 95 },
-];
+function formatPct(v: unknown) {
+  if (v === null || v === undefined) return "0.0%";
+  const s = String(v);
+  return s.includes("%") ? s : `${s}%`;
+}
 
-function splitStats() {
-  const ordered = [...stats].sort((a, b) => a.id - b.id);
+function buildStatRows(profile: any): StatRow[] {
+  const s = profile ?? {};
+
+  return [
+    { id: 1, label: "Minutes", value: s.min ?? 0 },
+    { id: 2, label: "Points", value: s.pts ?? 0 },
+    { id: 3, label: "Rebounds", value: s.reb ?? 0 },
+    { id: 4, label: "Defensive Rebounds", value: s.dreb ?? 0 },
+    { id: 5, label: "Offensive Rebounds", value: s.oreb ?? 0 },
+    { id: 6, label: "Assists", value: s.ast ?? 0 },
+    { id: 7, label: "Steals", value: s.stl ?? 0 },
+    { id: 8, label: "Blocks", value: s.blk ?? 0 },
+    { id: 9, label: "Turnover", value: s.turnovers ?? 0 },
+
+    { id: 10, label: "Field Goal", value: s.fgm ?? 0 },
+    { id: 11, label: "FG %", value: formatPct(s.fg_pct) },
+
+    { id: 12, label: "3 Pointers", value: s.fg3m ?? 0 },
+    { id: 13, label: "3PT %", value: formatPct(s.fg3_pct) },
+
+    { id: 14, label: "Free Throws", value: s.ftm ?? 0 },
+    { id: 15, label: "FT %", value: formatPct(s.ft_pct) },
+
+    { id: 16, label: "Personal Fouls", value: s.fouls ?? 0 },
+  ];
+}
+
+function splitStats(rows: StatRow[]) {
+  const ordered = [...rows].sort((a, b) => a.id - b.id);
   const mid = Math.ceil(ordered.length / 2);
 
   return {
@@ -69,8 +84,27 @@ interface ProfileStatsProps {
   title?: string;
 }
 
-const ProfileStats = ({ title }: ProfileStatsProps) => {
-  const { left, right } = React.useMemo(() => splitStats(), []);
+const ProfileStats = ({ title = "Stats" }: ProfileStatsProps) => {
+  const { data, isLoading, isError } = useProfileStats();
+
+  const rows = React.useMemo(() => buildStatRows(data), [data]);
+  const { left, right } = React.useMemo(() => splitStats(rows), [rows]);
+
+  if (isLoading) {
+    return (
+      <div className="rounded-lg border border-primary/50 bg-black/10 p-4 text-sm">
+        Loading stats...
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="rounded-lg border border-primary/50 bg-black/10 p-4 text-sm">
+        Failed to load stats.
+      </div>
+    );
+  }
 
   return (
     <div className="overflow-hidden rounded-lg border border-primary/50 bg-black/10">
