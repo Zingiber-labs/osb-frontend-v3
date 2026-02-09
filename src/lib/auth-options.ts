@@ -27,12 +27,9 @@ export const authOptions: AuthOptions = {
             }),
           });
 
-          if (!res.ok) {
-            return null;
-          }
+          if (!res.ok) return null;
 
           const data = await res.json();
-
           if (!data.access_token) return null;
 
           const accessToken = data.access_token as string;
@@ -45,9 +42,7 @@ export const authOptions: AuthOptions = {
             },
           });
 
-          if (!profileRes.ok) {
-            return null;
-          }
+          if (!profileRes.ok) return null;
 
           const profile = await profileRes.json();
 
@@ -58,9 +53,7 @@ export const authOptions: AuthOptions = {
             accessToken,
             refreshToken,
 
-            backendUserId: profile.userId,
-            username: profile.username,
-            isGuest: profile.isGuest,
+            profile,
           };
         } catch (err) {
           console.error("Error en authorize() credentials", err);
@@ -77,7 +70,6 @@ export const authOptions: AuthOptions = {
       },
       async authorize(credentials) {
         if (!credentials?.token) {
-          console.error("No viene token en credentials");
           return null;
         }
 
@@ -91,9 +83,7 @@ export const authOptions: AuthOptions = {
             },
           });
 
-          if (!profileRes.ok) {
-            return null;
-          }
+          if (!profileRes.ok) return null;
 
           const profile = await profileRes.json();
 
@@ -103,9 +93,7 @@ export const authOptions: AuthOptions = {
             email: profile.email ?? "no-email@example.com",
             accessToken,
             refreshToken: null,
-            backendUserId: profile.userId,
-            username: profile.username,
-            isGuest: profile.isGuest,
+            profile,
           };
         } catch (err) {
           console.error("Error in backend-token authorize()", err);
@@ -132,7 +120,6 @@ export const authOptions: AuthOptions = {
           }
 
           const data = await res.json();
-
           if (!data.access_token) return null;
 
           const accessToken = data.access_token as string;
@@ -155,9 +142,7 @@ export const authOptions: AuthOptions = {
             accessToken,
             refreshToken: null,
 
-            backendUserId: profile.userId,
-            username: profile.username,
-            isGuest: true,
+            profile,
           };
         } catch (err) {
           console.error("Error en authorize() guest", err);
@@ -174,21 +159,11 @@ export const authOptions: AuthOptions = {
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        if ((user as any).accessToken) {
-          token.accessToken = (user as any).accessToken;
-        }
-        if ((user as any).refreshToken) {
-          token.refreshToken = (user as any).refreshToken;
-        }
+        token.accessToken = (user as any).accessToken;
+        token.refreshToken = (user as any).refreshToken;
 
-        if ((user as any).backendUserId) {
-          token.backendUserId = (user as any).backendUserId;
-        }
-        if ((user as any).username) {
-          token.username = (user as any).username;
-        }
-        if ((user as any).isGuest !== undefined) {
-          token.isGuest = (user as any).isGuest;
+        if ((user as any).profile) {
+          token.profile = (user as any).profile;
         }
       }
       return token;
@@ -197,10 +172,7 @@ export const authOptions: AuthOptions = {
       if (session.user) {
         (session.user as any).accessToken = token.accessToken;
         (session.user as any).refreshToken = token.refreshToken;
-
-        (session.user as any).backendUserId = token.backendUserId;
-        (session.user as any).username = token.username;
-        (session.user as any).isGuest = token.isGuest;
+        (session.user as any).profile = token.profile;
       }
       return session;
     },

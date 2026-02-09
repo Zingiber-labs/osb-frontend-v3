@@ -12,6 +12,7 @@ export const useMyInventory = ({
 
   return useQuery({
     queryKey: ["inventory-items", { type }],
+    enabled: Boolean(userId),
     queryFn: async () => {
       const { data } = await api.get(`/inventory/user/${userId}`, {
         params: { ...(type ? { type } : {}) },

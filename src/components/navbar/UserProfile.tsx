@@ -25,28 +25,10 @@ const UserProfile = ({
   href = "/profile",
 }: UserProfileProps) => {
   const router = useRouter();
-
   const { data: session, status } = useSession();
   const isAuthenticated = status === "authenticated";
 
   if (status === "loading") return <p>Loading...</p>;
-
-  const user = session?.user as any;
-
-  const handleLogout = () => {
-    signOut({ callbackUrl: "/" });
-  };
-
-  const mockCoins = 125;
-  const mockAvatar = "/img/avatar.svg";
-
-  const displayName =
-    isAuthenticated && (user?.username || user?.email?.split("@")[0]);
-
-  const avatarSrc =
-    (isAuthenticated && (user?.avatar || mockAvatar)) || mockAvatar;
-
-  const coins = mockCoins;
 
   if (!isAuthenticated) {
     return (
@@ -59,61 +41,119 @@ const UserProfile = ({
     );
   }
 
+  const user = session?.user as any;
+  const profile = user?.profile;
+
+  const mockAvatar = "/img/avatar.svg";
+
+  const displayName =
+    profile?.username || user?.name || user?.email?.split("@")?.[0] || "User";
+
+  const avatarSrc = profile?.avatar || mockAvatar;
+
+  const coins = profile?.balance?.coins ?? 0;
+  const gems = profile?.balance?.gems ?? 0;
+
+  const handleLogout = () => {
+    signOut({ callbackUrl: "/" });
+  };
+
   return (
     <div
-      className={`${className} inline-flex items-center gap-4 rounded-full border border-orange-500/80 bg-black/40 px-6 py-2 shadow-[0_0_20px_rgba(0,0,0,0.5)] backdrop-blur-md relative`}
+      className={[
+        className,
+        "inline-flex items-center gap-2 sm:gap-4 rounded-full border border-orange-500/80 bg-black/40",
+        "px-3 py-2 sm:px-6 shadow-[0_0_20px_rgba(0,0,0,0.5)] backdrop-blur-md",
+        "max-w-full",
+      ].join(" ")}
     >
-      <div className="flex items-center justify-center gap-2 select-none">
-        <Image
-          src="/img/coin.svg"
-          alt="Ball animation"
-          width={15}
-          height={15}
-          className="drop-shadow-[0_10px_18px_rgba(0,0,0,0.35)] animate-bob"
-        />
-        <span className="text-sm font-semibold tracking-wide text-white">
-          {coins}
-        </span>
+      <div className="hidden sm:flex items-center gap-4">
+        <div className="flex items-center justify-center gap-2 select-none">
+          <Image
+            src="/img/coin.svg"
+            alt="Coin"
+            width={15}
+            height={15}
+            className="drop-shadow-[0_10px_18px_rgba(0,0,0,0.35)] animate-bob"
+          />
+          <span className="text-sm font-semibold tracking-wide text-white">
+            {coins}
+          </span>
+        </div>
+
+        <div className="flex items-center justify-center gap-2 select-none">
+          <Image
+            src="/img/gem.svg"
+            alt="Gem"
+            width={15}
+            height={15}
+            className="drop-shadow-[0_10px_18px_rgba(0,0,0,0.35)] animate-bob"
+          />
+          <span className="text-sm font-semibold tracking-wide text-white">
+            {gems}
+          </span>
+        </div>
       </div>
 
-      <div className="flex items-center text-white">
-        <Bell className="h-4 w-4" />
-      </div>
+      <button
+        type="button"
+        className="flex items-center text-white/90 hover:text-white transition-colors"
+        aria-label="Notifications"
+      >
+        <Bell className="h-4 w-4 sm:h-5 sm:w-5" />
+      </button>
 
       {/* Dropdown username + avatar */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <button className="flex items-center gap-3 focus:outline-none cursor-pointer">
-            <span className="text-xs sm:text-sm font-semibold tracking-[0.18em] uppercase text-white">
+          <button
+            type="button"
+            className="flex items-center gap-2 sm:gap-3 focus:outline-none cursor-pointer max-w-[70vw] sm:max-w-none"
+          >
+            <span className="hidden sm:inline text-sm font-semibold tracking-[0.18em] uppercase text-white truncate">
               {displayName}
             </span>
-            <Avatar className="h-10 w-10 border-2 border-orange-500/80 shadow-[0_0_12px_rgba(0,0,0,0.7)]">
+
+            <Avatar className="h-9 w-9 sm:h-10 sm:w-10 border-2 border-orange-500/80 shadow-[0_0_12px_rgba(0,0,0,0.7)]">
               <AvatarImage src={avatarSrc} alt={displayName} />
             </Avatar>
           </button>
         </DropdownMenuTrigger>
 
-        <DropdownMenuContent align="end" forceMount>
+        <DropdownMenuContent align="end" forceMount className="min-w-60">
           <DropdownMenuLabel className="font-normal">
             <div
-              className="flex gap-4 items-center cursor-pointer"
+              className="flex gap-3 items-center cursor-pointer"
               onClick={() => router.push(href)}
+              role="button"
             >
               <Avatar className="h-9 w-9">
                 <AvatarImage src={avatarSrc} alt={displayName} />
               </Avatar>
-              <div>
-                <p className="text-sm font-medium leading-none">
+
+              <div className="min-w-0">
+                <p className="text-sm font-medium leading-none truncate">
                   {displayName}
                 </p>
                 {user?.email && (
-                  <p className="text-xs text-gray-400 truncate max-w-[150px]">
-                    {user.email}
-                  </p>
+                  <p className="text-xs text-gray-400 truncate">{user.email}</p>
                 )}
               </div>
             </div>
           </DropdownMenuLabel>
+
+          <div className="sm:hidden px-2 pb-2">
+            <div className="mt-2 flex items-center gap-4">
+              <div className="flex items-center gap-2">
+                <Image src="/img/coin.svg" alt="Coin" width={14} height={14} />
+                <span className="text-sm">{coins}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Image src="/img/gem.svg" alt="Gem" width={14} height={14} />
+                <span className="text-sm">{gems}</span>
+              </div>
+            </div>
+          </div>
 
           <DropdownMenuSeparator />
 

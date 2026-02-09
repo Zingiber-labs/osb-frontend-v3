@@ -15,7 +15,7 @@ export const ThreeGameplayCanvas = () => {
   const gameId = searchParams.get("gameId") ?? "";
   const playerId = searchParams.get("playerId") ?? "";
   const { data: session } = useSession();
-  const userId = (session?.user as any)?.backendUserId;
+  const userId = (session?.user as any)?.profile?.userId;
 
   const assets = useMemo(() => createAssets(), []);
   const staticGroups = useMemo(() => createStaticGroups(assets), [assets]);
