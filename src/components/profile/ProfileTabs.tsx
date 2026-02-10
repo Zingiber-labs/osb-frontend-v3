@@ -5,6 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BarChart3, Cpu, DoorOpen, Medal, Trophy, User } from "lucide-react";
 import * as React from "react";
 import ProfileStats from "./tabs/ProfileStats";
+import ProfileDetails from "./profileDetails/ProfileDetails";
 
 export type StatRow = {
   id: number;
@@ -37,59 +38,60 @@ export default function ProfileTabs({
   title = "STATS",
 }: ProfileStatsTabsProps) {
   return (
-    <Card className="rounded-lg border border-primary bg-primary/35 text-white">
-      <Tabs defaultValue={defaultTab} className="w-full">
-        {/* ---------- TABS HEADER ---------- */}
-        <div className="px-3 pt-3">
-          <div className="w-full overflow-x-auto">
-            <TabsList
-              className="
-                inline-flex w-max min-w-full gap-2
-                rounded-lg bg-primary/30 border border-primary/40
-                p-2
-              "
-            >
-              <TabsTrigger value="profile" className="shrink-0 tab-trigger h-9">
-                <TabLabel icon={User} label="PROFILE" />
-              </TabsTrigger>
+    <Tabs defaultValue={defaultTab} className="w-full">
+      <div>
+        <div className="w-full overflow-x-auto">
+          <TabsList
+            className="
+              inline-flex w-max min-w-full gap-2
+              rounded-lg bg-primary/30 border border-primary/40
+              p-2
+            "
+          >
+            <TabsTrigger value="profile" className="shrink-0 tab-trigger h-9">
+              <TabLabel icon={User} label="PROFILE" />
+            </TabsTrigger>
 
-              <TabsTrigger value="stats" className="shrink-0 tab-trigger h-9">
-                <TabLabel icon={BarChart3} label="STATS" />
-              </TabsTrigger>
+            <TabsTrigger value="stats" className="shrink-0 tab-trigger h-9">
+              <TabLabel icon={BarChart3} label="STATS" />
+            </TabsTrigger>
 
-              <TabsTrigger value="trophies" className="shrink-0 tab-trigger h-9">
-                <TabLabel icon={Trophy} label="TROPHIES" />
-              </TabsTrigger>
+            <TabsTrigger value="trophies" className="shrink-0 tab-trigger h-9">
+              <TabLabel icon={Trophy} label="TROPHIES" />
+            </TabsTrigger>
 
-              <TabsTrigger value="medals" className="shrink-0 tab-trigger h-9">
-                <TabLabel icon={Medal} label="MEDALS" />
-              </TabsTrigger>
+            <TabsTrigger value="medals" className="shrink-0 tab-trigger h-9">
+              <TabLabel icon={Medal} label="MEDALS" />
+            </TabsTrigger>
 
-              <TabsTrigger value="tech" className="shrink-0 tab-trigger h-9">
-                <TabLabel icon={Cpu} label="TECH" />
-              </TabsTrigger>
+            <TabsTrigger value="tech" className="shrink-0 tab-trigger h-9">
+              <TabLabel icon={Cpu} label="TECH" />
+            </TabsTrigger>
 
-              <TabsTrigger value="locker" className="shrink-0 tab-trigger h-9">
-                <TabLabel icon={DoorOpen} label="LOCKER ROOM" />
-              </TabsTrigger>
-            </TabsList>
-          </div>
+            <TabsTrigger value="locker" className="shrink-0 tab-trigger h-9">
+              <TabLabel icon={DoorOpen} label="LOCKER ROOM" />
+            </TabsTrigger>
+          </TabsList>
         </div>
+      </div>
 
-        {/* ---------- STATS CONTENT ---------- */}
+      <Card className="rounded-lg border border-primary bg-primary/35 text-white">
         <TabsContent value="stats" className="p-3 pt-4">
           <ProfileStats title={title} />
         </TabsContent>
 
-        {/* ---------- OTHER TABS ---------- */}
-        {["profile", "trophies", "medals", "tech", "locker"].map((t) => (
+        <TabsContent value="profile" className="p-3 pt-4">
+          <ProfileDetails />
+        </TabsContent>
+
+        {["trophies", "medals", "tech", "locker"].map((t) => (
           <TabsContent key={t} value={t} className="p-3 pt-4">
             <div className="rounded-lg border border-primary/50 bg-primary/20 p-6 text-white/90">
               {t} content…
             </div>
           </TabsContent>
         ))}
-      </Tabs>
-    </Card>
+      </Card>
+    </Tabs>
   );
 }
