@@ -20,7 +20,7 @@ const Inventory = () => {
   const [selectedInventory, setSelectedInventory] = useState<any>(null);
   const [selectedType, setSelectedType] = useState<ItemType | undefined>();
 
-  const userId = (session?.user as any)?.backendUserId;
+  const userId = (session?.user as any)?.profile?.userId;
   const { data, isLoading, error } = useMyInventory({
     type: selectedType,
     userId: userId ?? "",
