@@ -26,11 +26,11 @@ export const ThreeGameplayCanvas = () => {
 
   const payload = {
     userId,
-    points: playerData?.statistics.pts || 0,
+    points: playerData?.statistics.pts,
     idPlayer: playerId,
     idGame: gameId,
-    blocks: playerData?.statistics.blk || 0,
-    rebounds: playerData?.statistics.reb || 0,
+    blocks: playerData?.statistics.blk,
+    rebounds: playerData?.statistics.reb,
   };
 
   const { data: missionProcess } = useMissionProcess(payload, {
@@ -83,10 +83,7 @@ export const ThreeGameplayCanvas = () => {
         }}
       />
 
-      <DialogMissionFailed
-        open={showFailed}
-        onOpenChange={setShowFailed}
-      />
+      <DialogMissionFailed open={showFailed} onOpenChange={setShowFailed} />
     </>
   );
 };
