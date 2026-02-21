@@ -1,9 +1,11 @@
 import { api } from "@/lib/axios";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-interface MissionProcess {
+export interface MissionProcess {
   userId: string;
   points: number;
+  idPlayer: string;
+  idGame: string;
   blocks: number;
   rebounds: number;
 }

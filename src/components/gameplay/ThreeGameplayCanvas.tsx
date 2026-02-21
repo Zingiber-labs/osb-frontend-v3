@@ -1,7 +1,7 @@
 "use client";
 
 import { useGameTeam } from "@/hooks/gameplay/useGameplay";
-import { useMissionProcess } from "@/hooks/missions/useMission";
+import { MissionProcess, useMissionProcess } from "@/hooks/missions/useMission";
 import { createAssets } from "@/lib/three/assets";
 import { createStaticGroups } from "@/lib/three/static-groups";
 import { Canvas } from "@react-three/fiber";
@@ -24,20 +24,30 @@ export const ThreeGameplayCanvas = () => {
 
   const { data: playerData } = useGameTeam(gameId, playerId);
 
-  const payload = {
-    userId,
-    points: playerData?.statistics.pts,
-    idPlayer: playerId,
-    idGame: gameId,
-    blocks: playerData?.statistics.blk,
-    rebounds: playerData?.statistics.reb,
-  };
+  const statsArr = playerData?.statistics;
+  const stats = Array.isArray(statsArr) ? statsArr[0] : statsArr;
 
-  const { data: missionProcess } = useMissionProcess(payload, {
-    enabled: Boolean(userId),
-    refetchIntervalMs: 5000,
-    stopWhen: (data) => data?.done === true || data?.status === "completed",
-  });
+  const payload = useMemo(() => {
+    if (!userId || !stats) return null;
+
+    return {
+      userId,
+      points: stats.pts ?? 0,
+      idPlayer: playerId,
+      idGame: gameId,
+      blocks: stats.blk ?? 0,
+      rebounds: stats.reb ?? 0,
+    };
+  }, [userId, stats, playerId, gameId]);
+
+  const { data: missionProcess } = useMissionProcess(
+    payload as MissionProcess,
+    {
+      enabled: Boolean(userId),
+      refetchIntervalMs: 5000,
+      stopWhen: (data) => data?.done === true || data?.status === "completed",
+    },
+  );
 
   const [showSuccess, setShowSuccess] = useState(false);
   const [showFailed, setShowFailed] = useState(false);
