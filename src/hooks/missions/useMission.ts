@@ -45,7 +45,7 @@ export const useMissionProcess = (
   const refetchIntervalMs = options?.refetchIntervalMs ?? 5000;
 
   return useQuery({
-    queryKey: ["mission-process", payload.userId],
+    queryKey: ["mission-process", payload?.userId],
     enabled,
     queryFn: async () => {
       const { data } = await api.post("/missions/process-game", payload);

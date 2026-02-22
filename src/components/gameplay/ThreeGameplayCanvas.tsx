@@ -37,6 +37,7 @@ export const ThreeGameplayCanvas = () => {
       idGame: gameId,
       blocks: stats.blk ?? 0,
       rebounds: stats.reb ?? 0,
+      isGameFinished: playerData?.time === "Final" ? true : false,
     };
   }, [userId, stats, playerId, gameId]);
 
