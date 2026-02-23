@@ -1,7 +1,9 @@
 "use client";
 
 import Image from "next/image";
+import { Button } from "../ui/button";
 import { Dialog, DialogContent, DialogTitle } from "../ui/dialog";
+import { useRouter } from "next/navigation";
 
 interface DialogConfirmationProps {
   open: boolean;
@@ -19,11 +21,12 @@ const DialogSuccessConfirmation = ({
   onOpenChange,
   onConfirm,
   onCancel,
-  imageSrc = "/img/ball.svg",
+  imageSrc = "/img/hangar/mission-success.png",
   imageAlt = "Mission success",
   isLoading = false,
   preventCloseWhileLoading = true,
 }: DialogConfirmationProps) => {
+  const router = useRouter();
   const blockClose = preventCloseWhileLoading && isLoading;
 
   const close = () => {
@@ -60,8 +63,8 @@ const DialogSuccessConfirmation = ({
             <Image
               src={imageSrc}
               alt={imageAlt}
-              width={96}
-              height={96}
+              width={280}
+              height={280}
               priority
             />
           </div>
@@ -75,6 +78,11 @@ const DialogSuccessConfirmation = ({
               first, conquering the galaxy and securing your place among the
               legends of the cosmos. Well done!
             </p>
+          </div>
+          <div className="flex justify-center mt-4">
+            <Button className="" onClick={() => router.push("/missions")}>
+              Go to Missions
+            </Button>
           </div>
         </div>
       </DialogContent>
