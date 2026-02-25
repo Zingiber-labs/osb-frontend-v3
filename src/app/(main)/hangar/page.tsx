@@ -1,16 +1,9 @@
 "use client";
 
 import Hangar from "@/components/hangar/Hangar";
+import PlayerAutocomplete from "@/components/hangar/PlayerAutocomplete";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { usePlayers } from "@/hooks/hangar/usePlayers";
 import { useSpin } from "@/hooks/hangar/useSpin";
 import Image from "next/image";
@@ -27,7 +20,7 @@ export default function HangarPage() {
   const { isPending } = useSpin("generalist");
 
   const selectedPlayerData = players?.find(
-    (p: any) => String(p.id) === selectedPlayer
+    (p: any) => String(p.id) === selectedPlayer,
   );
 
   const handlePlay = () => {
@@ -35,7 +28,11 @@ export default function HangarPage() {
     const playerId = selectedPlayerData?.id;
     if (!gameId || !playerId) return;
 
-    router.push(`/game-play?gameId=${encodeURIComponent(String(gameId))}&playerId=${encodeURIComponent(String(playerId))}`);
+    router.push(
+      `/game-play?gameId=${encodeURIComponent(String(gameId))}&playerId=${encodeURIComponent(
+        String(playerId),
+      )}`,
+    );
   };
 
   if (showHangar) {
@@ -50,28 +47,12 @@ export default function HangarPage() {
             Select your Player
           </Label>
 
-          <Select value={selectedPlayer} onValueChange={setSelectedPlayer}>
-            <SelectTrigger className="mt-4 w-[280px] text-left text-white bg-orange-dark cursor-pointer rounded-xl border border-orange-32/90 shadow-[0_10px_30px_rgba(0,0,0,0.55)]">
-              <SelectValue
-                className="text-white font-helvetica"
-                placeholder="Players"
-              />
-            </SelectTrigger>
-
-            <SelectContent className="w-[280px]">
-              <SelectGroup>
-                {players?.map((player: any) => (
-                  <SelectItem
-                    className="font-helvetica"
-                    key={player.id}
-                    value={String(player.id)}
-                  >
-                    {player.fullName}
-                  </SelectItem>
-                ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
+          <PlayerAutocomplete
+            players={players}
+            value={selectedPlayer}
+            onValueChange={setSelectedPlayer}
+            placeholder="Players"
+          />
         </div>
 
         <div className="flex flex-col items-center justify-center mt-6 md:mt-0">

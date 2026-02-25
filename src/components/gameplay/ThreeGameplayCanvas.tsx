@@ -1,21 +1,22 @@
 "use client";
 
 import { useGameTeam } from "@/hooks/gameplay/useGameplay";
-import { useMissionProcess } from "@/hooks/missions/useMission";
+import { MissionProcess, useMissionProcess } from "@/hooks/missions/useMission";
 import { createAssets } from "@/lib/three/assets";
 import { createStaticGroups } from "@/lib/three/static-groups";
 import { Canvas } from "@react-three/fiber";
 import { useSession } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
-import { Scene } from "./Scene";
-import DialogSuccessConfirmation from "./DialogSuccessConfirmation";
+import { useEffect, useMemo, useRef, useState } from "react";
 import DialogMissionFailed from "./DialogMissionFailed";
+import DialogSuccessConfirmation from "./DialogSuccessConfirmation";
+import { Scene } from "./Scene";
 
 export const ThreeGameplayCanvas = () => {
   const searchParams = useSearchParams();
   const gameId = searchParams.get("gameId") ?? "";
   const playerId = searchParams.get("playerId") ?? "";
+
   const { data: session } = useSession();
   const userId = (session?.user as any)?.profile?.userId;
 
@@ -24,42 +25,66 @@ export const ThreeGameplayCanvas = () => {
 
   const { data: playerData } = useGameTeam(gameId, playerId);
 
-  const payload = {
-    userId,
-    points: playerData?.statistics.pts,
-    idPlayer: playerId,
-    idGame: gameId,
-    blocks: playerData?.statistics.blk,
-    rebounds: playerData?.statistics.reb,
-  };
+  const statsArr = playerData?.statistics;
+  const stats = Array.isArray(statsArr) ? statsArr[0] : statsArr;
 
-  const { data: missionProcess } = useMissionProcess(payload, {
-    enabled: Boolean(userId),
-    refetchIntervalMs: 5000,
-    stopWhen: (data) => data?.done === true || data?.status === "completed",
-  });
+  const payload = useMemo(() => {
+    if (!userId || !stats) return null;
+
+    return {
+      userId,
+      points: stats.pts ?? 0,
+      idPlayer: playerId,
+      idGame: gameId,
+      blocks: stats.blk ?? 0,
+      rebounds: stats.reb ?? 0,
+      isGameFinished: playerData?.time === "Final",
+    };
+  }, [userId, stats, playerId, gameId, playerData?.time]);
+
+  const { data: missionProcess } = useMissionProcess(
+    payload as MissionProcess,
+    {
+      enabled: Boolean(payload),
+      refetchIntervalMs: 5000,
+      stopWhen: (data) => data?.done === true || data?.status === "completed",
+    },
+  );
 
   const [showSuccess, setShowSuccess] = useState(false);
   const [showFailed, setShowFailed] = useState(false);
-
-  const [hasHandledResult, setHasHandledResult] = useState(false);
+  const lastTerminalKeyRef = useRef<string | null>(null);
 
   useEffect(() => {
-    if (!missionProcess || hasHandledResult) return;
+    if (!missionProcess) return;
 
-    const isFinished =
-      missionProcess?.done === true || missionProcess?.status === "completed";
+    console.log("🔍 missionProcess:", missionProcess);
 
-    if (!isFinished) return;
+    const isTerminal =
+      missionProcess.success === true ||
+      typeof missionProcess.missionsCompleted === "boolean" ||
+      typeof missionProcess.processedMissions === "number" ||
+      typeof missionProcess.message === "string";
 
-    setHasHandledResult(true);
+    if (!isTerminal) return;
 
-    if (missionProcess?.missionCompleted === 1) {
+    if ((missionProcess.processedMissions ?? 0) === 0) return;
+
+    const completed = missionProcess.missionsCompleted === true;
+    const idPart = missionProcess.id ?? "default";
+    const terminalKey = `${idPart}-completed:${completed}-processed:${missionProcess.processedMissions}`;
+
+    if (lastTerminalKeyRef.current === terminalKey) return;
+    lastTerminalKeyRef.current = terminalKey;
+
+    if (completed) {
+      setShowFailed(false);
       setShowSuccess(true);
     } else {
+      setShowSuccess(false);
       setShowFailed(true);
     }
-  }, [missionProcess, hasHandledResult]);
+  }, [missionProcess]);
 
   return (
     <>

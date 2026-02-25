@@ -2,6 +2,8 @@
 
 import Image from "next/image";
 import { Dialog, DialogContent, DialogTitle } from "../ui/dialog";
+import { Button } from "../ui/button";
+import { useRouter } from "next/navigation";
 
 interface Props {
   open: boolean;
@@ -9,6 +11,8 @@ interface Props {
 }
 
 const DialogMissionFailed = ({ open, onOpenChange }: Props) => {
+  const router = useRouter();
+  
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTitle className="sr-only">Mission failed</DialogTitle>
@@ -23,10 +27,10 @@ const DialogMissionFailed = ({ open, onOpenChange }: Props) => {
         <div className="px-8 pt-10 pb-8">
           <div className="flex justify-center">
             <Image
-              src="/img/mission-failed.png"
+              src="/img/hangar/mission-failed.png"
               alt="Mission failed"
-              width={96}
-              height={96}
+              width={280}
+              height={280}
             />
           </div>
 
@@ -39,6 +43,11 @@ const DialogMissionFailed = ({ open, onOpenChange }: Props) => {
               The galaxy fought back this time, Captain. Regroup, refuel, and
               try again. Victory awaits the persistent.
             </p>
+          </div>
+          <div className="flex justify-center mt-4">
+            <Button className="" onClick={() => router.push("/missions")}>
+              Go to Missions
+            </Button>
           </div>
         </div>
       </DialogContent>

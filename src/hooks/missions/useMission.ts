@@ -1,9 +1,11 @@
 import { api } from "@/lib/axios";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-interface MissionProcess {
+export interface MissionProcess {
   userId: string;
   points: number;
+  idPlayer: string;
+  idGame: string;
   blocks: number;
   rebounds: number;
 }
@@ -37,14 +39,14 @@ export const useMissionProcess = (
     enabled?: boolean;
     refetchIntervalMs?: number;
     stopWhen?: (data: any) => boolean;
-  }
+  },
 ) => {
   const enabled = options?.enabled ?? false;
   const refetchIntervalMs = options?.refetchIntervalMs ?? 5000;
 
   return useQuery({
-    queryKey: ["mission-process", payload.userId],
-    enabled,
+    queryKey: ["mission-process", payload?.userId],
+    enabled: Boolean(payload),
     queryFn: async () => {
       const { data } = await api.post("/missions/process-game", payload);
       return data;
