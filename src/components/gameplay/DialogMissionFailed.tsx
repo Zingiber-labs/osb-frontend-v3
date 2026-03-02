@@ -12,7 +12,7 @@ interface Props {
 
 const DialogMissionFailed = ({ open, onOpenChange }: Props) => {
   const router = useRouter();
-  
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTitle className="sr-only">Mission failed</DialogTitle>
@@ -36,12 +36,13 @@ const DialogMissionFailed = ({ open, onOpenChange }: Props) => {
 
           <div className="text-center">
             <h2 className="text-3xl font-extrabold tracking-wide text-red-400">
-              MISSION FAILED
+              MISSION FAILED: DEFEAT!
             </h2>
 
             <p className="font-helvetica text-lg mt-1.5">
-              The galaxy fought back this time, Captain. Regroup, refuel, and
-              try again. Victory awaits the persistent.
+              Unfortunately, Capitan! The mission was a failure. You did not
+              meet the required objectives, and the galaxy remains unconquered.
+              Better luck next time!
             </p>
           </div>
           <div className="flex justify-center mt-4">
