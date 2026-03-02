@@ -1,6 +1,6 @@
 "use client";
 
-import { Bell, LogOut } from "lucide-react";
+import { LogOut } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -85,8 +85,8 @@ const UserProfile = ({
           <Image
             src="/img/gem.svg"
             alt="Gem"
-            width={15}
-            height={15}
+            width={20}
+            height={20}
             className="drop-shadow-[0_10px_18px_rgba(0,0,0,0.35)] animate-bob"
           />
           <span className="text-sm font-semibold tracking-wide text-white">
@@ -94,15 +94,6 @@ const UserProfile = ({
           </span>
         </div>
       </div>
-
-      <button
-        type="button"
-        className="flex items-center text-white/90 hover:text-white transition-colors"
-        aria-label="Notifications"
-      >
-        <Bell className="h-4 w-4 sm:h-5 sm:w-5" />
-      </button>
-
       {/* Dropdown username + avatar */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
