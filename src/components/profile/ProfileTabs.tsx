@@ -34,8 +34,8 @@ function TabLabel({
 }
 
 export default function ProfileTabs({
-  defaultTab = "stats",
-  title = "STATS",
+  defaultTab = "profile",
+  title = "PROFILE",
 }: ProfileStatsTabsProps) {
   return (
     <Tabs defaultValue={defaultTab} className="w-full">
