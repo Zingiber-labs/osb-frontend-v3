@@ -6,12 +6,13 @@ import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import Link from "next/link";
 import Image from "next/image";
+import { signOut } from "next-auth/react";
 
 export default function Home() {
   const isMobile = useIsMobile(1200);
 
   return (
-    <div className="relative mx-auto w-full max-w-[1200px] overflow-hidden rounded-2xl border-0 shadow min-h-[calc(100dvh-104px-91.83px)]">
+    <div className="relative mx-auto w-full overflow-hidden rounded-2xl border-0 shadow min-h-[calc(100dvh-104px-91.83px)]">
       {isMobile ? (
         <div className="flex flex-col gap-4 py-16 px-4 max-w-md mx-auto w-full text-white">
           <Link href="/missions" passHref>
@@ -120,6 +121,17 @@ export default function Home() {
             className="absolute z-20"
             href="/store"
             style={{ right: "48%", bottom: "20%" }}
+          />
+          <HoverImage
+            src="/img/menu/exit.png"
+            activeSrc="/img/menu/exit-active.png"
+            alt="Exit"
+            width={100}
+            height={30}
+            className="absolute z-20"
+            style={{ right: "4%", bottom: "69%" }}
+            tooltipOffset={0}
+            onClick={() => signOut({ callbackUrl: "/" })}
           />
         </>
       )}
