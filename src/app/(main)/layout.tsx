@@ -5,6 +5,7 @@ import ClientLayout from "@/components/layout/ClientLayout";
 import Navbar from "@/components/navbar/Navbar";
 import AuthSessionProvider from "@/providers/SessionProvider";
 import { Toaster } from "react-hot-toast";
+import DailyLoginRewardsGate from "@/components/rewards/DailyLoginRewardsGate";
 
 export default function MainLayout({
   children,
@@ -28,6 +29,7 @@ export default function MainLayout({
           <div className="lg:px-[5.625rem] flex-1">
             <div className="overlay" />
             <Navbar />
+            <DailyLoginRewardsGate />
             {children}
           </div>
           <Footer />

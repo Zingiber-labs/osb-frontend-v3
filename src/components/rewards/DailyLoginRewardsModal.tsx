@@ -1,0 +1,176 @@
+"use client";
+
+import * as React from "react";
+import { X } from "lucide-react";
+import Image from "next/image";
+
+export type DailyReward = {
+  day: number;
+  amount: number;
+  claimed?: boolean;
+};
+
+type Props = {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+
+  title?: string;
+  subtitle?: string;
+
+  rewards: DailyReward[];
+  activeDay: number;
+
+  onViewEvent?: () => void;
+};
+
+function formatAmount(amount: number) {
+  return `X${amount}`;
+}
+
+export function DailyLoginRewardsModal({
+  open,
+  onOpenChange,
+  title = "DAILY LOGIN REWARDS",
+  subtitle = "Rewards claimed!",
+  rewards,
+  activeDay,
+  onViewEvent,
+}: Props) {
+  if (!open) return null;
+
+  const safeRewards = rewards?.length ? rewards : [];
+
+  return (
+    <div
+      className="fixed inset-0 z-60"
+      role="dialog"
+      aria-modal="true"
+      aria-label={title}
+    >
+      <button
+        aria-label="Close"
+        onClick={() => onOpenChange(false)}
+        className="absolute inset-0 bg-black/60"
+      />
+
+      <div className="relative mx-auto flex h-full w-full items-center justify-center p-3 sm:p-6">
+        <div
+          className="
+            relative w-full max-w-[1100px]
+            overflow-hidden rounded-2xl
+            border border-orange-500/80
+            bg-gradient-to-b from-[#2a1b16]/90 via-[#1d1210]/85 to-[#120b0a]/90
+            shadow-2xl
+          "
+        >
+          <div className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-[#ff6b2f]/40" />
+
+          <button
+            onClick={() => onOpenChange(false)}
+            className="
+              absolute right-3 top-3
+              rounded-full p-2
+              text-cyan-200/90 hover:text-cyan-100
+              hover:bg-white/5
+              focus:outline-none focus:ring-2 focus:ring-cyan-300/50
+            "
+            aria-label="Close modal"
+          >
+            <X className="h-5 w-5" />
+          </button>
+
+          <div className="px-4 pb-5 pt-6 sm:px-8 sm:pb-7 sm:pt-8">
+            <div className="text-center">
+              <h2 className="text-base sm:text-lg tracking-widest text-cyan-300">
+                {title}
+              </h2>
+              <p className="mt-2 text-sm sm:text-base text-white/80">
+                {subtitle}
+              </p>
+            </div>
+
+            <div className="mt-6 sm:mt-7">
+              <div
+                className="
+                  grid gap-3
+                  grid-cols-2
+                  sm:grid-cols-3
+                  md:grid-cols-7 md:gap-4
+                  items-end
+                "
+              >
+                {safeRewards.map((r) => {
+                  const isActive = r.day === activeDay;
+
+                  return (
+                    <div key={r.day} className="flex flex-col items-center">
+                      <div
+                        className={[
+                          "relative w-full rounded-xl p-3 sm:p-4",
+                          "bg-orange-24 border border-orange-500/80",
+                          "backdrop-blur",
+                          isActive
+                            ? "ring-2 ring-cyan-300/70 shadow-[0_0_0_1px_rgba(34,211,238,0.25),0_0_25px_rgba(34,211,238,0.15)]"
+                            : "opacity-60",
+                        ].join(" ")}
+                      >
+                        <div className="mx-auto flex aspect-[4/3] w-full items-center justify-center rounded-lg bg-white">
+                          <Image
+                            src="/img/coin.svg"
+                            alt="Coin"
+                            width={40}
+                            height={40}
+                            className="drop-shadow-[0_10px_18px_rgba(0,0,0,0.35)] animate-bob"
+                          />{" "}
+                        </div>
+
+                        <div className="mt-2 text-center text-xs sm:text-sm font-semibold text-cyan-200">
+                          {formatAmount(r.amount)}
+                        </div>
+
+                        {r.claimed && (
+                          <div className="absolute left-2 top-2 rounded-md bg-black/70 px-2 py-1 text-[10px] text-white/80">
+                            Claimed
+                          </div>
+                        )}
+                      </div>
+
+                      <div
+                        className={[
+                          "mt-2 w-full text-center rounded-lg py-1.5",
+                          "text-sm sm:text-base font-semibold",
+                          isActive
+                            ? "bg-orange-24 text-white ring-1 ring-cyan-300/60"
+                            : "bg-orange-24 text-white/60",
+                        ].join(" ")}
+                      >
+                        {r.day}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* CTA */}
+            <div className="mt-6 flex justify-center">
+              <button
+                onClick={onViewEvent}
+                className="
+                  rounded-full px-10 py-3
+                  text-sm sm:text-base font-semibold
+                  text-black
+                  bg-cyan-300 hover:bg-cyan-200
+                  shadow-lg
+                  focus:outline-none focus:ring-2 focus:ring-cyan-300/60
+                "
+              >
+                VIEW EVENT
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
