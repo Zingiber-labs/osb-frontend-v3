@@ -60,3 +60,13 @@ export const useMissionProcess = (
     refetchIntervalInBackground: true,
   });
 };
+
+export const useRecentMissions = () => {
+  return useQuery({
+    queryKey: ["recent-missions"],
+    queryFn: async () => {
+      const { data } = await api.get("/auth/profile/missions");
+      return data;
+    },
+  });
+};
