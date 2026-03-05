@@ -8,6 +8,7 @@ export type DailyReward = {
   day: number;
   amount: number;
   claimed?: boolean;
+  status?: "AVAILABLE" | "CLAIMED" | "LOCKED" | "COMPLETED" | string;
 };
 
 type Props = {
@@ -21,6 +22,7 @@ type Props = {
   activeDay: number;
 
   onViewEvent?: () => void;
+  onRewardClick?: (day: number) => void;
 };
 
 function formatAmount(amount: number) {
@@ -35,6 +37,7 @@ export function DailyLoginRewardsModal({
   rewards,
   activeDay,
   onViewEvent,
+  onRewardClick,
 }: Props) {
   if (!open) return null;
 
@@ -102,17 +105,35 @@ export function DailyLoginRewardsModal({
                 {safeRewards.map((r) => {
                   const isActive = r.day === activeDay;
 
+                  const isClaimed =
+                    !!r.claimed ||
+                    r.status === "CLAIMED" ||
+                    r.status === "COMPLETED";
+
+                  const isAvailable = r.status === "AVAILABLE";
+
+                  const disabled = isClaimed || !isAvailable;
+
                   return (
                     <div key={r.day} className="flex flex-col items-center">
-                      <div
+                      <button
+                        type="button"
+                        disabled={disabled}
+                        onClick={() => onRewardClick?.(r.day)}
                         className={[
-                          "relative w-full rounded-xl p-3 sm:p-4",
+                          "relative w-full rounded-xl p-3 sm:p-4 text-left",
                           "bg-orange-24 border border-orange-500/80",
-                          "backdrop-blur",
+                          "backdrop-blur transition",
                           isActive
                             ? "ring-2 ring-cyan-300/70 shadow-[0_0_0_1px_rgba(34,211,238,0.25),0_0_25px_rgba(34,211,238,0.15)]"
                             : "opacity-60",
-                        ].join(" ")}
+                          disabled
+                            ? "cursor-not-allowed"
+                            : "cursor-pointer hover:opacity-100",
+                        ]
+                          .filter(Boolean)
+                          .join(" ")}
+                        aria-label={`Claim reward for day ${r.day}`}
                       >
                         <div className="mx-auto flex aspect-[4/3] w-full items-center justify-center rounded-lg bg-white">
                           <Image
@@ -121,19 +142,25 @@ export function DailyLoginRewardsModal({
                             width={40}
                             height={40}
                             className="drop-shadow-[0_10px_18px_rgba(0,0,0,0.35)] animate-bob"
-                          />{" "}
+                          />
                         </div>
 
                         <div className="mt-2 text-center text-xs sm:text-sm font-semibold text-cyan-200">
                           {formatAmount(r.amount)}
                         </div>
 
-                        {r.claimed && (
+                        {isClaimed && (
                           <div className="absolute left-2 top-2 rounded-md bg-black/70 px-2 py-1 text-[10px] text-white/80">
                             Claimed
                           </div>
                         )}
-                      </div>
+
+                        {!isClaimed && r.status === "LOCKED" && (
+                          <div className="absolute left-2 top-2 rounded-md bg-black/70 px-2 py-1 text-[10px] text-white/80">
+                            Locked
+                          </div>
+                        )}
+                      </button>
 
                       <div
                         className={[
@@ -155,7 +182,7 @@ export function DailyLoginRewardsModal({
             {/* CTA */}
             <div className="mt-6 flex justify-center">
               <button
-                onClick={onViewEvent}
+                onClick={() => onViewEvent?.()}
                 className="
                   rounded-full px-10 py-3
                   text-sm sm:text-base font-semibold
