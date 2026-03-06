@@ -8,7 +8,7 @@ import Link from "next/link";
 import Image from "next/image";
 
 export default function Home() {
-  const isMobile = useIsMobile(1200);
+  const isMobile = useIsMobile(1300);
 
   return (
     <div className="relative mx-auto w-full max-w-[1200px] overflow-hidden rounded-2xl border-0 shadow min-h-[calc(100dvh-104px-91.83px)]">
@@ -83,22 +83,16 @@ export default function Home() {
             src="/img/menu/avatar.svg"
             activeSrc="/img/menu/avatar-active.png"
             alt="Profile / Robot"
-            width={350}
-            height={400}
-            className="absolute z-30"
+            className="absolute z-30 left-[18%] 2xl:left-[11%] bottom-0 w-[200px] h-[300px] 2xl:w-[300px] 2xl:h-[400px]"
             href="/profile"
-            style={{ left: "6%", bottom: "0%" }}
             tooltipOffset={0}
           />
           <HoverImage
             src="/img/menu/hangar.svg"
             activeSrc="/img/menu/hangar-active.png"
             alt="Hangar"
-            width={380}
-            height={320}
-            className="absolute z-20"
+            className="absolute z-20 right-[21%] bottom-[10%] w-[350px] h-[300px] 2xl:w-[450px] 2xl:h-[350px] 2xl:right-[12%] 2xl:bottom-[12%]"
             href="/hangar"
-            style={{ right: "19%", bottom: "15%" }}
             tooltipOffset={-70}
           />
           <HoverImage
@@ -107,9 +101,8 @@ export default function Home() {
             alt="Inventory"
             width={220}
             height={160}
-            className="absolute z-20"
+            className="absolute z-20 right-[40%] -bottom-[0%] lg:-bottom-[5%] 2xl:bottom-[0%] w-[220px] h-[160px] 2xl:w-[300px] 2xl:h-[220px]"
             href="/inventory"
-            style={{ right: "40%", bottom: "1%" }}
           />
           <HoverImage
             src="/img/menu/store.svg"
