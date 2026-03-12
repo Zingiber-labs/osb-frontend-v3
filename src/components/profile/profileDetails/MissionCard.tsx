@@ -37,7 +37,7 @@ export default function MissionCard({
         "lg:grid-cols-[96px_minmax(0,1.8fr)_0.8fr_1.2fr_0.8fr]",
       ].join(" ")}
     >
-      <div className="h-[76px] w-[76px] overflow-hidden rounded-[18px] border border-secondary-cyan/60 shadow-[0_0_10px_rgba(59,231,255,0.35)] lg:h-[96px] lg:w-[96px]">
+      <div className="h-16 w-16 overflow-hidden rounded-[14px] border border-secondary-cyan/60 shadow-[0_0_10px_rgba(59,231,255,0.35)] sm:h-[76px] sm:w-[76px] lg:h-[96px] lg:w-[96px]">
         <Image
           src={image}
           alt={name}
@@ -47,20 +47,21 @@ export default function MissionCard({
         />
       </div>
 
+      {/* Mission info */}
       <div className="min-w-0">
-        <p className="truncate text-lg font-semibold text-white sm:text-xl lg:text-[22px]">
+        <p className="line-clamp-2 text-sm font-semibold leading-tight text-white sm:text-lg lg:text-[22px]">
           {name}
         </p>
 
-        <div className="mt-1 flex flex-wrap items-center gap-2">
-          <span className="text-sm font-semibold uppercase tracking-wide text-[#70E37C] sm:text-base">
+        <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1">
+          <span className="text-xs font-semibold uppercase tracking-wide text-[#70E37C] sm:text-sm">
             {isSuccess ? "SUCCESS" : "FAILURE"}
           </span>
 
           {isSuccess && (
             <>
-              <span className="text-[#70E37C]/80">•</span>
-              <span className="text-sm font-semibold uppercase tracking-wide text-[#70E37C] sm:text-base">
+              <span className="text-[#70E37C]/80 text-xs sm:text-sm">•</span>
+              <span className="text-xs font-semibold uppercase tracking-wide text-[#70E37C] sm:text-sm">
                 {rankLabel}
               </span>
             </>
@@ -68,16 +69,16 @@ export default function MissionCard({
         </div>
 
         {/* Mobile */}
-        <div className="mt-4 space-y-3 lg:hidden">
+        <div className="mt-3 space-y-2 lg:hidden">
           <Meta
             label="Result"
             value={isSuccess ? "SUCCESS" : "FAILURE"}
-            valueClass={
-              isSuccess ? "text-primary-orange" : "text-primary-orange"
-            }
+            valueClass={isSuccess ? "text-[#70E37C]" : "text-[#FF7B6B]"}
           />
 
-          <RewardsCard xp={xp} coins={coins} gems={gems} compact />
+          <div className="flex flex-col items-start">
+            <RewardsCard xp={xp} coins={coins} gems={gems} compact />
+          </div>
 
           <Meta
             label="Ship used"
@@ -87,20 +88,27 @@ export default function MissionCard({
         </div>
       </div>
 
-      <div className="hidden lg:block">
+      {/* Desktop Result */}
+      <div className="hidden lg:block min-w-0">
         <p className="text-sm text-white/85">Result</p>
-        <p className="mt-1 text-[18px] font-semibold text-primary-orange">
+        <p
+          className={`mt-1 text-[18px] font-semibold ${
+            isSuccess ? "text-[#70E37C]" : "text-primary-orange"
+          }`}
+        >
           {isSuccess ? "SUCCESS" : "FAILURE"}
         </p>
       </div>
 
-      <div className="hidden lg:block">
-        <RewardsCard xp={xp} coins={coins} gems={gems} />
+      {/* Desktop Rewards */}
+      <div className="hidden lg:block min-w-0">
+        <RewardsCard xp={xp} coins={coins} gems={gems} compact />
       </div>
 
-      <div className="hidden lg:block">
+      {/* Desktop Ship/date */}
+      <div className="hidden lg:block min-w-0">
         <p className="text-sm text-white/85">Ship used</p>
-        <p className="mt-1 text-[18px] font-semibold text-white">
+        <p className="mt-1 text-[18px] font-semibold text-white break-words">
           {shipUsed || date}
         </p>
       </div>
@@ -120,31 +128,22 @@ function RewardsCard({
   compact?: boolean;
 }) {
   return (
-    <div
-      className={[
-        "rounded-2xl bg-[#4B636D]/85 text-white",
-        compact ? "p-3" : "min-w-[320px] p-4",
-      ].join(" ")}
-    >
-      <p className="mb-2 text-center text-sm font-medium text-white/95 sm:text-base">
+    <>
+      <p className="mb-2 text-center text-sm font-medium text-white/95">
         Rewards
       </p>
-
-      <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6">
-        <div className="text-[22px] font-semibold text-[#8AE59B]">
-          + {xp} EXP
-        </div>
-
+      <div className="mt-2 flex items-center gap-4">
+        <div className="text-sm text-[#8AE59B]">+{xp} EXP</div>
         <div className="flex items-center gap-2">
-          <Image src="/img/coin.svg" alt="Coin" width={30} height={30} />
+          <Image src="/img/coin.svg" alt="Coin" width={14} height={14} />
           <span className="text-sm">{coins}</span>
         </div>
         <div className="flex items-center gap-2">
-          <Image src="/img/gem.svg" alt="Gem" width={30} height={30} />
+          <Image src="/img/gem.svg" alt="Gem" width={14} height={14} />
           <span className="text-sm">{gems}</span>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 
@@ -159,9 +158,9 @@ function Meta({
 }) {
   return (
     <div className="min-w-0">
-      <p className="text-xs text-white/70">{label}</p>
+      <p className="text-sm text-white/70 sm:text-xs">{label}</p>
       <p
-        className={`truncate text-sm font-semibold ${valueClass ?? "text-white"}`}
+        className={`truncate text-xs font-semibold sm:text-sm ${valueClass ?? "text-white"}`}
       >
         {value}
       </p>
