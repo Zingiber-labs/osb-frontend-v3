@@ -29,7 +29,7 @@ export interface RecentMission {
   id: string
   missionId: string
   mission: Mission
-  progress: Progress
+  progress: any
   isCompleted: boolean
   isClaimed: boolean
   completedAt: any
@@ -45,5 +45,3 @@ export interface Rewards {
   xp: number
   gems: number
 }
-
-export interface Progress {}

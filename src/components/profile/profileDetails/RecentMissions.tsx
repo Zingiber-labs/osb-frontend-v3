@@ -27,8 +27,9 @@ export default function RecentMissions() {
         </div>
       ) : (
         <div className="flex flex-col gap-4">
-          {recentMissions?.map((item: RecentMission ) => (
+          {recentMissions?.map((item: RecentMission) => (
             <MissionCard
+              key={item.id}
               name={item.mission.name}
               result={item.isCompleted ? "success" : "failure"}
               xp={item.mission.rewards?.xp ?? 0}
