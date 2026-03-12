@@ -3,6 +3,7 @@
 import { useRecentMissions } from "@/hooks/missions/useMission";
 import MissionCard from "./MissionCard";
 import { Loader } from "lucide-react";
+import { RecentMission } from "@/types/mission";
 
 function formatDate(date: string) {
   const d = new Date(date);
@@ -10,7 +11,7 @@ function formatDate(date: string) {
 }
 
 export default function RecentMissions() {
-  const { data, isLoading } = useRecentMissions();
+  const { data: recentMissions, isLoading } = useRecentMissions();
 
   return (
     <section className="border border-secondary-cyan/50 rounded-lg p-4 sm:p-6 bg-[#24282B] shadow-[0_0_10px_rgba(45,255,254,0.5)]">
@@ -26,13 +27,15 @@ export default function RecentMissions() {
         </div>
       ) : (
         <div className="flex flex-col gap-4">
-          {data?.map((m: any) => (
+          {recentMissions?.map((item: RecentMission) => (
             <MissionCard
-              key={m.id}
-              name={m.mission?.name ?? "Unknown mission"}
-              result={m.isCompleted ? "success" : "failure"}
-              points={m.mission?.rewards?.xp ?? 0}
-              date={formatDate(m.completedAt || m.createdAt)}
+              key={item.id}
+              name={item.mission.name}
+              result={item.isCompleted ? "success" : "failure"}
+              xp={item.mission.rewards?.xp ?? 0}
+              coins={item.mission.requirements?.points ?? 0}
+              gems={item.mission.rewards?.gems ?? 0}
+              date={formatDate(item.completedAt || item.createdAt)}
             />
           ))}
         </div>

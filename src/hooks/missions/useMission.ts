@@ -41,7 +41,6 @@ export const useMissionProcess = (
     stopWhen?: (data: any) => boolean;
   },
 ) => {
-  const enabled = options?.enabled ?? false;
   const refetchIntervalMs = options?.refetchIntervalMs ?? 5000;
 
   return useQuery({
