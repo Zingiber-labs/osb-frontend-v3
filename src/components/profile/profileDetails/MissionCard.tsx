@@ -12,6 +12,7 @@ type Props = {
   gems?: number;
   shipUsed?: string;
   rankLabel?: string;
+  onClick?: () => void;
 };
 
 export default function MissionCard({
@@ -24,18 +25,23 @@ export default function MissionCard({
   gems = 0,
   shipUsed,
   rankLabel = "S RANK",
+  onClick,
 }: Props) {
   const isSuccess = result === "success";
 
   return (
-    <div
-      className={[
-        "rounded-[20px] border bg-[#11181D] p-3 sm:p-4",
-        "border-secondary-cyan/50 shadow-[0_0_14px_rgba(59,231,255,0.28)]",
-        "grid gap-4 items-center",
-        "grid-cols-[76px_1fr]",
-        "lg:grid-cols-[96px_minmax(0,1.8fr)_0.8fr_1.2fr_0.8fr]",
-      ].join(" ")}
+    <button
+      type="button"
+      onClick={onClick}
+      className="
+        w-full text-left
+        rounded-[20px] border bg-[#11181D] p-3 sm:p-4
+        border-secondary-cyan/50 shadow-[0_0_14px_rgba(59,231,255,0.28)]
+        grid gap-4 items-center
+        grid-cols-[76px_1fr]
+        lg:grid-cols-[96px_minmax(0,1.8fr)_0.8fr_1.2fr_0.8fr]
+        transition-transform hover:scale-[1.01]
+      "
     >
       <div className="h-16 w-16 overflow-hidden rounded-[14px] border border-secondary-cyan/60 shadow-[0_0_10px_rgba(59,231,255,0.35)] sm:h-[76px] sm:w-[76px] lg:h-[96px] lg:w-[96px]">
         <Image
@@ -47,28 +53,24 @@ export default function MissionCard({
         />
       </div>
 
-      {/* Mission info */}
       <div className="min-w-0">
         <p className="line-clamp-2 text-sm font-semibold leading-tight text-white sm:text-lg lg:text-[22px]">
           {name}
         </p>
 
         <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1">
-          <span className="text-xs font-semibold uppercase tracking-wide text-[#70E37C] sm:text-sm">
+          {/* <span className="text-xs font-semibold uppercase tracking-wide text-[#70E37C] sm:text-sm">
             {isSuccess ? "SUCCESS" : "FAILURE"}
-          </span>
+          </span> */}
 
-          {isSuccess && (
-            <>
-              <span className="text-[#70E37C]/80 text-xs sm:text-sm">•</span>
-              <span className="text-xs font-semibold uppercase tracking-wide text-[#70E37C] sm:text-sm">
-                {rankLabel}
-              </span>
-            </>
-          )}
+          <>
+            {/* <span className="text-[#70E37C]/80 text-xs sm:text-sm">•</span> */}
+            <span className="text-xs font-semibold uppercase tracking-wide text-[#70E37C] sm:text-sm">
+              {rankLabel}
+            </span>
+          </>
         </div>
 
-        {/* Mobile */}
         <div className="mt-3 space-y-2 lg:hidden">
           <Meta
             label="Result"
@@ -88,7 +90,6 @@ export default function MissionCard({
         </div>
       </div>
 
-      {/* Desktop Result */}
       <div className="hidden lg:block min-w-0">
         <p className="text-sm text-white/85">Result</p>
         <p
@@ -100,19 +101,17 @@ export default function MissionCard({
         </p>
       </div>
 
-      {/* Desktop Rewards */}
       <div className="hidden lg:block min-w-0">
         <RewardsCard xp={xp} coins={coins} gems={gems} compact />
       </div>
 
-      {/* Desktop Ship/date */}
       <div className="hidden lg:block min-w-0">
         <p className="text-sm text-white/85">Ship used</p>
         <p className="mt-1 text-[18px] font-semibold text-white break-words">
           {shipUsed || date}
         </p>
       </div>
-    </div>
+    </button>
   );
 }
 
@@ -120,7 +119,6 @@ function RewardsCard({
   xp,
   coins,
   gems,
-  compact = false,
 }: {
   xp: number;
   coins: number;
