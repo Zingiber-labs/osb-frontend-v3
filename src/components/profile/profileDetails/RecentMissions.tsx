@@ -1,45 +1,82 @@
 "use client";
 
-import { useRecentMissions } from "@/hooks/missions/useMission";
+import { useState } from "react";
 import MissionCard from "./MissionCard";
-import { Loader } from "lucide-react";
-import { RecentMission } from "@/types/mission";
+import MissionDetailsDialog from "./MissionDetailsDialog";
+import { useRecentMissions } from "@/hooks/missions/useMission";
 
-function formatDate(date: string) {
-  const d = new Date(date);
-  return d.toLocaleDateString("en-US");
+type RecentMissionItem = {
+  id: string;
+  missionId: string;
+  mission: {
+    name: string;
+    description: string;
+    author: string;
+    minPlayers: number;
+    maxPlayers: number | null;
+    requirements?: Record<string, number>;
+    prerequisites?: string[] | string | null;
+    rewards?: {
+      xp?: number;
+      coins?: number;
+      gems?: number;
+    };
+    isRepeatable?: boolean;
+    cooldownMinutes?: number | null;
+  };
+  progress?: {
+    current?: number;
+    target?: number;
+  };
+  isCompleted: boolean;
+  isClaimed: boolean;
+  completedAt: string | null;
+  createdAt: string;
+};
+
+function formatDate(date?: string | null) {
+  if (!date) return "N/A";
+  return new Date(date).toLocaleDateString("en-US");
 }
 
 export default function RecentMissions() {
-  const { data: recentMissions, isLoading } = useRecentMissions();
+  const { data = [] } = useRecentMissions();
+  const [selectedMission, setSelectedMission] = useState<RecentMissionItem | null>(null);
+  const [open, setOpen] = useState(false);
+
+  const handleOpen = (mission: RecentMissionItem) => {
+    setSelectedMission(mission);
+    setOpen(true);
+  };
 
   return (
-    <section className="border border-secondary-cyan/50 rounded-lg p-4 sm:p-6 bg-[#24282B] shadow-[0_0_10px_rgba(45,255,254,0.5)]">
-      <div className="flex items-center justify-between gap-3 mb-4 sm:mb-6">
-        <h2 className="text-white text-xl sm:text-2xl font-bold">
+    <>
+      <div className="border border-secondary-cyan/50 rounded-lg p-6 bg-[#24282B] shadow-[0_0_10px_rgba(45,255,254,0.5)]">
+        <h2 className="mb-6 text-2xl font-bold uppercase text-white">
           Recent Missions
         </h2>
-      </div>
 
-      {isLoading ? (
-        <div className="py-8">
-          <Loader />
-        </div>
-      ) : (
-        <div className="flex flex-col gap-4">
-          {recentMissions?.map((item: RecentMission) => (
+        <div className="space-y-4">
+          {data.map((item: RecentMissionItem) => (
             <MissionCard
               key={item.id}
               name={item.mission.name}
               result={item.isCompleted ? "success" : "failure"}
               xp={item.mission.rewards?.xp ?? 0}
-              coins={item.mission.requirements?.points ?? 0}
+              coins={item.mission.rewards?.coins ?? 0}
               gems={item.mission.rewards?.gems ?? 0}
               date={formatDate(item.completedAt || item.createdAt)}
+              onClick={() => handleOpen(item)}
             />
           ))}
         </div>
-      )}
-    </section>
+      </div>
+
+      <MissionDetailsDialog
+        open={open}
+        onOpenChange={setOpen}
+        mission={selectedMission}
+      />
+    </>
   );
 }
