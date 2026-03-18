@@ -27,6 +27,7 @@ export const ThreeGameplayCanvas = () => {
 
   const statsArr = playerData?.statistics;
   const stats = Array.isArray(statsArr) ? statsArr[0] : statsArr;
+  const isGameFinished = playerData?.time === "Final";
 
   const payload = useMemo(() => {
     if (!userId || !stats) return null;
@@ -38,9 +39,9 @@ export const ThreeGameplayCanvas = () => {
       idGame: gameId,
       blocks: stats.blk ?? 0,
       rebounds: stats.reb ?? 0,
-      isGameFinished: playerData?.time === "Final",
+      isGameFinished,
     };
-  }, [userId, stats, playerId, gameId, playerData?.time]);
+  }, [userId, stats, playerId, gameId, isGameFinished]);
 
   const { data: missionProcess } = useMissionProcess(
     payload as MissionProcess,
@@ -58,8 +59,6 @@ export const ThreeGameplayCanvas = () => {
   useEffect(() => {
     if (!missionProcess) return;
 
-    console.log("🔍 missionProcess:", missionProcess);
-
     const isTerminal =
       missionProcess.success === true ||
       typeof missionProcess.missionsCompleted === "boolean" ||
@@ -67,12 +66,11 @@ export const ThreeGameplayCanvas = () => {
       typeof missionProcess.message === "string";
 
     if (!isTerminal) return;
-
     if ((missionProcess.processedMissions ?? 0) === 0) return;
 
     const completed = missionProcess.missionsCompleted === true;
     const idPart = missionProcess.id ?? "default";
-    const terminalKey = `${idPart}-completed:${completed}-processed:${missionProcess.processedMissions}`;
+    const terminalKey = `${idPart}-completed:${completed}-processed:${missionProcess.processedMissions}-final:${isGameFinished}`;
 
     if (lastTerminalKeyRef.current === terminalKey) return;
     lastTerminalKeyRef.current = terminalKey;
@@ -80,11 +78,14 @@ export const ThreeGameplayCanvas = () => {
     if (completed) {
       setShowFailed(false);
       setShowSuccess(true);
-    } else {
+      return;
+    }
+
+    if (!completed && isGameFinished) {
       setShowSuccess(false);
       setShowFailed(true);
     }
-  }, [missionProcess]);
+  }, [missionProcess, isGameFinished]);
 
   return (
     <>
