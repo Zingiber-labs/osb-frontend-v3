@@ -59,18 +59,16 @@ export default function MissionCard({
         </p>
 
         <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1">
-          <span className="text-xs font-semibold uppercase tracking-wide text-[#70E37C] sm:text-sm">
+          {/* <span className="text-xs font-semibold uppercase tracking-wide text-[#70E37C] sm:text-sm">
             {isSuccess ? "SUCCESS" : "FAILURE"}
-          </span>
+          </span> */}
 
-          {isSuccess && (
-            <>
-              <span className="text-[#70E37C]/80 text-xs sm:text-sm">•</span>
-              <span className="text-xs font-semibold uppercase tracking-wide text-[#70E37C] sm:text-sm">
-                {rankLabel}
-              </span>
-            </>
-          )}
+          <>
+            {/* <span className="text-[#70E37C]/80 text-xs sm:text-sm">•</span> */}
+            <span className="text-xs font-semibold uppercase tracking-wide text-[#70E37C] sm:text-sm">
+              {rankLabel}
+            </span>
+          </>
         </div>
 
         <div className="mt-3 space-y-2 lg:hidden">
