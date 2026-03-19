@@ -56,6 +56,7 @@ interface StoreItem {
   price: number;
   image?: string;
   category?: string;
+  iconUrl?: string;
 }
 ```
 
