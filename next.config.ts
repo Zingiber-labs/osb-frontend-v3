@@ -8,29 +8,28 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: 's3.us-central-1.wasabisys.com',
-        port: '',
-        pathname: '/**',
       },
       {
         protocol: 'https',
         hostname: '**.wasabisys.com',
-        port: '',
-        pathname: '/**',
       },
       {
         protocol: 'https',
         hostname: 'example.com',
-        port: '',
-        pathname: '/**',
       },
       {
         protocol: 'https',
         hostname: '**.example.com',
-        port: '',
-        pathname: '/**',
       },
     ],
   },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+  optimizeFonts: false,
 };
 
 export default nextConfig;

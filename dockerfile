@@ -16,7 +16,7 @@ COPY package.json package-lock.json* pnpm-lock.yaml* yarn.lock* ./
 RUN npm ci 
 
 COPY . .
-RUN npm run build
+RUN NODE_OPTIONS="--max-old-space-size=4096" npm run build
 
 FROM node:20-alpine AS runner
 WORKDIR /app
