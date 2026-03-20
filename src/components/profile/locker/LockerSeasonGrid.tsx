@@ -13,9 +13,11 @@ import {
 
 interface LockerSeasonGridProps {
   season: LockerSeason;
+  isCapture?: boolean;
+  captureId?: number;
 }
 
-export default function LockerSeasonGrid({ season }: LockerSeasonGridProps) {
+export default function LockerSeasonGrid({ season, isCapture = false, captureId = 0 }: LockerSeasonGridProps) {
   const [imgErrors, setImgErrors] = useState<Record<string, boolean>>({});
 
   const formatDate = (dateString?: string) => {
@@ -37,21 +39,33 @@ export default function LockerSeasonGrid({ season }: LockerSeasonGridProps) {
           gridTemplateColumns: `repeat(${season.gridSize}, 1fr)`,
         }}
       >
-        {season.pieces.sort((a, b) => a.index - b.index).map((piece) => (
+        {[...season.pieces].sort((a, b) => a.index - b.index).map((piece) => (
           <Tooltip key={piece.pieceId}>
             <TooltipTrigger asChild>
               <div 
                 className="relative aspect-square rounded-lg overflow-hidden bg-primary/10 border border-primary/30 flex items-center justify-center transform transition-transform hover:scale-105 duration-200 cursor-help"
               >
                 {piece.unlocked && piece.url && !imgErrors[piece.pieceId] ? (
-                  <Image
-                    src={piece.url}
-                    alt={`Piece ${piece.index}`}
-                    fill
-                    sizes="(max-width: 768px) 33vw, 20vw"
-                    className="object-cover"
-                    onError={() => setImgErrors(prev => ({ ...prev, [piece.pieceId]: true }))}
-                  />
+                  isCapture ? (
+                    /* Use raw img for capture to handle CORS correctly with html-to-image */
+                    <img
+                      key={`img-${piece.pieceId}-${captureId}`}
+                      src={piece.url.startsWith('data:') ? piece.url : `/_next/image?url=${encodeURIComponent(piece.url)}&q=100&w=256&v=${captureId}`}
+                      alt={`Piece ${piece.index}`}
+                      className="w-full h-full object-cover"
+                      crossOrigin="anonymous"
+                    />
+                  ) : (
+                    <Image
+                      src={piece.url}
+                      alt={`Piece ${piece.index}`}
+                      fill
+                      sizes="(max-width: 768px) 33vw, 20vw"
+                      className="object-cover"
+                      unoptimized={true}
+                      onError={() => setImgErrors(prev => ({ ...prev, [piece.pieceId]: true }))}
+                    />
+                  )
                 ) : (
                   <div className="flex flex-col items-center justify-center text-primary/40">
                     <Lock className="w-6 h-6 mb-1 opacity-50" />

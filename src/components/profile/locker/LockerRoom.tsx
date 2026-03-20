@@ -11,45 +11,90 @@ export default function LockerRoom() {
   const { data: seasons, isLoading, error } = useLockerRoomProgress();
   const [expandedSeason, setExpandedSeason] = useState<string | null>(null);
   const [capturingSeason, setCapturingSeason] = useState<any | null>(null);
+  const [captureId, setCaptureId] = useState(0);
   const captureRef = useRef<HTMLDivElement | null>(null);
+  
+  const getBase64 = async (url: string) => {
+    try {
+      // Use the Next.js image proxy to avoid CORS when fetching
+      const proxiedUrl = `/_next/image?url=${encodeURIComponent(url)}&q=100&w=256`;
+      const response = await fetch(proxiedUrl);
+      if (!response.ok) throw new Error("Proxy fetch failed");
+      const blob = await response.blob();
+      return new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result as string);
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+      });
+    } catch (e) {
+      console.error("Base64 conversion failed for:", url, e);
+      return url; // Fallback to original URL
+    }
+  };
 
   const handleCapture = async (season: any) => {
-    setCapturingSeason(season);
+    const toastId = toast.loading("Preparing data...");
+    setCapturingSeason(null);
     
-    // Wait for the hidden grid to render
-    const toastId = toast.loading("Preparing capture...");
-    
-    // Small delay to ensure React has rendered the hidden component
-    setTimeout(async () => {
-      const node = captureRef.current;
-      if (!node) {
-        toast.error("Capture element not found", { id: toastId });
-        setCapturingSeason(null);
-        return;
-      }
+    try {
+      // 1. Deep clone the data
+      const clonedSeason = JSON.parse(JSON.stringify(season));
+      
+      // 2. Pre-fetch and convert all pieces to Base64 (Nuclear Option)
+      toast.loading("Fetching images...", { id: toastId });
+      const piecePromises = clonedSeason.pieces.map(async (piece: any) => {
+        if (piece.unlocked && piece.url) {
+          piece.url = await getBase64(piece.url);
+        }
+        return piece;
+      });
+      await Promise.all(piecePromises);
 
-      toast.loading("Generating capture...", { id: toastId });
-      try {
-        const dataUrl = await toPng(node, {
-          cacheBust: true,
-          backgroundColor: "#000",
-          style: {
-            padding: "30px",
-            borderRadius: "0",
-          }
-        });
-        const link = document.createElement("a");
-        link.download = `locker-room-${season.name.toLowerCase().replace(/\s+/g, "-")}.png`;
-        link.href = dataUrl;
-        link.click();
-        toast.success("Capture downloaded!", { id: toastId });
-      } catch (err) {
-        console.error("Capture failed:", err);
-        toast.error("Failed to generate capture", { id: toastId });
-      } finally {
-        setCapturingSeason(null);
-      }
-    }, 100);
+      // 3. Set the state and trigger render
+      const newId = Date.now();
+      setCaptureId(newId);
+      setCapturingSeason(clonedSeason);
+      
+      // 4. Wait for the hidden grid to render
+      toast.loading("Rendering capture...", { id: toastId });
+      
+      setTimeout(async () => {
+        const node = captureRef.current;
+        if (!node) {
+          toast.error("Capture element not found", { id: toastId });
+          setCapturingSeason(null);
+          return;
+        }
+
+        toast.loading("Generating PNG...", { id: toastId });
+        try {
+          const dataUrl = await toPng(node, {
+            cacheBust: true,
+            backgroundColor: "#000",
+            style: {
+              padding: "30px",
+              borderRadius: "0",
+            }
+          });
+          const link = document.createElement("a");
+          link.download = `locker-room-${season.name.toLowerCase().replace(/\s+/g, "-")}.png`;
+          link.href = dataUrl;
+          link.click();
+          toast.success("Capture downloaded!", { id: toastId });
+        } catch (err) {
+          console.error("Capture failed:", err);
+          if (err instanceof Error) console.error("Error message:", err.message);
+          toast.error("Failed to generate capture", { id: toastId });
+        } finally {
+          setCapturingSeason(null);
+        }
+      }, 500); // Shorter delay needed since images are already Base64
+    } catch (err) {
+      console.error("Preparation failed:", err);
+      toast.error("Failed to prepare capture data", { id: toastId });
+      setCapturingSeason(null);
+    }
   };
 
   if (isLoading) {
@@ -191,8 +236,17 @@ export default function LockerRoom() {
         </div>
       </div>
 
-      {/* Hidden container for background capturing */}
-      <div style={{ position: 'absolute', top: -9999, left: -9999, pointerEvents: 'none' }}>
+      {/* Hidden container for background capturing - technically visible but offscreen for layout engines */}
+      <div 
+        style={{ 
+          position: 'fixed', 
+          left: '-5000px', 
+          top: '0', 
+          visibility: 'visible',
+          pointerEvents: 'none',
+          zIndex: -1000
+        }}
+      >
         {capturingSeason && (
           <div ref={captureRef} style={{ width: '600px', backgroundColor: '#000', padding: '20px' }}>
             <h2 style={{ color: '#fff', fontSize: '24px', fontWeight: '900', marginBottom: '10px', textAlign: 'center' }}>
@@ -201,7 +255,12 @@ export default function LockerRoom() {
             <p style={{ color: '#22c55e', fontSize: '14px', fontWeight: 'bold', marginBottom: '20px', textAlign: 'center' }}>
                 COMPLETED: {capturingSeason.completionPercent}%
             </p>
-            <LockerSeasonGrid season={capturingSeason} />
+            <LockerSeasonGrid 
+              key={`capture-${capturingSeason.seasonId}-${captureId}`} 
+              season={capturingSeason} 
+              isCapture={true} 
+              captureId={captureId}
+            />
             <p style={{ color: '#666', fontSize: '10px', marginTop: '20px', textAlign: 'center', letterSpacing: '0.1em' }}>
               OUTER SPORTS BALLER — LOCKER ROOM COLLECTION
             </p>
