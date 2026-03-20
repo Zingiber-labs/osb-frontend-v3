@@ -10,31 +10,46 @@ import toast from "react-hot-toast";
 export default function LockerRoom() {
   const { data: seasons, isLoading, error } = useLockerRoomProgress();
   const [expandedSeason, setExpandedSeason] = useState<string | null>(null);
-  const gridRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  const [capturingSeason, setCapturingSeason] = useState<any | null>(null);
+  const captureRef = useRef<HTMLDivElement | null>(null);
 
   const handleCapture = async (season: any) => {
-    const node = gridRefs.current[season.seasonId];
-    if (!node) return;
+    setCapturingSeason(season);
+    
+    // Wait for the hidden grid to render
+    const toastId = toast.loading("Preparing capture...");
+    
+    // Small delay to ensure React has rendered the hidden component
+    setTimeout(async () => {
+      const node = captureRef.current;
+      if (!node) {
+        toast.error("Capture element not found", { id: toastId });
+        setCapturingSeason(null);
+        return;
+      }
 
-    const toastId = toast.loading("Generating capture...");
-    try {
-      const dataUrl = await toPng(node, {
-        cacheBust: true,
-        backgroundColor: "#000",
-        style: {
-          padding: "20px",
-          borderRadius: "16px",
-        }
-      });
-      const link = document.createElement("a");
-      link.download = `locker-room-${season.name.toLowerCase().replace(/\s+/g, "-")}.png`;
-      link.href = dataUrl;
-      link.click();
-      toast.success("Capture downloaded!", { id: toastId });
-    } catch (err) {
-      console.error("Capture failed:", err);
-      toast.error("Failed to generate capture", { id: toastId });
-    }
+      toast.loading("Generating capture...", { id: toastId });
+      try {
+        const dataUrl = await toPng(node, {
+          cacheBust: true,
+          backgroundColor: "#000",
+          style: {
+            padding: "30px",
+            borderRadius: "0",
+          }
+        });
+        const link = document.createElement("a");
+        link.download = `locker-room-${season.name.toLowerCase().replace(/\s+/g, "-")}.png`;
+        link.href = dataUrl;
+        link.click();
+        toast.success("Capture downloaded!", { id: toastId });
+      } catch (err) {
+        console.error("Capture failed:", err);
+        toast.error("Failed to generate capture", { id: toastId });
+      } finally {
+        setCapturingSeason(null);
+      }
+    }, 100);
   };
 
   if (isLoading) {
@@ -163,7 +178,6 @@ export default function LockerRoom() {
             </div>
 
             <div 
-              ref={(el) => { gridRefs.current[season.seasonId] = el; }}
               className={`
                 transition-all duration-300 ease-in-out px-5 pb-5
                 ${isExpanded ? "max-h-[2000px] opacity-100" : "max-h-0 opacity-0 pointer-events-none overflow-hidden"}
@@ -175,6 +189,24 @@ export default function LockerRoom() {
         );
       })}
         </div>
+      </div>
+
+      {/* Hidden container for background capturing */}
+      <div style={{ position: 'absolute', top: -9999, left: -9999, pointerEvents: 'none' }}>
+        {capturingSeason && (
+          <div ref={captureRef} style={{ width: '600px', backgroundColor: '#000', padding: '20px' }}>
+            <h2 style={{ color: '#fff', fontSize: '24px', fontWeight: '900', marginBottom: '10px', textAlign: 'center' }}>
+              {capturingSeason.name.toUpperCase()}
+            </h2>
+            <p style={{ color: '#22c55e', fontSize: '14px', fontWeight: 'bold', marginBottom: '20px', textAlign: 'center' }}>
+                COMPLETED: {capturingSeason.completionPercent}%
+            </p>
+            <LockerSeasonGrid season={capturingSeason} />
+            <p style={{ color: '#666', fontSize: '10px', marginTop: '20px', textAlign: 'center', letterSpacing: '0.1em' }}>
+              OUTER SPORTS BALLER — LOCKER ROOM COLLECTION
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );
