@@ -7,7 +7,11 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: '**',
+        hostname: 's3.us-central-1.wasabisys.com',
+      },
+      {
+        protocol: 'https',
+        hostname: '**.wasabisys.com',
       },
     ],
   },
