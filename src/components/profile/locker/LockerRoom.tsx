@@ -16,8 +16,8 @@ export default function LockerRoom() {
   
   const getBase64 = async (url: string) => {
     try {
-      // Use the Next.js image proxy to avoid CORS when fetching
-      const proxiedUrl = `/_next/image?url=${encodeURIComponent(url)}&q=100&w=256`;
+      // Use our custom image proxy to avoid CORS when fetching
+      const proxiedUrl = `/api/proxy-image?url=${encodeURIComponent(url)}`;
       const response = await fetch(proxiedUrl);
       if (!response.ok) throw new Error("Proxy fetch failed");
       const blob = await response.blob();

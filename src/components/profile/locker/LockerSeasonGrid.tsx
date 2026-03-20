@@ -50,7 +50,7 @@ export default function LockerSeasonGrid({ season, isCapture = false, captureId 
                     /* Use raw img for capture to handle CORS correctly with html-to-image */
                     <img
                       key={`img-${piece.pieceId}-${captureId}`}
-                      src={piece.url.startsWith('data:') ? piece.url : `/_next/image?url=${encodeURIComponent(piece.url)}&q=100&w=256&v=${captureId}`}
+                      src={piece.url.startsWith('data:') ? piece.url : `/api/proxy-image?url=${encodeURIComponent(piece.url)}&v=${captureId}`}
                       alt={`Piece ${piece.index}`}
                       className="w-full h-full object-cover"
                       crossOrigin="anonymous"
