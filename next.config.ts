@@ -1,9 +1,18 @@
 import type { NextConfig } from "next";
 
+console.log("NEXT_CONFIG: Loading configuration...");
+
 const nextConfig: NextConfig = {
   /* config options here */
   transpilePackages: ['three'],
   images: {
+    unoptimized: true,
+    domains: [
+      's3.us-central-1.wasabisys.com',
+      'wasabisys.com',
+      'example.com',
+      'cdn.example.com',
+    ],
     remotePatterns: [
       {
         protocol: 'https',
