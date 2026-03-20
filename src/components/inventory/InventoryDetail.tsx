@@ -1,4 +1,7 @@
+"use client";
+
 import Image from "next/image";
+import { useState } from "react";
 import { Button } from "../ui/button";
 import ExperienceLevels from "./ExperienceLevels";
 
@@ -14,6 +17,8 @@ const InventoryDetail = ({
   image,
 }: InventoryDetailProps) => {
   const backgroundImage = image || "/img/detail_bg.png";
+  const [imgError, setImgError] = useState(false);
+  const iconSrc = imgError ? "/img/weapon.svg" : (inventory?.item?.iconUrl || "/img/weapon.svg");
 
   return (
     <div className="mt-8 rounded-lg overflow-hidden relative">
@@ -31,13 +36,15 @@ const InventoryDetail = ({
         {/* Main Content - Two Columns */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <div className="flex items-center justify-center h-full">
-            <div className=" w-full h-full flex items-center justify-center">
+            <div className="relative w-full h-[300px] flex items-center justify-center">
               <Image
                 alt="inventory-image"
-                src={"/img/weapon.svg"}
-                width={500}
-                height={500}
-                className="object-contain max-w-full max-h-full"
+                src={iconSrc}
+                fill
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                className="object-contain"
+                onError={() => setImgError(true)}
+                priority
               />
             </div>
           </div>
