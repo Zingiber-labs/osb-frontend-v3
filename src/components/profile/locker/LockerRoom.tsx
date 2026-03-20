@@ -51,7 +51,9 @@ export default function LockerRoom() {
         </h3>
       </header>
 
-      {seasons.map((season) => {
+      <div className="flex-1 overflow-y-auto custom-scroll-thin pr-2 h-[calc(100vh-450px)]">
+        <div className="flex flex-col gap-4">
+          {seasons.map((season) => {
         const isExpanded = expandedSeason === season.seasonId;
         
         return (
@@ -116,7 +118,7 @@ export default function LockerRoom() {
             <div 
               className={`
                 transition-all duration-300 ease-in-out px-5 pb-5
-                ${isExpanded ? "max-h-[1000px] opacity-100" : "max-h-0 opacity-0 pointer-events-none overflow-hidden"}
+                ${isExpanded ? "max-h-[2000px] opacity-100" : "max-h-0 opacity-0 pointer-events-none overflow-hidden"}
               `}
             >
               <LockerSeasonGrid season={season} />
@@ -124,6 +126,8 @@ export default function LockerRoom() {
           </div>
         );
       })}
+        </div>
+      </div>
     </div>
   );
 }
