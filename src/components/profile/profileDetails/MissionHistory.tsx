@@ -87,7 +87,7 @@ export default function MissionHistory() {
           </div>
 
           <div className="h-[260px]">
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height="100%" minWidth={100}>
               <LineChart data={rankedHistory} margin={{ top: 10, right: 16, left: 0, bottom: 8 }}>
                 <CartesianGrid stroke="rgba(255,255,255,0.08)" strokeDasharray="3 6" />
                 <XAxis
@@ -129,7 +129,7 @@ export default function MissionHistory() {
           </div>
 
           <div className="h-[260px]">
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height="100%" minWidth={100}>
               <BarChart data={last20Missions} margin={{ top: 10, right: 16, left: 0, bottom: 8 }}>
                 <CartesianGrid stroke="rgba(255,255,255,0.08)" strokeDasharray="3 6" />
                 <XAxis

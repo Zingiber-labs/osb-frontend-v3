@@ -45,6 +45,12 @@ export default function WeaponPreview({
   const { mutate: buyStoreItem, isPending: isBuying } = useBuyStoreItem();
 
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
+  const [imgError, setImgError] = useState(false);
+
+  // Reset image error state whenever a different weapon is selected
+  React.useEffect(() => {
+    setImgError(false);
+  }, [weapon.id]);
   const [isSuccessDialogOpen, setIsSuccessDialogOpen] = useState(false);
   const [isErrorDialogOpen, setIsErrorDialogOpen] = useState(false);
   const [showQuantityValidationError, setShowQuantityValidationError] =
@@ -176,13 +182,17 @@ export default function WeaponPreview({
         >
           <div className="p-6 space-y-6">
             <div className="flex justify-center">
-              <Image
-                src={"/img/gun.svg"}
-                alt={weapon.name}
-                width={300}
-                height={200}
-                className="object-contain"
-              />
+              <div className="relative w-full h-[220px]">
+                <Image
+                  src={imgError ? "/img/gun.svg" : (weapon.iconUrl || "/img/gun.svg")}
+                  alt={weapon.name}
+                  fill
+                  sizes="500px"
+                  className="object-contain"
+                  onError={() => setImgError(true)}
+                  priority
+                />
+              </div>
             </div>
 
             <div>

@@ -19,7 +19,7 @@ export default function MissionCard({
   name,
   result,
   date,
-  image = "/images/missions/default.png",
+  image = "/img/missions.png",
   xp = 0,
   coins = 0,
   gems = 0,

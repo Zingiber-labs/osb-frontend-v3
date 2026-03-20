@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Card,
   CardFooter,
@@ -6,6 +8,7 @@ import {
 import { MyInventory } from "@/types/inventory-items";
 import { Lock } from "lucide-react";
 import Image from "next/image";
+import { useState } from "react";
 import { Label } from "../ui/label";
 
 interface InventoryCardProps {
@@ -20,7 +23,8 @@ const InventoryCard = ({
   isSelected,
 }: InventoryCardProps) => {
   // TODO: remove hardcoded equipped value
-  const isLocked = false
+  const isLocked = false;
+  const [imgError, setImgError] = useState(false);
 
   return (
     <Card
@@ -39,14 +43,17 @@ const InventoryCard = ({
       onClick={() => !isLocked && onClick(inventory)}
     >
       <CardHeader className="px-2 relative">
-        <div className="bg-gray-300 rounded-lg flex justify-center py-5 relative">
-          <Image
-            src={"/img/gun.svg"}
-            alt={inventory.item.name}
-            width={108}
-            height={60}
-            className={`object-contain ${isLocked ? "opacity-40" : ""}`}
-          />
+        <div className="bg-gray-300 rounded-lg flex justify-center py-4 relative">
+          <div className="relative w-full h-[140px]">
+            <Image
+              src={imgError ? "/img/gun.svg" : (inventory.item.iconUrl || "/img/gun.svg")}
+              alt={inventory.item.name}
+              fill
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+              className={`object-contain p-2 ${isLocked ? "opacity-40" : ""}`}
+              onError={() => setImgError(true)}
+            />
+          </div>
 
           {inventory.equipped && (
             <div className="absolute top-2 right-2 bg-green-600 text-white text-xs font-semibold rounded-full px-3 py-1 tracking-wide shadow-md">

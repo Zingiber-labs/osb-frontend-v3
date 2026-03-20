@@ -19,6 +19,7 @@ const Weapons = ({ type }: { type?: ItemType }) => {
   const [open, setOpen] = useState(false);
   const [selectedWeapon, setSelectedWeapon] = useState<StoreItem | null>(null);
   const [quantities, setQuantities] = useState<Record<string, number>>({});
+  const [imgErrors, setImgErrors] = useState<Record<string, boolean>>({});
 
   const { data, isLoading, error } = useStoreItems({ type });
 
@@ -104,21 +105,25 @@ const Weapons = ({ type }: { type?: ItemType }) => {
     <div className="h-screen flex flex-col mt-6 mb-6">
       <div className="flex-1 overflow-y-auto custom-scroll-thin pr-2">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {data?.map((item: StoreItem) => (
+          {data?.map((item: StoreItem, index: number) => (
             <Card
               key={item.id}
               className="py-2 group bg-orange-24 hover:shadow-lg transition-shadow text-white font-bold border-2 border-transparent hover:bg-transparent hover:border-secondary duration-300 cursor-pointer flex flex-col"
               onClick={() => handleOpenDialog(item)}
             >
               <CardHeader className="px-2">
-                <div className="bg-card-bg rounded-lg flex justify-center py-5">
-                  <Image
-                    src={"/img/gun.svg"}
-                    alt={item.name}
-                    width={108}
-                    height={60}
-                    className="object-contain"
-                  />
+                <div className="bg-card-bg rounded-lg flex justify-center items-center py-4">
+                  <div className="relative w-full h-[140px]">
+                    <Image
+                      src={imgErrors[item.id] ? "/img/gun.svg" : (item.iconUrl || "/img/gun.svg")}
+                      alt={item.name}
+                      fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                      className="object-contain p-2"
+                      priority={index < 4}
+                      onError={() => setImgErrors((p) => ({ ...p, [item.id]: true }))}
+                    />
+                  </div>
                 </div>
 
                 <div>

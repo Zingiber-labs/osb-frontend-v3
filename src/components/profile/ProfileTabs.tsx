@@ -6,6 +6,7 @@ import { BarChart3, Cpu, DoorOpen, Medal, Trophy, User } from "lucide-react";
 import * as React from "react";
 import ProfileStats from "./tabs/ProfileStats";
 import ProfileDetails from "./profileDetails/ProfileDetails";
+import LockerRoom from "./locker/LockerRoom";
 
 export type StatRow = {
   id: number;
@@ -84,7 +85,11 @@ export default function ProfileTabs({
           <ProfileDetails />
         </TabsContent>
 
-        {["trophies", "medals", "tech", "locker"].map((t) => (
+        <TabsContent value="locker" className="p-3 pt-4">
+          <LockerRoom />
+        </TabsContent>
+
+        {["trophies", "medals", "tech"].map((t) => (
           <TabsContent key={t} value={t} className="p-3 pt-4">
             <div className="rounded-lg border border-primary/50 bg-primary/20 p-6 text-white/90">
               {t} content…
