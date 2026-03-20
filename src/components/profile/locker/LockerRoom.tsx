@@ -1,13 +1,41 @@
 "use client";
 
 import { useLockerRoomProgress } from "@/hooks/locker-room/useLockerRoom";
-import { ChevronDown, ChevronUp, Trophy } from "lucide-react";
-import { useState } from "react";
+import { ChevronDown, ChevronUp, Share, Trophy } from "lucide-react";
+import { useRef, useState } from "react";
 import LockerSeasonGrid from "./LockerSeasonGrid";
+import { toPng } from "html-to-image";
+import toast from "react-hot-toast";
 
 export default function LockerRoom() {
   const { data: seasons, isLoading, error } = useLockerRoomProgress();
   const [expandedSeason, setExpandedSeason] = useState<string | null>(null);
+  const gridRefs = useRef<Record<string, HTMLDivElement | null>>({});
+
+  const handleCapture = async (season: any) => {
+    const node = gridRefs.current[season.seasonId];
+    if (!node) return;
+
+    const toastId = toast.loading("Generating capture...");
+    try {
+      const dataUrl = await toPng(node, {
+        cacheBust: true,
+        backgroundColor: "#000",
+        style: {
+          padding: "20px",
+          borderRadius: "16px",
+        }
+      });
+      const link = document.createElement("a");
+      link.download = `locker-room-${season.name.toLowerCase().replace(/\s+/g, "-")}.png`;
+      link.href = dataUrl;
+      link.click();
+      toast.success("Capture downloaded!", { id: toastId });
+    } catch (err) {
+      console.error("Capture failed:", err);
+      toast.error("Failed to generate capture", { id: toastId });
+    }
+  };
 
   if (isLoading) {
     return (
@@ -105,17 +133,37 @@ export default function LockerRoom() {
                   <span className="text-2xl font-black text-white tabular-nums">
                     {season.completionPercent}%
                   </span>
-                  {isExpanded ? (
-                    <ChevronUp className="w-5 h-5 text-secondary animate-bounce mt-1" />
-                  ) : (
-                    <ChevronDown className="w-5 h-5 text-white/30 mt-1" />
-                  )}
+                  <div className="flex items-center gap-3 mt-1">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleCapture(season);
+                      }}
+                      className="
+                        flex items-center gap-1.5 px-3 py-1 
+                        bg-black/40 hover:bg-secondary/20 
+                        border border-white/10 hover:border-secondary/50 
+                        rounded-lg transition-all duration-300 group/share
+                      "
+                      title="Download Capture"
+                    >
+                      <Share className="w-3.5 h-3.5 text-white/40 group-hover/share:text-secondary group-hover/share:scale-110 transition-transform" />
+                      <span className="text-[10px] font-black text-white/40 group-hover/share:text-white uppercase tracking-tighter">
+                        SHARE
+                      </span>
+                    </button>
+                    {isExpanded ? (
+                      <ChevronUp className="w-5 h-5 text-secondary animate-bounce" />
+                    ) : (
+                      <ChevronDown className="w-5 h-5 text-white/30" />
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
 
-            {/* Grid Content */}
             <div 
+              ref={(el) => { gridRefs.current[season.seasonId] = el; }}
               className={`
                 transition-all duration-300 ease-in-out px-5 pb-5
                 ${isExpanded ? "max-h-[2000px] opacity-100" : "max-h-0 opacity-0 pointer-events-none overflow-hidden"}
