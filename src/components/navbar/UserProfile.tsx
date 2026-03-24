@@ -1,6 +1,7 @@
 "use client";
 
-import { LogOut } from "lucide-react";
+import { useProfileData } from "@/hooks/profile/useProfile";
+import { Loader2, LogOut } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -26,6 +27,13 @@ const UserProfile = ({
 }: UserProfileProps) => {
   const router = useRouter();
   const { data: session, status } = useSession();
+  const { data: profileData, isLoading } = useProfileData();
+
+  const profile = profileData;
+  const coins = profile?.balance?.coins ?? 0;
+  const gems = profile?.balance?.gems ?? 0;
+  const xp = profile?.balance?.xp ?? 0;
+
   const isAuthenticated = status === "authenticated";
 
   if (status === "loading") return <p>Loading...</p>;
@@ -42,7 +50,6 @@ const UserProfile = ({
   }
 
   const user = session?.user as any;
-  const profile = user?.profile;
 
   const mockAvatar = "/img/avatar.svg";
 
@@ -50,9 +57,6 @@ const UserProfile = ({
     profile?.username || user?.name || user?.email?.split("@")?.[0] || "User";
 
   const avatarSrc = profile?.avatar || mockAvatar;
-
-  const coins = profile?.balance?.coins ?? 0;
-  const gems = profile?.balance?.gems ?? 0;
 
   const handleLogout = () => {
     signOut({ callbackUrl: "/" });
@@ -69,6 +73,15 @@ const UserProfile = ({
     >
       <div className="hidden sm:flex items-center gap-4">
         <div className="flex items-center justify-center gap-2 select-none">
+          <span className="text-sm font-semibold tracking-wide text-white flex items-center">
+            {isLoading ? (
+              <Loader2 className="h-4 w-4 animate-spin text-white/70" />
+            ) : (
+              `${xp} XP`
+            )}
+          </span>
+        </div>
+        <div className="flex items-center justify-center gap-2 select-none">
           <Image
             src="/img/coin.svg"
             alt="Coin"
@@ -76,8 +89,12 @@ const UserProfile = ({
             height={15}
             className="drop-shadow-[0_10px_18px_rgba(0,0,0,0.35)] animate-bob"
           />
-          <span className="text-sm font-semibold tracking-wide text-white">
-            {coins}
+          <span className="text-sm font-semibold tracking-wide text-white flex items-center">
+            {isLoading ? (
+              <Loader2 className="h-4 w-4 animate-spin text-white/70" />
+            ) : (
+              coins
+            )}
           </span>
         </div>
 
@@ -89,12 +106,16 @@ const UserProfile = ({
             height={20}
             className="drop-shadow-[0_10px_18px_rgba(0,0,0,0.35)] animate-bob"
           />
-          <span className="text-sm font-semibold tracking-wide text-white">
-            {gems}
+          <span className="text-sm font-semibold tracking-wide text-white flex items-center">
+            {isLoading ? (
+              <Loader2 className="h-4 w-4 animate-spin text-white/70" />
+            ) : (
+              gems
+            )}
           </span>
         </div>
       </div>
-      {/* Dropdown username + avatar */}
+
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <button
@@ -135,6 +156,9 @@ const UserProfile = ({
 
           <div className="sm:hidden px-2 pb-2">
             <div className="mt-2 flex items-center gap-4">
+              <div className="flex items-center gap-2">
+                <span className="text-sm">{xp} XP</span>
+              </div>
               <div className="flex items-center gap-2">
                 <Image src="/img/coin.svg" alt="Coin" width={14} height={14} />
                 <span className="text-sm">{coins}</span>
