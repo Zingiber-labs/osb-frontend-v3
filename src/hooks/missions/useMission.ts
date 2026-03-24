@@ -1,5 +1,6 @@
 import { api } from "@/lib/axios";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useEffect } from "react";
 
 export interface MissionProcess {
   userId: string;
@@ -12,11 +13,12 @@ export interface MissionProcess {
 
 export const useMissions = ({ userId }: { userId?: string } = {}) => {
   return useQuery({
-    queryKey: ["missions"],
+    queryKey: ["missions", userId],
     queryFn: async () => {
       const { data } = await api.get(`/missions/available/${userId}`);
       return data;
     },
+    enabled: Boolean(userId),
   });
 };
 
@@ -34,30 +36,47 @@ export const useAcceptMission = ({ userId }: { userId?: string }) => {
 };
 
 export const useMissionProcess = (
-  payload: MissionProcess,
+  payload?: MissionProcess,
   options?: {
     enabled?: boolean;
     refetchIntervalMs?: number;
     stopWhen?: (data: any) => boolean;
   },
 ) => {
+  const queryClient = useQueryClient();
   const refetchIntervalMs = options?.refetchIntervalMs ?? 5000;
 
-  return useQuery({
-    queryKey: ["mission-process", payload?.userId],
-    enabled: Boolean(payload),
+  const query = useQuery({
+    queryKey: [
+      "mission-process",
+      payload?.userId,
+      payload?.idGame,
+      payload?.idPlayer,
+    ],
+    enabled: Boolean(payload?.userId) && (options?.enabled ?? true),
     queryFn: async () => {
       const { data } = await api.post("/missions/process-game", payload);
       return data;
     },
     refetchInterval: (query) => {
       const data = query.state.data;
+
       if (options?.stopWhen?.(data)) return false;
 
       return refetchIntervalMs;
     },
     refetchIntervalInBackground: true,
   });
+
+  useEffect(() => {
+    if (!query.data) return;
+
+    if (options?.stopWhen?.(query.data)) {
+      queryClient.invalidateQueries({ queryKey: ["profile-data"] });
+    }
+  }, [query.data, options, queryClient]);
+
+  return query;
 };
 
 export const useRecentMissions = () => {

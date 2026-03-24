@@ -1,6 +1,7 @@
 "use client";
 
-import { LogOut } from "lucide-react";
+import { useProfileData } from "@/hooks/profile/useProfile";
+import { Loader2, LogOut } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -26,6 +27,12 @@ const UserProfile = ({
 }: UserProfileProps) => {
   const router = useRouter();
   const { data: session, status } = useSession();
+  const { data: profileData, isLoading } = useProfileData();
+
+  const profile = profileData;
+  const coins = profile?.balance?.coins ?? 0;
+  const gems = profile?.balance?.gems ?? 0;
+
   const isAuthenticated = status === "authenticated";
 
   if (status === "loading") return <p>Loading...</p>;
@@ -42,7 +49,6 @@ const UserProfile = ({
   }
 
   const user = session?.user as any;
-  const profile = user?.profile;
 
   const mockAvatar = "/img/avatar.svg";
 
@@ -50,9 +56,6 @@ const UserProfile = ({
     profile?.username || user?.name || user?.email?.split("@")?.[0] || "User";
 
   const avatarSrc = profile?.avatar || mockAvatar;
-
-  const coins = profile?.balance?.coins ?? 0;
-  const gems = profile?.balance?.gems ?? 0;
 
   const handleLogout = () => {
     signOut({ callbackUrl: "/" });
@@ -76,8 +79,12 @@ const UserProfile = ({
             height={15}
             className="drop-shadow-[0_10px_18px_rgba(0,0,0,0.35)] animate-bob"
           />
-          <span className="text-sm font-semibold tracking-wide text-white">
-            {coins}
+          <span className="text-sm font-semibold tracking-wide text-white flex items-center">
+            {isLoading ? (
+              <Loader2 className="h-4 w-4 animate-spin text-white/70" />
+            ) : (
+              coins
+            )}
           </span>
         </div>
 
@@ -89,12 +96,16 @@ const UserProfile = ({
             height={20}
             className="drop-shadow-[0_10px_18px_rgba(0,0,0,0.35)] animate-bob"
           />
-          <span className="text-sm font-semibold tracking-wide text-white">
-            {gems}
+          <span className="text-sm font-semibold tracking-wide text-white flex items-center">
+            {isLoading ? (
+              <Loader2 className="h-4 w-4 animate-spin text-white/70" />
+            ) : (
+              gems
+            )}
           </span>
         </div>
       </div>
-      {/* Dropdown username + avatar */}
+
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <button
