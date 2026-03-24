@@ -32,6 +32,7 @@ const UserProfile = ({
   const profile = profileData;
   const coins = profile?.balance?.coins ?? 0;
   const gems = profile?.balance?.gems ?? 0;
+  const xp = profile?.balance?.xp ?? 0;
 
   const isAuthenticated = status === "authenticated";
 
@@ -71,6 +72,15 @@ const UserProfile = ({
       ].join(" ")}
     >
       <div className="hidden sm:flex items-center gap-4">
+        <div className="flex items-center justify-center gap-2 select-none">
+          <span className="text-sm font-semibold tracking-wide text-white flex items-center">
+            {isLoading ? (
+              <Loader2 className="h-4 w-4 animate-spin text-white/70" />
+            ) : (
+              `${xp} XP`
+            )}
+          </span>
+        </div>
         <div className="flex items-center justify-center gap-2 select-none">
           <Image
             src="/img/coin.svg"
@@ -146,6 +156,9 @@ const UserProfile = ({
 
           <div className="sm:hidden px-2 pb-2">
             <div className="mt-2 flex items-center gap-4">
+              <div className="flex items-center gap-2">
+                <span className="text-sm">{xp} XP</span>
+              </div>
               <div className="flex items-center gap-2">
                 <Image src="/img/coin.svg" alt="Coin" width={14} height={14} />
                 <span className="text-sm">{coins}</span>
