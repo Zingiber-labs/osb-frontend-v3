@@ -1,85 +1,146 @@
 "use client";
 
-import { HoverImage } from "@/components/commons/HoverImage";
 import { AuthPanel } from "@/components/auth/AuthStatus";
+import { HoverImage } from "@/components/commons/HoverImage";
+import FloatingActionButton from "@/components/home/FloatingActionButton";
+import WeekEventsModal from "@/components/home/WeekEventModal";
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/useIsMobile";
-import Link from "next/link";
-import Image from "next/image";
+import { Bell, CalendarDays } from "lucide-react";
 import { signOut } from "next-auth/react";
+import Image from "next/image";
+import Link from "next/link";
+import { useState } from "react";
+
+type EventItem = {
+  id: number;
+  name: string;
+  date: string;
+  description?: string;
+};
+
+const mockEvents: EventItem[] = [
+  {
+    id: 1,
+    name: "EVENT NAME",
+    date: "04/16/2026",
+    description: "Event details",
+  },
+  {
+    id: 2,
+    name: "EVENT NAME",
+    date: "04/16/2026",
+    description: "Event details",
+  },
+  {
+    id: 3,
+    name: "EVENT NAME",
+    date: "04/16/2026",
+    description: "Event details",
+  },
+  {
+    id: 4,
+    name: "EVENT NAME",
+    date: "04/16/2026",
+    description: "Event details",
+  },
+  {
+    id: 5,
+    name: "EVENT NAME",
+    date: "04/16/2026",
+    description: "Event details",
+  },
+];
 
 export default function Home() {
   const isMobile = useIsMobile(1200);
+  const [isEventsOpen, setIsEventsOpen] = useState(false);
 
   return (
-    <div className="relative mx-auto w-full overflow-hidden rounded-2xl border-0 shadow min-h-[calc(100dvh-104px-91.83px)]">
+    <div className="relative mx-auto min-h-[calc(100dvh-104px-91.83px)] w-full overflow-hidden rounded-2xl border-0 shadow">
       {isMobile ? (
-        <div className="flex flex-col gap-4 py-16 px-4 max-w-md mx-auto w-full text-white">
-          <Link href="/missions" passHref>
-            <Button
-              variant="outline"
-              className="w-full justify-start gap-3 text-lg h-[72] text-orange bg-[#FF6B2F3D] border-primary"
-            >
-              <Image
-                src="/img/menu/hangar.svg"
-                alt="Profile / Robot"
-                width={50}
-                height={50}
-              />
-              <p className="text-3xl">HANGAR</p>
-            </Button>
-          </Link>
-          <Link href="/inventory" passHref>
-            <Button
-              variant="outline"
-              className="w-full justify-start gap-3 text-lg h-[72] text-orange bg-[#FF6B2F3D] border-primary"
-            >
-              <Image
-                src="/img/menu/inventory.svg"
-                alt="Profile / Robot"
-                width={50}
-                height={50}
-              />{" "}
-              <p className="text-3xl">INVENTORY</p>
-            </Button>
-          </Link>
-          <Link href="/store" passHref>
-            <Button
-              variant="outline"
-              className="w-full justify-start gap-3 text-lg h-[72] text-orange bg-[#FF6B2F3D] border-primary"
-            >
-              <Image
-                src="/img/menu/store.svg"
-                alt="Profile / Robot"
-                width={50}
-                height={50}
-              />{" "}
-              <p className="text-3xl">STORE</p>
-            </Button>
-          </Link>
-          <Link href="/profile" passHref>
-            <Button
-              variant="outline"
-              className="w-full justify-start gap-3 text-lg h-[72] text-orange bg-[#FF6B2F3D] border-primary"
-            >
-              <Image
-                src="/img/menu/avatar2.png"
-                alt="Profile / Robot"
-                width={50}
-                height={50}
-              />{" "}
-              <p className="text-3xl">PROFILE</p>
-            </Button>
-          </Link>
-          {/* <Link href="/guest" passHref>
-            <span className="text-cyan-400 text-sm mt-4 hover:underline">
-              Play as a guest
-            </span>
-          </Link> */}
-        </div>
+        <>
+          <div className="mx-auto flex max-w-md w-full flex-col gap-4 px-4 py-16 text-white">
+            <Link href="/missions" passHref>
+              <Button
+                variant="outline"
+                className="h-[72px] w-full justify-start gap-3 border-primary bg-[#FF6B2F3D] text-lg text-orange"
+              >
+                <Image
+                  src="/img/menu/hangar.svg"
+                  alt="Hangar"
+                  width={50}
+                  height={50}
+                />
+                <p className="text-3xl">HANGAR</p>
+              </Button>
+            </Link>
+
+            <Link href="/inventory" passHref>
+              <Button
+                variant="outline"
+                className="h-[72px] w-full justify-start gap-3 border-primary bg-[#FF6B2F3D] text-lg text-orange"
+              >
+                <Image
+                  src="/img/menu/inventory.svg"
+                  alt="Inventory"
+                  width={50}
+                  height={50}
+                />
+                <p className="text-3xl">INVENTORY</p>
+              </Button>
+            </Link>
+
+            <Link href="/store" passHref>
+              <Button
+                variant="outline"
+                className="h-[72px] w-full justify-start gap-3 border-primary bg-[#FF6B2F3D] text-lg text-orange"
+              >
+                <Image
+                  src="/img/menu/store.svg"
+                  alt="Store"
+                  width={50}
+                  height={50}
+                />
+                <p className="text-3xl">STORE</p>
+              </Button>
+            </Link>
+
+            <Link href="/profile" passHref>
+              <Button
+                variant="outline"
+                className="h-[72px] w-full justify-start gap-3 border-primary bg-[#FF6B2F3D] text-lg text-orange"
+              >
+                <Image
+                  src="/img/menu/avatar2.png"
+                  alt="Profile"
+                  width={50}
+                  height={50}
+                />
+                <p className="text-3xl">PROFILE</p>
+              </Button>
+            </Link>
+          </div>
+
+          {/* Floating buttons mobile */}
+          <div className="absolute bottom-4 left-4 z-40 flex gap-3">
+            <FloatingActionButton
+              ariaLabel="Open events"
+              onClick={() => setIsEventsOpen(true)}
+              icon={<CalendarDays className="h-5 w-5 text-white" />}
+            />
+
+            <FloatingActionButton
+              ariaLabel="Notifications"
+              onClick={() => console.log("notifications")}
+              icon={<Bell className="h-5 w-5 text-white" />}
+            />
+          </div>
+        </>
       ) : (
         <>
           <AuthPanel />
+
           <HoverImage
             src="/img/menu/avatar.svg"
             activeSrc="/img/menu/avatar-active.png"
@@ -91,6 +152,7 @@ export default function Home() {
             style={{ left: "6%", bottom: "0%" }}
             tooltipOffset={0}
           />
+
           <HoverImage
             src="/img/menu/hangar.svg"
             activeSrc="/img/menu/hangar-active.png"
@@ -102,6 +164,7 @@ export default function Home() {
             style={{ right: "19%", bottom: "15%" }}
             tooltipOffset={-70}
           />
+
           <HoverImage
             src="/img/menu/inventory.svg"
             activeSrc="/img/menu/inventory-active.png"
@@ -112,6 +175,7 @@ export default function Home() {
             href="/inventory"
             style={{ right: "40%", bottom: "1%" }}
           />
+
           <HoverImage
             src="/img/menu/store.svg"
             activeSrc="/img/menu/store-active.png"
@@ -122,6 +186,7 @@ export default function Home() {
             href="/store"
             style={{ right: "48%", bottom: "20%" }}
           />
+
           <HoverImage
             src="/img/menu/exit.png"
             activeSrc="/img/menu/exit-active.png"
@@ -133,8 +198,29 @@ export default function Home() {
             tooltipOffset={0}
             onClick={() => signOut({ callbackUrl: "/" })}
           />
+
+          {/* Floating buttons desktop */}
+          <div className="absolute bottom-[18%] left-[3.5%] z-40 flex flex-col gap-4">
+            <FloatingActionButton
+              ariaLabel="Open events"
+              onClick={() => setIsEventsOpen(true)}
+              icon={<CalendarDays className="h-6 w-6 text-white" />}
+            />
+
+            <FloatingActionButton
+              ariaLabel="Notifications"
+              onClick={() => console.log("notifications")}
+              icon={<Bell className="h-6 w-6 text-white" />}
+            />
+          </div>
         </>
       )}
+
+      <WeekEventsModal
+        open={isEventsOpen}
+        onClose={() => setIsEventsOpen(false)}
+        events={mockEvents}
+      />
     </div>
   );
 }

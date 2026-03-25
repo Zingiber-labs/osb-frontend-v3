@@ -1,0 +1,87 @@
+"use client";
+
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { X } from "lucide-react";
+
+export type EventItem = {
+  id: number | string;
+  name: string;
+  date: string;
+  description?: string;
+};
+
+interface WeekEventsModalProps {
+  open: boolean;
+  onClose: () => void;
+  events: EventItem[];
+  title?: string;
+  subtitle?: string;
+}
+
+export default function WeekEventsModal({
+  open,
+  onClose,
+  events,
+  title = "WEEK EVENTS",
+  subtitle = "Lorem ipsum dolor sit amet consectetur. Nulla lacinia eget mattis pretium fringilla. Tempus mattis enim dui phasellus sit massa pharetra at ac. Tempus id adipiscing enim mauris sagittis porttitor dignissim risus eget.",
+}: WeekEventsModalProps) {
+  if (!open) return null;
+
+  return (
+    <div className="absolute inset-0 z-50 flex items-start justify-end bg-black/35 p-6">
+      <div className="relative w-full max-w-[780px] rounded-[24px] border border-[#ff7a2f] bg-[#8F421E]/95 p-4 text-white shadow-[0_0_24px_rgba(255,107,47,0.25)] backdrop-blur-sm">
+        <button
+          type="button"
+          onClick={onClose}
+          className="absolute right-4 top-4 text-white/90 transition hover:text-white"
+          aria-label="Close modal"
+        >
+          <X className="h-6 w-6" />
+        </button>
+
+        <div className="pr-10">
+          <h2 className="text-[32px] font-extrabold uppercase tracking-wide text-cyan-300">
+            {title}
+          </h2>
+
+          <p className="mt-2 max-w-[680px] text-sm leading-6 text-white/75">
+            {subtitle}
+          </p>
+        </div>
+
+        <div className="mt-5 max-h-[420px] overflow-y-auto pr-2 thin-scroll overscroll-contain">
+          <Accordion type="single" collapsible className="space-y-4">
+            {events.map((event) => (
+              <AccordionItem
+                key={event.id}
+                value={String(event.id)}
+                className="overflow-hidden rounded-md border-0 bg-[#B45322]"
+              >
+                <AccordionTrigger className="px-4 py-4 [&>svg]:text-white/80">
+                  <div className="flex w-full items-center justify-between pr-2 text-left">
+                    <span className="text-[22px] font-extrabold uppercase tracking-wide text-white">
+                      {event.name}
+                    </span>
+
+                    <span className="flex items-center gap-3 text-sm font-bold text-white/90">
+                      {event.date}
+                    </span>
+                  </div>
+                </AccordionTrigger>
+
+                <AccordionContent className="border-t border-white/10 px-4 pb-4 pt-3 text-sm leading-6 text-white/80">
+                  {event.description || "No event details available yet."}
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        </div>
+      </div>
+    </div>
+  );
+}
