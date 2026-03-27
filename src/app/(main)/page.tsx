@@ -5,6 +5,7 @@ import { HoverImage } from "@/components/commons/HoverImage";
 import FloatingActionButton from "@/components/home/FloatingActionButton";
 import WeekEventsModal from "@/components/home/WeekEventModal";
 import { Button } from "@/components/ui/button";
+import { useEventsForRewards } from "@/hooks/rewards/useRewards";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { Bell, CalendarDays } from "lucide-react";
 import { signOut } from "next-auth/react";
@@ -12,49 +13,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
-type EventItem = {
-  id: number;
-  name: string;
-  date: string;
-  description?: string;
-};
-
-const mockEvents: EventItem[] = [
-  {
-    id: 1,
-    name: "EVENT NAME",
-    date: "04/16/2026",
-    description: "Event details",
-  },
-  {
-    id: 2,
-    name: "EVENT NAME",
-    date: "04/16/2026",
-    description: "Event details",
-  },
-  {
-    id: 3,
-    name: "EVENT NAME",
-    date: "04/16/2026",
-    description: "Event details",
-  },
-  {
-    id: 4,
-    name: "EVENT NAME",
-    date: "04/16/2026",
-    description: "Event details",
-  },
-  {
-    id: 5,
-    name: "EVENT NAME",
-    date: "04/16/2026",
-    description: "Event details",
-  },
-];
 
 export default function Home() {
   const isMobile = useIsMobile(1200);
   const [isEventsOpen, setIsEventsOpen] = useState(false);
+  const { data: events } = useEventsForRewards();
 
   return (
     <div className="relative mx-auto min-h-[calc(100dvh-104px-91.83px)] w-full overflow-hidden rounded-2xl border-0 shadow">
@@ -219,7 +182,7 @@ export default function Home() {
       <WeekEventsModal
         open={isEventsOpen}
         onClose={() => setIsEventsOpen(false)}
-        events={mockEvents}
+        events={events || []}
       />
     </div>
   );
