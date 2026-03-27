@@ -6,7 +6,7 @@ import RecentMissions from "./RecentMissions";
 export default function ProfileDetails() {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mt-6 max-w-7xl mx-auto">
-      <div className="lg:col-span-3">
+      <div className="lg:col-span-3 flex flex-col gap-5">
         <ProfileSummary />
         <ProfileRewards />
       </div>
