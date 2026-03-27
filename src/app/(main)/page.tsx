@@ -142,7 +142,7 @@ export default function Home() {
           <AuthPanel />
 
           <HoverImage
-            src="/img/menu/avatar.svg"
+            src="/img/menu/avatar-v2.svg"
             activeSrc="/img/menu/avatar-active.png"
             alt="Profile / Robot"
             width={350}
@@ -154,7 +154,7 @@ export default function Home() {
           />
 
           <HoverImage
-            src="/img/menu/hangar.svg"
+            src="/img/menu/hangar-v2.svg"
             activeSrc="/img/menu/hangar-active.png"
             alt="Hangar"
             width={380}
@@ -166,7 +166,7 @@ export default function Home() {
           />
 
           <HoverImage
-            src="/img/menu/inventory.svg"
+            src="/img/menu/inventory-v2.svg"
             activeSrc="/img/menu/inventory-active.png"
             alt="Inventory"
             width={220}
@@ -177,7 +177,7 @@ export default function Home() {
           />
 
           <HoverImage
-            src="/img/menu/store.svg"
+            src="/img/menu/store-v2.svg"
             activeSrc="/img/menu/store-active.png"
             alt="Store"
             width={190}
@@ -188,7 +188,7 @@ export default function Home() {
           />
 
           <HoverImage
-            src="/img/menu/exit.png"
+            src="/img/menu/exit-v2.svg"
             activeSrc="/img/menu/exit-active.png"
             alt="Exit"
             width={100}
