@@ -15,6 +15,7 @@ const ProfileRewards = () => {
         <div className="flex justify-between text-white">
           <span className="text-gray-400">XP:</span>
           <div className="flex items-center gap-2">
+            <Image src="/img/xp.svg" alt="XP" width={14} height={14} />
             <span className="text-sm">{xp}</span>
           </div>
         </div>

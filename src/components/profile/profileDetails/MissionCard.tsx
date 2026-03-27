@@ -131,7 +131,10 @@ function RewardsCard({
         Rewards
       </p>
       <div className="mt-2 flex items-center gap-4">
-        <div className="text-sm text-[#8AE59B]">+{xp} EXP</div>
+        <div className="flex items-center gap-2">
+          <Image src="/img/xp.svg" alt="XP" width={14} height={14} />
+          <div className="text-sm text-[#8AE59B]">+{xp} EXP</div>
+        </div>
         <div className="flex items-center gap-2">
           <Image src="/img/coin.svg" alt="Coin" width={14} height={14} />
           <span className="text-sm">{coins}</span>

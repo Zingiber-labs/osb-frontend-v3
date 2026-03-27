@@ -266,7 +266,12 @@ export default function MissionDetailsDialog({
                 <div className="grid grid-cols-1 gap-6 pt-2 text-center sm:grid-cols-3">
                   <div className="flex flex-col items-center justify-center gap-3 rounded-[16px] border border-secondary-cyan/20 bg-[#09171d] px-4 py-8">
                     <div className="text-lg font-bold uppercase tracking-wide text-white/80">
-                      XP
+                      <Image
+                        src="/img/xp.svg"
+                        alt="XP"
+                        width={44}
+                        height={44}
+                      />
                     </div>
                     <div className="text-xl font-extrabold sm:text-xl text-[#57d6f6]">
                       +{mission.mission.rewards?.xp ?? 0} xp

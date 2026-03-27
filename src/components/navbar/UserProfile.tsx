@@ -73,6 +73,13 @@ const UserProfile = ({
     >
       <div className="hidden sm:flex items-center gap-4">
         <div className="flex items-center justify-center gap-2 select-none">
+          <Image
+            src="/img/xp.svg"
+            alt="XP"
+            width={20}
+            height={20}
+            className="drop-shadow-[0_10px_18px_rgba(0,0,0,0.35)] animate-bob"
+          />
           <span className="text-sm font-semibold tracking-wide text-white flex items-center">
             {isLoading ? (
               <Loader2 className="h-4 w-4 animate-spin text-white/70" />
@@ -157,6 +164,7 @@ const UserProfile = ({
           <div className="sm:hidden px-2 pb-2">
             <div className="mt-2 flex items-center gap-4">
               <div className="flex items-center gap-2">
+                <Image src="/img/xp.svg" alt="XP" width={14} height={14} />
                 <span className="text-sm">{xp} XP</span>
               </div>
               <div className="flex items-center gap-2">
