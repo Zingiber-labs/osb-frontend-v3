@@ -7,6 +7,8 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { X } from "lucide-react";
+import { Button } from "../ui/button";
+import { useJoinEvent } from "@/hooks/events-complex/useEvents";
 
 export type EventItem = {
   id: number | string;
@@ -23,13 +25,15 @@ interface WeekEventsModalProps {
   subtitle?: string;
 }
 
-export default function WeekEventsModal({
+const WeekEventsModal = ({
   open,
   onClose,
   events,
   title = "WEEK EVENTS",
   subtitle = "Lorem ipsum dolor sit amet consectetur. Nulla lacinia eget mattis pretium fringilla. Tempus mattis enim dui phasellus sit massa pharetra at ac. Tempus id adipiscing enim mauris sagittis porttitor dignissim risus eget.",
-}: WeekEventsModalProps) {
+}: WeekEventsModalProps) => {
+  const { mutate: joinEvent, isPending } = useJoinEvent();
+
   if (!open) return null;
 
   return (
@@ -76,6 +80,15 @@ export default function WeekEventsModal({
 
                 <AccordionContent className="border-t border-white/10 px-4 pb-4 pt-3 text-sm leading-6 text-white/80">
                   {event.description || "No event details available yet."}
+                  <div className="mt-5 flex justify-end gap-3">
+                    <Button
+                      disabled={isPending}
+                      variant="secondary"
+                      onClick={() => joinEvent({ idEvent: String(event.id) })}
+                    >
+                      {isPending ? "Joining..." : "Join Event"}
+                    </Button>
+                  </div>
                 </AccordionContent>
               </AccordionItem>
             ))}
@@ -84,4 +97,6 @@ export default function WeekEventsModal({
       </div>
     </div>
   );
-}
+};
+
+export default WeekEventsModal;
