@@ -15,6 +15,7 @@ export type EventItem = {
   name: string;
   date: string;
   description?: string;
+  accepted?: boolean;
 };
 
 interface WeekEventsModalProps {
@@ -29,7 +30,7 @@ const WeekEventsModal = ({
   open,
   onClose,
   events,
-  title = "WEEK EVENTS",
+  title = "AVAILABLE EVENTS",
   subtitle = "Lorem ipsum dolor sit amet consectetur. Nulla lacinia eget mattis pretium fringilla. Tempus mattis enim dui phasellus sit massa pharetra at ac. Tempus id adipiscing enim mauris sagittis porttitor dignissim risus eget.",
 }: WeekEventsModalProps) => {
   const { mutate: joinEvent, isPending } = useJoinEvent();
@@ -82,11 +83,15 @@ const WeekEventsModal = ({
                   {event.description || "No event details available yet."}
                   <div className="mt-5 flex justify-end gap-3">
                     <Button
-                      disabled={isPending}
+                      disabled={isPending || event.accepted}
                       variant="secondary"
                       onClick={() => joinEvent({ idEvent: String(event.id) })}
                     >
-                      {isPending ? "Joining..." : "Join Event"}
+                      {event.accepted
+                        ? "Joined"
+                        : isPending
+                          ? "Joining..."
+                          : "Join Event"}
                     </Button>
                   </div>
                 </AccordionContent>
