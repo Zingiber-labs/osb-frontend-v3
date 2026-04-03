@@ -49,13 +49,13 @@ function mapStepsToDailyRewards(steps: EventStep[]): DailyReward[] {
     });
 }
 
-function getActiveDayFromSteps(steps: EventStep[]): number {
+function getActiveDayFromSteps(steps: EventStep[]): number | null {
   const firstAvailable = (steps ?? [])
     .slice()
     .sort((a, b) => a.step - b.step)
     .find((s) => s.status === "AVAILABLE");
 
-  return firstAvailable?.step ?? 1;
+  return firstAvailable?.step ?? null;
 }
 
 export default function DailyLoginRewardsGate() {

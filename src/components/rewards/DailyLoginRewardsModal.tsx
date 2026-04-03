@@ -19,7 +19,7 @@ type Props = {
   subtitle?: string;
 
   rewards: DailyReward[];
-  activeDay: number;
+  activeDay: number | null;
 
   onViewEvent?: () => void;
   onRewardClick?: (day: number) => void;
@@ -103,7 +103,7 @@ export function DailyLoginRewardsModal({
                 "
               >
                 {safeRewards.map((r) => {
-                  const isActive = r.day === activeDay;
+                  const isActive = activeDay !== null && r.day === activeDay;
 
                   const isClaimed =
                     !!r.claimed ||
