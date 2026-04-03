@@ -11,7 +11,8 @@ import {
 } from "@/components/rewards/DailyLoginRewardsModal";
 
 import { useDailyLoginRewardsGate } from "@/hooks/rewards/useDailyLoginRewardsGate";
-import { useClaimReward, useEventsForRewards } from "@/hooks/rewards/useRewards";
+import { useClaimReward, useEventsForDailyLogin, useEventsForRewards } from "@/hooks/rewards/useRewards";
+import { Step } from "@/types/event";
 
 type EventReward = { type: "CURRENCY" | string; code?: string; amount: number };
 
@@ -69,37 +70,32 @@ export default function DailyLoginRewardsGate() {
     storageKeyPrefix: "oat:daily-login-rewards",
   });
 
-  const { data: eventsData, isLoading, isError } = useEventsForRewards();
+  const { data: eventsData, isLoading, isError } = useEventsForDailyLogin();
   const claimMutation = useClaimReward();
 
-  const dailyLoginEvent = useMemo(() => {
-    const list = (eventsData ?? []) as EventsResponseItem[];
-    return list.find((e) => e.type === "DAILY_LOGIN");
+  const rewards = useMemo(() => {
+    return mapStepsToDailyRewards(eventsData?.steps ?? []);
   }, [eventsData]);
 
-  const rewards = useMemo(() => {
-    return mapStepsToDailyRewards(dailyLoginEvent?.steps ?? []);
-  }, [dailyLoginEvent]);
-
   const activeDay = useMemo(() => {
-    return getActiveDayFromSteps(dailyLoginEvent?.steps ?? []);
-  }, [dailyLoginEvent]);
+    return getActiveDayFromSteps(eventsData?.steps ?? []);
+  }, [eventsData]);
 
   const subtitle = useMemo(() => {
-    const hasAvailable = (dailyLoginEvent?.steps ?? []).some((s) => s.status === "AVAILABLE");
+    const hasAvailable = (eventsData?.steps ?? []).some((step: Step) => step.status === "AVAILABLE");
     return hasAvailable ? "Tap a reward to claim it!" : "Rewards claimed!";
-  }, [dailyLoginEvent]);
+  }, [eventsData]);
 
   const handleRewardClick = async (day: number) => {
-    if (!dailyLoginEvent) return;
+    if (!eventsData) return;
 
-    const stepObj = (dailyLoginEvent.steps ?? []).find((s) => s.step === day);
+    const stepObj = (eventsData.steps ?? []).find((s: Step) => s.step === day);
     if (!stepObj) return;
 
     if (stepObj.status !== "AVAILABLE") return;
 
     try {
-      await claimMutation.mutateAsync({ eventId: dailyLoginEvent.id, step: day });
+      await claimMutation.mutateAsync({ eventId: eventsData.id, step: day });
       toast.success("Reward claimed!");
       await queryClient.invalidateQueries({ queryKey: ["events"] });
     } catch (err: any) {
@@ -110,13 +106,13 @@ export default function DailyLoginRewardsGate() {
   if (status === "loading") return null;
   if (!open) return null;
   if (isLoading) return null;
-  if (isError || !dailyLoginEvent) return null;
+  if (isError || !eventsData) return null;
 
   return (
     <DailyLoginRewardsModal
       open={open}
       onOpenChange={setOpen}
-      title={dailyLoginEvent.name?.toUpperCase() || "DAILY LOGIN REWARDS"}
+      title={eventsData.name?.toUpperCase() || "DAILY LOGIN REWARDS"}
       subtitle={subtitle}
       rewards={rewards}
       activeDay={activeDay}
