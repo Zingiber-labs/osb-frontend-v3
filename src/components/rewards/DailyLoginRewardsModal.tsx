@@ -23,6 +23,9 @@ type Props = {
 
   onViewEvent?: () => void;
   onRewardClick?: (day: number) => void;
+  
+  currentEventIndex?: number;
+  totalEvents?: number;
 };
 
 function formatAmount(amount: number) {
@@ -38,6 +41,8 @@ export function DailyLoginRewardsModal({
   activeDay,
   onViewEvent,
   onRewardClick,
+  currentEventIndex = 0,
+  totalEvents = 1,
 }: Props) {
   if (!open) return null;
 
@@ -85,7 +90,7 @@ export function DailyLoginRewardsModal({
           <div className="px-4 pb-5 pt-6 sm:px-8 sm:pb-7 sm:pt-8">
             <div className="text-center">
               <h2 className="text-base sm:text-lg tracking-widest text-cyan-300">
-                {title}
+                {title} {totalEvents > 1 ? `(${currentEventIndex + 1}/${totalEvents})` : ""}
               </h2>
               <p className="mt-2 text-sm sm:text-base text-white/80">
                 {subtitle}
