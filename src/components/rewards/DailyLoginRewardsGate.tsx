@@ -73,6 +73,7 @@ function getSubtitle(steps: EventStep[]) {
 export default function DailyLoginRewardsGate() {
   const { data: session, status } = useSession();
   const queryClient = useQueryClient();
+  const [currentEventIndex, setCurrentEventIndex] = useState(0);
 
   const userId =
     (session?.user as any)?.profile?.userId ?? (session?.user as any)?.id;
@@ -84,8 +85,6 @@ export default function DailyLoginRewardsGate() {
 
   const { data: eventsData, isLoading, isError } = useEventsForDailyLogin();
   const claimMutation = useClaimReward();
-
-  const [currentEventIndex, setCurrentEventIndex] = useState(0);
 
   const events = useMemo<EventsResponseItem[]>(() => {
     if (!eventsData) return [];
