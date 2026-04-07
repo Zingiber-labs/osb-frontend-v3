@@ -26,7 +26,7 @@ type Props = {
 };
 
 function formatAmount(amount: number) {
-  return `X${amount}`;
+  return `x${amount}`;
 }
 
 export function DailyLoginRewardsModal({
@@ -145,7 +145,7 @@ export function DailyLoginRewardsModal({
                           />
                         </div>
 
-                        <div className="mt-2 text-center text-xs sm:text-sm font-semibold text-cyan-200">
+                        <div className="font-helvetica mt-2 text-center text-xs sm:text-sm font-semibold text-cyan-200">
                           {formatAmount(r.amount)}
                         </div>
 
