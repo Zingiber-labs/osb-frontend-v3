@@ -131,7 +131,7 @@ const EventCard = ({ event }: { event: EventItem }) => {
               </p>
             </div>
 
-            <Button className="min-w-[140px] rounded-full bg-cyan-400 px-8 font-semibold text-black hover:bg-cyan-300">
+            <Button className="min-w-35 rounded-full bg-cyan-400 px-8 font-semibold text-black hover:bg-cyan-300">
               CLAIM
             </Button>
           </div>
