@@ -2,11 +2,20 @@
 
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { BarChart3, Cpu, DoorOpen, Medal, Trophy, User } from "lucide-react";
+import {
+  BarChart3,
+  CalendarDays,
+  Cpu,
+  DoorOpen,
+  Medal,
+  Trophy,
+  User,
+} from "lucide-react";
 import * as React from "react";
-import ProfileStats from "./tabs/ProfileStats";
-import ProfileDetails from "./profileDetails/ProfileDetails";
 import LockerRoom from "./locker/LockerRoom";
+import MyEvents from "./profileDetails/my-events/MyEvents";
+import ProfileDetails from "./profileDetails/ProfileDetails";
+import ProfileStats from "./tabs/ProfileStats";
 
 export type StatRow = {
   id: number;
@@ -53,6 +62,10 @@ export default function ProfileTabs({
               <TabLabel icon={User} label="PROFILE" />
             </TabsTrigger>
 
+            <TabsTrigger value="my-events" className="shrink-0 tab-trigger h-9">
+              <TabLabel icon={CalendarDays} label="MY EVENTS" />
+            </TabsTrigger>
+
             <TabsTrigger value="stats" className="shrink-0 tab-trigger h-9">
               <TabLabel icon={BarChart3} label="STATS" />
             </TabsTrigger>
@@ -83,6 +96,10 @@ export default function ProfileTabs({
 
         <TabsContent value="profile" className="p-3 pt-4">
           <ProfileDetails />
+        </TabsContent>
+
+        <TabsContent value="my-events" className="p-3 pt-4">
+          <MyEvents />
         </TabsContent>
 
         <TabsContent value="locker" className="p-3 pt-4">
