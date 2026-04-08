@@ -1,17 +1,36 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
-import { EventItem, EventStep } from "@/types/event";
+import { EventItem } from "@/types/event";
 import clsx from "clsx";
-import { Coins } from "lucide-react";
+import Image from "next/image";
 
 const rewardLabelMap: Record<string, string> = {
   COINS: "Coins",
   GEMS: "Gems",
   XP: "XP",
-  POINTS: "Points",
 };
 
-const getRewardIcon = () => {
-  return <Coins className="h-4 w-4 text-yellow-400" />;
+const rewardIconMap: Record<string, string> = {
+  COINS: "/img/coin.svg",
+  GEMS: "/img/gem.svg",
+  XP: "/img/xp.svg",
+};
+
+const getRewardIcon = (code: string) => {
+  const iconSrc = rewardIconMap[code];
+
+  if (!iconSrc) return null;
+
+  return (
+    <Image
+      src={iconSrc}
+      alt={rewardLabelMap[code] ?? code}
+      width={15}
+      height={15}
+      className="drop-shadow-[0_10px_18px_rgba(0,0,0,0.35)] animate-bob"
+    />
+  );
 };
 
 const getTimeLeftLabel = (endDate: string) => {
@@ -25,17 +44,6 @@ const getTimeLeftLabel = (endDate: string) => {
 
   if (days === 1) return "ENDS IN 1 DAY";
   return `ENDS IN ${days} DAYS`;
-};
-
-const getStepRewardText = (step: EventStep) => {
-  if (!step.rewards?.length) return "";
-
-  return step.rewards
-    .map(
-      (reward) =>
-        `${reward.amount} ${rewardLabelMap[reward.code] ?? reward.code}`,
-    )
-    .join(" + ");
 };
 
 const getDescription = (event: EventItem) => {
@@ -79,11 +87,18 @@ const EventCard = ({ event }: { event: EventItem }) => {
 
       <div className="mb-4 flex flex-wrap items-center gap-6">
         {event.steps.map((step) => (
-          <div key={step.step} className="flex items-center gap-2 text-white">
-            {getRewardIcon()}
-            <span className="text-lg font-medium">
-              {getStepRewardText(step)}
-            </span>
+          <div key={step.step} className="flex items-center gap-4">
+            {step.rewards.map((reward, index) => (
+              <div
+                key={`${step.step}-${reward.code}-${index}`}
+                className="flex items-center gap-2 text-white"
+              >
+                {getRewardIcon(reward.code)}
+                <span className="text-lg font-medium">
+                  {reward.amount} {rewardLabelMap[reward.code] ?? reward.code}
+                </span>
+              </div>
+            ))}
           </div>
         ))}
       </div>
@@ -116,7 +131,7 @@ const EventCard = ({ event }: { event: EventItem }) => {
               </p>
             </div>
 
-            <Button className="min-w-35 rounded-full bg-cyan-400 px-8 font-semibold text-black hover:bg-cyan-300">
+            <Button className="min-w-[140px] rounded-full bg-cyan-400 px-8 font-semibold text-black hover:bg-cyan-300">
               CLAIM
             </Button>
           </div>
