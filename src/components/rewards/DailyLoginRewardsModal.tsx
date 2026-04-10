@@ -171,7 +171,7 @@ export function DailyLoginRewardsModal({
                             : "bg-orange-24 text-white/60",
                         ].join(" ")}
                       >
-                        {r.day}
+                        day {r.day}
                       </div>
                     </div>
                   );
