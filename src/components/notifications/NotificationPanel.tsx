@@ -343,19 +343,19 @@ export function NotificationPanel({ open, onClose }: NotificationPanelProps) {
 
   return (
     <div className="absolute inset-0 z-50 flex items-stretch">
-      {/* backdrop */}
+      {/* backdrop (click to close) */}
       <div
-        className="absolute inset-0 bg-black/60 backdrop-blur-[3px]"
+        className="absolute inset-0 bg-black/70"
         onClick={onClose}
       />
 
-      {/* panel */}
+      {/* panel — full height, full width split layout */}
       <aside
-        className="relative z-10 flex flex-col w-full max-w-[620px] h-full"
+        className="relative z-10 flex flex-col w-full h-full"
         style={{
           background: "linear-gradient(160deg, #180801 0%, #2a1006 45%, #3a1809 100%)",
-          borderRight: "1px solid rgba(255,122,47,0.28)",
-          boxShadow: "6px 0 52px rgba(255,107,47,0.20), inset 0 0 60px rgba(0,0,0,0.4)",
+          borderTop: "1px solid rgba(255,122,47,0.18)",
+          boxShadow: "inset 0 0 80px rgba(0,0,0,0.5)",
         }}
       >
         {/* top accent bar */}
@@ -486,7 +486,8 @@ export function NotificationPanel({ open, onClose }: NotificationPanelProps) {
             className="flex-1 overflow-hidden"
             style={{
               minWidth: 0,
-              background: "linear-gradient(160deg, #1e0c04 0%, #2f1208 50%, #3a1809 100%)",
+              background: "linear-gradient(160deg, #1a0902 0%, #2d1107 50%, #381608 100%)",
+              borderLeft: "1px solid rgba(255,122,47,0.14)",
             }}
           >
             {selected ? (
