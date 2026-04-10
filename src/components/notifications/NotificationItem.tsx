@@ -32,7 +32,7 @@ export const NotificationItem = ({ notification }: Props) => {
   };
 
   const date = new Date(notification.createdAt);
-  const formattedDate = new Intl.DateTimeFormat('es-ES', { dateStyle: 'medium', timeStyle: 'short'}).format(date);
+  const formattedDate = new Intl.DateTimeFormat('en-US', { dateStyle: 'medium', timeStyle: 'short'}).format(date);
 
   return (
     <div 

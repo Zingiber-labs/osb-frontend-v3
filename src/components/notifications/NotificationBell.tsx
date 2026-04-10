@@ -46,21 +46,21 @@ const TYPE_CFG: Record<string, TypeCfg> = {
     color: "#c084fc",
     bg: "rgba(168,85,247,0.15)",
     border: "rgba(168,85,247,0.45)",
-    label: "Recompensa",
+    label: "Reward",
   },
   MISSION_COMPLETED: {
     icon: CheckCircle2 as IconComponent,
     color: "#34d399",
     bg: "rgba(52,211,153,0.15)",
     border: "rgba(52,211,153,0.45)",
-    label: "Misión",
+    label: "Mission",
   },
   MISSION_REWARD_CLAIMED: {
     icon: Star as IconComponent,
     color: "#fbbf24",
     bg: "rgba(251,191,36,0.15)",
     border: "rgba(251,191,36,0.45)",
-    label: "Premio",
+    label: "Prize",
   },
   RANKING_UP: {
     icon: Trophy as IconComponent,
@@ -74,26 +74,26 @@ const TYPE_CFG: Record<string, TypeCfg> = {
     color: "#22d3ee",
     bg: "rgba(34,211,238,0.15)",
     border: "rgba(34,211,238,0.45)",
-    label: "Sistema",
+    label: "System",
   },
 };
 
 function timeAgo(iso: string): string {
   const diff = Date.now() - new Date(iso).getTime();
   const m = Math.floor(diff / 60000);
-  if (m < 1) return "Ahora";
+  if (m < 1) return "Just now";
   if (m < 60) return `${m}m`;
   const h = Math.floor(m / 60);
   if (h < 24) return `${h}h`;
   const d = Math.floor(h / 24);
   if (d < 7) return `${d}d`;
-  return new Intl.DateTimeFormat("es-ES", { dateStyle: "short" }).format(
+  return new Intl.DateTimeFormat("en-US", { dateStyle: "short" }).format(
     new Date(iso)
   );
 }
 
 function fullDate(iso: string): string {
-  return new Intl.DateTimeFormat("es-ES", {
+  return new Intl.DateTimeFormat("en-US", {
     dateStyle: "long",
     timeStyle: "short",
   }).format(new Date(iso));
@@ -289,7 +289,7 @@ function EmptyDetail() {
         <Inbox size={20} color="rgba(255,255,255,0.15)" />
       </div>
       <p className="text-[10px] text-white/20 font-bold uppercase tracking-widest leading-relaxed">
-        Selecciona una<br />notificación
+        Select a<br />notification
       </p>
     </div>
   );
@@ -435,10 +435,10 @@ export const NotificationBell = () => {
               className="text-xs font-extrabold uppercase tracking-[0.18em] leading-none"
               style={{ color: "#7cf8ff" }}
             >
-              NOTIFICACIONES
+              NOTIFICATIONS
             </h2>
             <p className="text-[10px] text-white/35 mt-0.5">
-              {unreadCount > 0 ? `${unreadCount} sin leer` : "Todo al día ✓"}
+              {unreadCount > 0 ? `${unreadCount} unread` : "All caught up ✓"}
             </p>
           </div>
         </div>
@@ -460,7 +460,7 @@ export const NotificationBell = () => {
               ) : (
                 <CheckCheck size={9} />
               )}
-              Leer todo
+              Read all
             </button>
           )}
           <button
@@ -498,7 +498,7 @@ export const NotificationBell = () => {
               <div className="flex flex-col items-center justify-center h-full py-10 gap-2">
                 <BellOff size={22} color="rgba(255,255,255,0.12)" />
                 <p className="text-[10px] text-white/20 uppercase tracking-wider font-bold text-center">
-                  Sin notif.
+                  No notifications
                 </p>
               </div>
             ) : (
