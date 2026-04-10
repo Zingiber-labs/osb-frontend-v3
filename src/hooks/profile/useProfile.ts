@@ -21,7 +21,5 @@ export const useProfileData = () => {
       const { data } = await api.get("/auth/profile");
       return data;
     },
-    enabled: status === "authenticated",
-    refetchOnWindowFocus: true,
   });
 };
