@@ -4,8 +4,10 @@ import { AuthPanel } from "@/components/auth/AuthStatus";
 import { HoverImage } from "@/components/commons/HoverImage";
 import FloatingActionButton from "@/components/home/FloatingActionButton";
 import WeekEventsModal from "@/components/home/WeekEventModal";
+import { NotificationPanel } from "@/components/notifications/NotificationPanel";
 import { Button } from "@/components/ui/button";
 import { useEventsForRewards } from "@/hooks/rewards/useRewards";
+import { useUnreadCount } from "@/hooks/notifications/useNotifications";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { Bell, CalendarDays } from "lucide-react";
 import { signOut } from "next-auth/react";
@@ -17,7 +19,10 @@ import { useState } from "react";
 export default function Home() {
   const isMobile = useIsMobile(1200);
   const [isEventsOpen, setIsEventsOpen] = useState(false);
+  const [isNotifOpen, setIsNotifOpen] = useState(false);
   const { data: events } = useEventsForRewards();
+  const { data: unreadData } = useUnreadCount();
+  const unreadCount = unreadData?.unreadCount ?? 0;
 
   return (
     <div className="relative mx-auto min-h-[calc(100dvh-104px-91.83px)] w-full overflow-hidden rounded-2xl border-0 shadow">
@@ -93,11 +98,27 @@ export default function Home() {
               icon={<CalendarDays className="h-5 w-5 text-white" />}
             />
 
-            <FloatingActionButton
-              ariaLabel="Notifications"
-              onClick={() => console.log("notifications")}
-              icon={<Bell className="h-5 w-5 text-white" />}
-            />
+            <div className="relative">
+              <FloatingActionButton
+                ariaLabel="Notifications"
+                onClick={() => setIsNotifOpen(true)}
+                icon={<Bell className="h-5 w-5 text-white" />}
+              />
+              {unreadCount > 0 && (
+                <span
+                  className="pointer-events-none absolute -top-1 -right-1 min-w-[20px] h-5 px-1
+                    flex items-center justify-center rounded-full
+                    text-white text-[10px] font-extrabold z-10 animate-pulse"
+                  style={{
+                    background: "linear-gradient(135deg, #ff3b00 0%, #ff6b2f 100%)",
+                    boxShadow: "0 0 10px rgba(255,60,0,0.7), 0 0 4px rgba(255,60,0,0.5)",
+                    border: "1.5px solid rgba(255,150,100,0.5)",
+                  }}
+                >
+                  {unreadCount > 9 ? "9+" : unreadCount}
+                </span>
+              )}
+            </div>
           </div>
         </>
       ) : (
@@ -170,11 +191,27 @@ export default function Home() {
               icon={<CalendarDays className="h-6 w-6 text-white" />}
             />
 
-            <FloatingActionButton
-              ariaLabel="Notifications"
-              onClick={() => console.log("notifications")}
-              icon={<Bell className="h-6 w-6 text-white" />}
-            />
+            <div className="relative">
+              <FloatingActionButton
+                ariaLabel="Notifications"
+                onClick={() => setIsNotifOpen(true)}
+                icon={<Bell className="h-6 w-6 text-white" />}
+              />
+              {unreadCount > 0 && (
+                <span
+                  className="pointer-events-none absolute -top-1 -right-1 min-w-[20px] h-5 px-1
+                    flex items-center justify-center rounded-full
+                    text-white text-[10px] font-extrabold z-10 animate-pulse"
+                  style={{
+                    background: "linear-gradient(135deg, #ff3b00 0%, #ff6b2f 100%)",
+                    boxShadow: "0 0 12px rgba(255,60,0,0.75), 0 0 5px rgba(255,60,0,0.5)",
+                    border: "1.5px solid rgba(255,150,100,0.5)",
+                  }}
+                >
+                  {unreadCount > 9 ? "9+" : unreadCount}
+                </span>
+              )}
+            </div>
           </div>
         </>
       )}
@@ -183,6 +220,11 @@ export default function Home() {
         open={isEventsOpen}
         onClose={() => setIsEventsOpen(false)}
         events={events || []}
+      />
+
+      <NotificationPanel
+        open={isNotifOpen}
+        onClose={() => setIsNotifOpen(false)}
       />
     </div>
   );

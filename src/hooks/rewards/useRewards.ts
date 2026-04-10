@@ -33,8 +33,9 @@ export const useClaimReward = () => {
       const { data } = await api.post(`/events/claim`, payload);
       return data;
     },
-     onSuccess: () => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["profile-data"] });
+      queryClient.invalidateQueries({ queryKey: ["notifications"] });
     },
   });
 };

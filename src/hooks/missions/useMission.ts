@@ -31,6 +31,7 @@ export const useAcceptMission = ({ userId }: { userId?: string }) => {
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["missions"] });
+      queryClient.invalidateQueries({ queryKey: ["notifications"] });
     },
   });
 };
@@ -73,6 +74,7 @@ export const useMissionProcess = (
 
     if (options?.stopWhen?.(query.data)) {
       queryClient.invalidateQueries({ queryKey: ["profile-data"] });
+      queryClient.invalidateQueries({ queryKey: ["notifications"] });
     }
   }, [query.data, options, queryClient]);
 
