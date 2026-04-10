@@ -1,5 +1,5 @@
 import { api } from "@/lib/axios";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export const useEventsForDailyLogin = () => {
   return useQuery({
@@ -27,10 +27,14 @@ type ClaimRewardPayload = {
 };
 
 export const useClaimReward = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (payload: ClaimRewardPayload) => {
       const { data } = await api.post(`/events/claim`, payload);
       return data;
+    },
+     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["profile-data"] });
     },
   });
 };
