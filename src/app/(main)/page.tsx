@@ -3,7 +3,7 @@
 import { AuthPanel } from "@/components/auth/AuthStatus";
 import { HoverImage } from "@/components/commons/HoverImage";
 import FloatingActionButton from "@/components/home/FloatingActionButton";
-import WeekEventsModal from "@/components/home/WeekEventModal";
+import AvailableEvents from "@/components/home/AvailableEvents";
 import { NotificationPanel } from "@/components/notifications/NotificationPanel";
 import { Button } from "@/components/ui/button";
 import { useEventsForRewards } from "@/hooks/rewards/useRewards";
@@ -216,7 +216,7 @@ export default function Home() {
         </>
       )}
 
-      <WeekEventsModal
+      <AvailableEvents
         open={isEventsOpen}
         onClose={() => setIsEventsOpen(false)}
         events={events || []}

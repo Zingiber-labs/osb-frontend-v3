@@ -11,6 +11,7 @@ export const useJoinEvent = () => {
       return await api.post(`/events/${idEvent}/accept`);
     },
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["events"] });
       queryClient.invalidateQueries({ queryKey: ["my-events"] });
       queryClient.invalidateQueries({ queryKey: ["notifications"] });
     },

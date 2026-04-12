@@ -39,7 +39,7 @@ const WeekEventsModal = ({
 
   return (
     <div className="absolute inset-0 z-50 flex items-start justify-end bg-black/35 p-6">
-      <div className="relative w-full max-w-[780px] rounded-[24px] border border-[#ff7a2f] bg-[#8F421E]/95 p-4 text-white shadow-[0_0_24px_rgba(255,107,47,0.25)] backdrop-blur-sm">
+      <div className="relative w-full max-w-195 rounded-3xl border border-[#ff7a2f] bg-[#8F421E]/95 p-4 text-white shadow-[0_0_24px_rgba(255,107,47,0.25)] backdrop-blur-sm">
         <button
           type="button"
           onClick={onClose}
@@ -59,7 +59,7 @@ const WeekEventsModal = ({
           </p>
         </div>
 
-        <div className="mt-5 max-h-[420px] overflow-y-auto pr-2 thin-scroll overscroll-contain">
+        <div className="mt-5 max-h-105 overflow-y-auto pr-2 thin-scroll overscroll-contain">
           <Accordion type="single" collapsible className="space-y-4">
             {events.map((event) => (
               <AccordionItem
