@@ -31,7 +31,7 @@ const WeekEventsModal = ({
   onClose,
   events,
   title = "AVAILABLE EVENTS",
-  subtitle = "Lorem ipsum dolor sit amet consectetur. Nulla lacinia eget mattis pretium fringilla. Tempus mattis enim dui phasellus sit massa pharetra at ac. Tempus id adipiscing enim mauris sagittis porttitor dignissim risus eget.",
+  subtitle = "In the Outer Sports Ballers galaxy, the competition never stops. In addition to our regular gameplay, we've designed limited-time Special Events to push your skills to the limit and reward the best players in the cosmos.",
 }: WeekEventsModalProps) => {
   const { mutate: joinEvent, isPending } = useJoinEvent();
 
@@ -54,7 +54,7 @@ const WeekEventsModal = ({
             {title}
           </h2>
 
-          <p className="mt-2 max-w-[680px] text-sm leading-6 text-white/75">
+          <p className="mt-2 max-w-170 font-helvetica text-sm leading-6 text-white/75">
             {subtitle}
           </p>
         </div>
