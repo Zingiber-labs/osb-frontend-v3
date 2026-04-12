@@ -12,7 +12,6 @@ import {
   User,
 } from "lucide-react";
 import { useState, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
 import LockerRoom from "./locker/LockerRoom";
 import MyEvents from "./profileDetails/my-events/MyEvents";
 import ProfileDetails from "./profileDetails/ProfileDetails";
@@ -67,24 +66,11 @@ export default function ProfileTabs({
   defaultTab = "profile",
   title = "PROFILE",
 }: ProfileStatsTabsProps) {
-  const searchParams = useSearchParams();
-  const tabFromUrl = searchParams.get("tab");
-
-  const initialTab: TabValue =
-    tabFromUrl && validTabs.includes(tabFromUrl as TabValue)
-      ? (tabFromUrl as TabValue)
-      : defaultTab;
-
-  const [activeTab, setActiveTab] = useState<TabValue>(initialTab);
+  const [activeTab, setActiveTab] = useState<TabValue>(defaultTab);
 
   useEffect(() => {
-    const nextTab =
-      tabFromUrl && validTabs.includes(tabFromUrl as TabValue)
-        ? (tabFromUrl as TabValue)
-        : defaultTab;
-
-    setActiveTab(nextTab);
-  }, [tabFromUrl, defaultTab]);
+    setActiveTab(defaultTab);
+  }, [defaultTab]);
 
   return (
     <Tabs
