@@ -11,11 +11,21 @@ import {
   Trophy,
   User,
 } from "lucide-react";
-import * as React from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import LockerRoom from "./locker/LockerRoom";
 import MyEvents from "./profileDetails/my-events/MyEvents";
 import ProfileDetails from "./profileDetails/ProfileDetails";
 import ProfileStats from "./tabs/ProfileStats";
+
+type TabValue =
+  | "profile"
+  | "my-events"
+  | "stats"
+  | "trophies"
+  | "medals"
+  | "tech"
+  | "locker";
 
 export type StatRow = {
   id: number;
@@ -24,7 +34,7 @@ export type StatRow = {
 };
 
 type ProfileStatsTabsProps = {
-  defaultTab?: "profile" | "stats" | "trophies" | "medals" | "tech" | "locker";
+  defaultTab?: TabValue;
   title?: string;
 };
 
@@ -43,12 +53,45 @@ function TabLabel({
   );
 }
 
+const validTabs: TabValue[] = [
+  "profile",
+  "my-events",
+  "stats",
+  "trophies",
+  "medals",
+  "tech",
+  "locker",
+];
+
 export default function ProfileTabs({
   defaultTab = "profile",
   title = "PROFILE",
 }: ProfileStatsTabsProps) {
+  const searchParams = useSearchParams();
+  const tabFromUrl = searchParams.get("tab");
+
+  const initialTab: TabValue =
+    tabFromUrl && validTabs.includes(tabFromUrl as TabValue)
+      ? (tabFromUrl as TabValue)
+      : defaultTab;
+
+  const [activeTab, setActiveTab] = useState<TabValue>(initialTab);
+
+  useEffect(() => {
+    const nextTab =
+      tabFromUrl && validTabs.includes(tabFromUrl as TabValue)
+        ? (tabFromUrl as TabValue)
+        : defaultTab;
+
+    setActiveTab(nextTab);
+  }, [tabFromUrl, defaultTab]);
+
   return (
-    <Tabs defaultValue={defaultTab} className="w-full">
+    <Tabs
+      value={activeTab}
+      onValueChange={(value) => setActiveTab(value as TabValue)}
+      className="w-full"
+    >
       <div>
         <div className="w-full overflow-x-auto">
           <TabsList

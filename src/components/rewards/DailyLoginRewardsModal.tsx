@@ -3,6 +3,7 @@
 import * as React from "react";
 import { X } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export type DailyReward = {
   day: number;
@@ -39,9 +40,18 @@ export function DailyLoginRewardsModal({
   onViewEvent,
   onRewardClick,
 }: Props) {
-  if (!open) return null;
-
+  const router = useRouter();
   const safeRewards = rewards?.length ? rewards : [];
+
+  const currentRewardIndex =
+    activeDay !== null
+      ? safeRewards.findIndex((reward) => reward.day === activeDay)
+      : -1;
+
+  const isLastEvent =
+    currentRewardIndex !== -1 && currentRewardIndex === safeRewards.length - 1;
+
+  if (!open) return null;
 
   return (
     <div
@@ -102,7 +112,8 @@ export function DailyLoginRewardsModal({
                   items-end
                 "
               >
-                {safeRewards.map((r) => {
+                {safeRewards.map((r, index) => {
+                  const isLastEvent = index === safeRewards.length - 1;
                   const isActive = activeDay !== null && r.day === activeDay;
 
                   const isClaimed =
@@ -182,7 +193,15 @@ export function DailyLoginRewardsModal({
             {/* CTA */}
             <div className="mt-6 flex justify-center">
               <button
-                onClick={() => onViewEvent?.()}
+                onClick={() => {
+                  if (isLastEvent) {
+                    onOpenChange(false);
+                    router.push("/profile?tab=my-events");
+                    return;
+                  }
+
+                  onViewEvent?.();
+                }}
                 className="
                   rounded-full px-10 py-3
                   text-sm sm:text-base font-semibold
@@ -192,7 +211,7 @@ export function DailyLoginRewardsModal({
                   focus:outline-none focus:ring-2 focus:ring-cyan-300/60
                 "
               >
-                VIEW EVENT
+                {isLastEvent ? "My Events" : "Next Event"}
               </button>
             </div>
           </div>
