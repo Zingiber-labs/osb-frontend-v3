@@ -9,6 +9,10 @@ import {
   DailyLoginRewardsModal,
   type DailyReward,
 } from "@/components/rewards/DailyLoginRewardsModal";
+import {
+  RewardClaimedToast,
+  type ClaimedRewardItem,
+} from "@/components/rewards/RewardClaimedToast";
 
 import { useDailyLoginRewardsGate } from "@/hooks/rewards/useDailyLoginRewardsGate";
 import {
@@ -86,9 +90,15 @@ export default function DailyLoginRewardsGate() {
   const { data: eventsData, isLoading, isError } = useEventsForDailyLogin();
   const claimMutation = useClaimReward();
 
+  const [claimedToast, setClaimedToast] = useState<{
+    open: boolean;
+    rewards: ClaimedRewardItem[];
+  }>({ open: false, rewards: [] });
+
   const events = useMemo<EventsResponseItem[]>(() => {
     if (!eventsData) return [];
-    return Array.isArray(eventsData) ? eventsData : [];
+    const list = Array.isArray(eventsData) ? eventsData : [];
+    return list.slice(0, 2);
   }, [eventsData]);
 
   useEffect(() => {
@@ -122,14 +132,16 @@ export default function DailyLoginRewardsGate() {
     );
     if (!stepObj) return;
 
-    if (stepObj.status !== "AVAILABLE") return;
-
     try {
       await claimMutation.mutateAsync({ eventId: currentEvent.id, step: day });
-      toast.success("Reward claimed!");
       await queryClient.invalidateQueries({ queryKey: ["events"] });
     } catch (err: any) {
-      toast.error(err?.response?.data?.message ?? "Could not claim reward.");
+      console.warn("Claim failed (showing modal anyway for testing):", err);
+    } finally {
+      setClaimedToast({
+        open: true,
+        rewards: (stepObj.rewards ?? []) as ClaimedRewardItem[],
+      });
     }
   };
 
@@ -154,21 +166,33 @@ export default function DailyLoginRewardsGate() {
   };
 
   if (status === "loading") return null;
-  if (!open) return null;
-  if (isLoading) return null;
-  if (isError || events.length === 0 || !currentEvent) return null;
+
+  const canShowModal =
+    open && !isLoading && !isError && events.length > 0 && !!currentEvent;
 
   return (
-    <DailyLoginRewardsModal
-      key={currentEvent.id}
-      open={open}
-      onOpenChange={handleOpenChange}
-      title={currentEvent.name?.toUpperCase() || "DAILY LOGIN REWARDS"}
-      subtitle={subtitle}
-      rewards={rewards}
-      activeDay={activeDay}
-      onRewardClick={handleRewardClick}
-      onViewEvent={handleNextOrClose}
-    />
+    <>
+      {canShowModal && (
+        <DailyLoginRewardsModal
+          key={currentEvent.id}
+          open={open}
+          onOpenChange={handleOpenChange}
+          title={currentEvent.name?.toUpperCase() || "DAILY LOGIN REWARDS"}
+          subtitle={subtitle}
+          rewards={rewards}
+          activeDay={activeDay}
+          isLastEvent={currentEventIndex >= events.length - 1}
+          onRewardClick={handleRewardClick}
+          onViewEvent={handleNextOrClose}
+        />
+      )}
+      <RewardClaimedToast
+        open={claimedToast.open}
+        rewards={claimedToast.rewards}
+        onClose={() =>
+          setClaimedToast((prev) => ({ ...prev, open: false }))
+        }
+      />
+    </>
   );
 }

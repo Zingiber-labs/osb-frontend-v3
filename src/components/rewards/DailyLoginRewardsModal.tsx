@@ -29,6 +29,8 @@ type Props = {
   rewards: DailyReward[];
   activeDay: number | null;
 
+  isLastEvent?: boolean;
+
   onViewEvent?: () => void;
   onRewardClick?: (day: number) => void;
 };
@@ -56,7 +58,7 @@ function RewardCard({
     reward.status === "COMPLETED";
 
   const isAvailable = reward.status === "AVAILABLE";
-  const disabled = isClaimed || !isAvailable;
+  const disabled = false;
 
   return (
     <div className="flex h-full flex-col items-center">
@@ -128,20 +130,13 @@ export function DailyLoginRewardsModal({
   subtitle = "Rewards claimed!",
   rewards,
   activeDay,
+  isLastEvent = false,
   onViewEvent,
   onRewardClick,
 }: Props) {
   const router = useRouter();
   const isMobile = useIsMobile();
   const safeRewards = rewards?.length ? rewards : [];
-
-  const currentRewardIndex =
-    activeDay !== null
-      ? safeRewards.findIndex((reward) => reward.day === activeDay)
-      : -1;
-
-  const isLastEvent =
-    currentRewardIndex !== -1 && currentRewardIndex === safeRewards.length - 1;
 
   const shouldUseCarousel =
     isMobile || safeRewards.length > MAX_GRID_REWARDS;
