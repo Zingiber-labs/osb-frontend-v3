@@ -301,3 +301,35 @@
 .thin-scroll::-webkit-scrollbar-thumb:hover {
   background: #ff8a55;
 }
+
+.daily-rewards-swiper .swiper-button-next,
+.daily-rewards-swiper .swiper-button-prev {
+  color: rgb(103 232 249);
+  width: 28px;
+  height: 28px;
+}
+.daily-rewards-swiper .swiper-button-next::after,
+.daily-rewards-swiper .swiper-button-prev::after {
+  font-size: 18px;
+  font-weight: 700;
+}
+.daily-rewards-swiper .swiper-button-disabled {
+  opacity: 0.25;
+}
+.daily-rewards-swiper .swiper {
+  padding-bottom: 2.5rem !important;
+}
+.daily-rewards-swiper .swiper-pagination {
+  bottom: 0 !important;
+  position: absolute !important;
+}
+.daily-rewards-swiper .swiper-pagination-bullet {
+  background: rgba(103, 232, 249, 0.5);
+  opacity: 1;
+  width: 8px;
+  height: 8px;
+  margin: 0 4px !important;
+}
+.daily-rewards-swiper .swiper-pagination-bullet-active {
+  background: rgb(103 232 249);
+}
