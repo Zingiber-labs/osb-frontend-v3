@@ -1,5 +1,3 @@
-"use client";
-
 import ProfileStatsTabs from "@/components/profile/ProfileTabs";
 
 type TabValue =
