@@ -73,7 +73,7 @@ const MyEvents = () => {
         </Select>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+      <div>
         {filteredEvents.map((event) => (
           <EventCard key={event.id} event={event} />
         ))}
