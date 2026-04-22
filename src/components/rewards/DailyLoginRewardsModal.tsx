@@ -221,9 +221,9 @@ export function DailyLoginRewardsModal({
                 </div>
               ) : (
                 <div
-                  className="grid gap-3 sm:gap-4 items-end"
+                  className="mx-auto grid gap-3 sm:gap-4 items-end justify-center"
                   style={{
-                    gridTemplateColumns: `repeat(${safeRewards.length}, minmax(0, 1fr))`,
+                    gridTemplateColumns: `repeat(${safeRewards.length}, minmax(0, 150px))`,
                   }}
                 >
                   {safeRewards.map((r) => (
