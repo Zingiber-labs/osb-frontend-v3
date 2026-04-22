@@ -58,7 +58,7 @@ function RewardCard({
     reward.status === "COMPLETED";
 
   const isAvailable = reward.status === "AVAILABLE";
-  const disabled = false;
+  const disabled = isClaimed || !isAvailable;
 
   return (
     <div className="flex h-full flex-col items-center">
