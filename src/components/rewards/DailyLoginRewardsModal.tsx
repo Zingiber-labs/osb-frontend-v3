@@ -199,7 +199,7 @@ export function DailyLoginRewardsModal({
                     modules={[Navigation, Pagination]}
                     spaceBetween={12}
                     slidesPerView={1}
-                    navigation={!isMobile}
+                    navigation
                     pagination={{ clickable: true }}
                     breakpoints={{
                       640: { slidesPerView: 3, spaceBetween: 14 },
