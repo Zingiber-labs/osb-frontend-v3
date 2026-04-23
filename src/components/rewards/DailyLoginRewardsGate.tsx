@@ -96,15 +96,8 @@ export default function DailyLoginRewardsGate() {
   }>({ open: false, rewards: [] });
 
   const events = useMemo<EventsResponseItem[]>(() => {
-    if (!eventsData) return [];
-    const raw = Array.isArray(eventsData)
-      ? eventsData
-      : Array.isArray((eventsData as any)?.data)
-        ? (eventsData as any).data
-        : Array.isArray((eventsData as any)?.events)
-          ? (eventsData as any).events
-          : [];
-    return (raw as EventsResponseItem[])
+    const raw = (eventsData ?? []) as EventsResponseItem[];
+    return raw
       .filter(
         (e) =>
           e?.type === "DAILY_LOGIN" &&
