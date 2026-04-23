@@ -301,3 +301,57 @@
 .thin-scroll::-webkit-scrollbar-thumb:hover {
   background: #ff8a55;
 }
+
+.daily-rewards-swiper .swiper-button-next,
+.daily-rewards-swiper .swiper-button-prev {
+  color: rgba(207, 250, 254, 0.55);
+  width: 24px;
+  height: 24px;
+  top: 42%;
+  opacity: 1;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+.daily-rewards-swiper .swiper-button-prev {
+  left: 2px;
+}
+.daily-rewards-swiper .swiper-button-next {
+  right: 2px;
+}
+.daily-rewards-swiper .swiper-button-next:hover,
+.daily-rewards-swiper .swiper-button-prev:hover {
+  color: rgb(207, 250, 254);
+  transform: scale(1.15);
+}
+.daily-rewards-swiper .swiper-button-prev:hover {
+  transform: scale(1.15) translateX(-2px);
+}
+.daily-rewards-swiper .swiper-button-next:hover {
+  transform: scale(1.15) translateX(2px);
+}
+.daily-rewards-swiper .swiper-button-next::after,
+.daily-rewards-swiper .swiper-button-prev::after {
+  font-size: 20px;
+  font-weight: 400;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.6), 0 0 10px rgba(34, 211, 238, 0.35);
+}
+.daily-rewards-swiper .swiper-button-disabled {
+  opacity: 0.2 !important;
+  pointer-events: none;
+}
+.daily-rewards-swiper .swiper {
+  padding-bottom: 2.5rem !important;
+}
+.daily-rewards-swiper .swiper-pagination {
+  bottom: 0 !important;
+  position: absolute !important;
+}
+.daily-rewards-swiper .swiper-pagination-bullet {
+  background: rgba(103, 232, 249, 0.5);
+  opacity: 1;
+  width: 8px;
+  height: 8px;
+  margin: 0 4px !important;
+}
+.daily-rewards-swiper .swiper-pagination-bullet-active {
+  background: rgb(103 232 249);
+}
