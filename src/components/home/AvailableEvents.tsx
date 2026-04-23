@@ -1,23 +1,25 @@
 "use client";
 
 import { Accordion } from "@/components/ui/accordion";
-import { X } from "lucide-react";
 import { useJoinEvent } from "@/hooks/events-complex/useEvents";
 import { EventComplexItem } from "@/types/event";
+import { Loader2, X } from "lucide-react";
 import EventAccordionCard from "../complex-event/EventAccordionCard";
 
 interface WeekEventsModalProps {
   open: boolean;
   onClose: () => void;
   events: EventComplexItem[];
+  isLoading?: boolean;
   title?: string;
   subtitle?: string;
 }
 
-const WeekEventsModal = ({
+const AvailableEvents = ({
   open,
   onClose,
   events,
+  isLoading = false,
   title = "AVAILABLE EVENTS",
   subtitle = "In the Outer Sports Ballers galaxy, the competition never stops. In addition to our regular gameplay, we've designed limited-time Special Events to push your skills to the limit and reward the best players in the cosmos.",
 }: WeekEventsModalProps) => {
@@ -48,20 +50,35 @@ const WeekEventsModal = ({
         </div>
 
         <div className="mt-5 max-h-105 overflow-y-auto pr-2 thin-scroll overscroll-contain">
-          <Accordion type="single" collapsible className="space-y-4">
-            {events.map((event) => (
-              <EventAccordionCard
-                key={event.id}
-                event={event}
-                isPending={isPending}
-                onJoin={(eventId) => joinEvent({ idEvent: eventId })}
-              />
-            ))}
-          </Accordion>
+          {isLoading ? (
+            <div className="flex min-h-60 flex-col items-center justify-center gap-4">
+              <Loader2 className="h-10 w-10 animate-spin text-cyan-300" />
+              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-white/75">
+                Loading Events...
+              </p>
+            </div>
+          ) : events.length === 0 ? (
+            <div className="flex min-h-60 items-center justify-center">
+              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-white/60">
+                No Events Available
+              </p>
+            </div>
+          ) : (
+            <Accordion type="single" collapsible className="space-y-4">
+              {events.map((event) => (
+                <EventAccordionCard
+                  key={event.id}
+                  event={event}
+                  isPending={isPending}
+                  onJoin={(eventId) => joinEvent({ idEvent: eventId })}
+                />
+              ))}
+            </Accordion>
+          )}
         </div>
       </div>
     </div>
   );
 };
 
-export default WeekEventsModal;
+export default AvailableEvents;

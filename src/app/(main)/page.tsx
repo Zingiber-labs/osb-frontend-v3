@@ -19,7 +19,7 @@ export default function Home() {
   const isMobile = useIsMobile(1200);
   const [isEventsOpen, setIsEventsOpen] = useState(false);
   const [isNotifOpen, setIsNotifOpen] = useState(false);
-  const { data: events } = useComplexEvents();
+  const { data: events, isLoading: isEventsLoading } = useComplexEvents();
   const { data: unreadData } = useUnreadCount();
   const unreadCount = unreadData?.unreadCount ?? 0;
 
@@ -223,6 +223,7 @@ export default function Home() {
         open={isEventsOpen}
         onClose={() => setIsEventsOpen(false)}
         events={events || []}
+        isLoading={isEventsLoading}
       />
 
       <NotificationPanel
