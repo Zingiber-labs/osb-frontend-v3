@@ -1,27 +1,15 @@
 "use client";
 
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+import { Accordion } from "@/components/ui/accordion";
 import { X } from "lucide-react";
-import { Button } from "../ui/button";
 import { useJoinEvent } from "@/hooks/events-complex/useEvents";
-
-export type EventItem = {
-  id: number | string;
-  name: string;
-  date: string;
-  description?: string;
-  accepted?: boolean;
-};
+import { EventComplexItem } from "@/types/event";
+import EventAccordionCard from "../complex-event/EventAccordionCard";
 
 interface WeekEventsModalProps {
   open: boolean;
   onClose: () => void;
-  events: EventItem[];
+  events: EventComplexItem[];
   title?: string;
   subtitle?: string;
 }
@@ -62,40 +50,12 @@ const WeekEventsModal = ({
         <div className="mt-5 max-h-105 overflow-y-auto pr-2 thin-scroll overscroll-contain">
           <Accordion type="single" collapsible className="space-y-4">
             {events.map((event) => (
-              <AccordionItem
+              <EventAccordionCard
                 key={event.id}
-                value={String(event.id)}
-                className="overflow-hidden rounded-md border-0 bg-[#B45322]"
-              >
-                <AccordionTrigger className="px-4 py-4 [&>svg]:text-white/80">
-                  <div className="flex w-full items-center justify-between pr-2 text-left">
-                    <span className="text-[22px] font-extrabold uppercase tracking-wide text-white">
-                      {event.name}
-                    </span>
-
-                    <span className="flex items-center gap-3 text-sm font-bold text-white/90">
-                      {event.date}
-                    </span>
-                  </div>
-                </AccordionTrigger>
-
-                <AccordionContent className="border-t border-white/10 px-4 pb-4 pt-3 text-sm leading-6 text-white/80">
-                  {event.description || "No event details available yet."}
-                  <div className="mt-5 flex justify-end gap-3">
-                    <Button
-                      disabled={isPending || event.accepted}
-                      variant="secondary"
-                      onClick={() => joinEvent({ idEvent: String(event.id) })}
-                    >
-                      {event.accepted
-                        ? "Joined"
-                        : isPending
-                          ? "Joining..."
-                          : "Join Event"}
-                    </Button>
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
+                event={event}
+                isPending={isPending}
+                onJoin={(eventId) => joinEvent({ idEvent: eventId })}
+              />
             ))}
           </Accordion>
         </div>

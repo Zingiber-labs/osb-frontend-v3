@@ -18,7 +18,7 @@ export const useJoinEvent = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({ idEvent }: { idEvent: string }) => {
-      return await api.post(`/events/${idEvent}/accept`);
+      return await api.post(`/events/complex/${idEvent}/join`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["complex-events"] });

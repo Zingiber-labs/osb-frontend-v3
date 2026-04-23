@@ -53,3 +53,49 @@ export type EventStep = {
   status: "AVAILABLE" | "LOCKED" | "CLAIMED" | string;
   rewards: Reward[];
 };
+
+export type RewardCode = "COINS" | "GEMS" | "XP" | string;
+
+export type RewardItem = {
+  code?: RewardCode;
+  type?: string;
+  amount: number;
+  isSurprise?: boolean;
+};
+
+export type MilestoneItem = {
+  step: number;
+  conditionValue: number;
+  status: "LOCKED" | "AVAILABLE" | "CLAIMED" | "COMPLETED" | string;
+  rewards: RewardItem[];
+};
+
+export type CompetitiveReward = {
+  rankFrom: number;
+  rankTo: number;
+  label?: string;
+  rewardType?: string;
+  code?: RewardCode;
+  amount: number;
+};
+
+export type EventComplexItem = {
+  id: number | string;
+  uid?: string;
+  name: string;
+  description?: string;
+  type?: string;
+  accepted?: boolean;
+  isBoxscoreLinked?: boolean;
+  startDate?: string;
+  endDate?: string;
+  progress?: {
+    currentValue: number;
+    lastUpdate?: string;
+  };
+  milestones?: MilestoneItem[];
+  rankingConfig?: {
+    enabled: boolean;
+  };
+  competitiveRewards?: CompetitiveReward[];
+};
