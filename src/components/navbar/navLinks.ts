@@ -3,4 +3,5 @@ export const navLinks = [
   { label: "Store", href: "/store" },
   { label: "Inventory", href: "/inventory" },
   { label: "Hangar", href: "/missions" },
+  { label: "Leaderboard", href: "/ranking" },
 ];
