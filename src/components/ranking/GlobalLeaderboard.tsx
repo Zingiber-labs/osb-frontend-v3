@@ -33,7 +33,7 @@ export const GlobalLeaderboard = () => {
     return (
       <div className="flex flex-col items-center justify-center min-h-[400px] gap-4">
         <Loader2 className="w-10 h-10 animate-spin text-primary" />
-        <p className="text-muted-foreground animate-pulse">Cargando el ranking mundial...</p>
+        <p className="text-muted-foreground animate-pulse">Loading the global leaderboard...</p>
       </div>
     );
   }
@@ -41,9 +41,9 @@ export const GlobalLeaderboard = () => {
   if (isError || !data) {
     return (
       <div className="text-center p-12 bg-destructive/10 rounded-xl border border-destructive/20">
-        <p className="text-destructive font-medium">Error al cargar el leaderboard.</p>
+        <p className="text-destructive font-medium">Error loading the leaderboard.</p>
         <Button variant="outline" className="mt-4" onClick={() => window.location.reload()}>
-          Reintentar
+          Retry
         </Button>
       </div>
     );
@@ -61,11 +61,9 @@ export const GlobalLeaderboard = () => {
           <div className="h-[2px] w-12 bg-gradient-to-l from-transparent to-yellow-500/50" />
         </div>
         <h1 className="text-5xl md:text-7xl font-black bg-gradient-to-b from-white via-white to-zinc-500 bg-clip-text text-transparent italic tracking-tighter uppercase leading-none">
-          Leaderboard Global
+          Global Leaderboard
         </h1>
-        <p className="text-zinc-400 text-lg md:text-xl font-medium tracking-wide uppercase italic opacity-80">
-          Los guerreros más destacados de la plataforma basado en su XP total.
-        </p>
+
       </div>
 
       <Card className="border border-white/10 bg-black/40 backdrop-blur-3xl shadow-[0_0_50px_-12px_rgba(0,0,0,0.5)] overflow-hidden rounded-3xl">
@@ -73,16 +71,16 @@ export const GlobalLeaderboard = () => {
           <Table>
             <TableHeader className="bg-white/[0.02] border-b border-white/5">
               <TableRow className="hover:bg-transparent border-none">
-                <TableHead className="w-[100px] text-center font-black uppercase text-[10px] tracking-[0.2em] text-zinc-500 py-6">Rango</TableHead>
-                <TableHead className="font-black uppercase text-[10px] tracking-[0.2em] text-zinc-500 py-6">Usuario</TableHead>
-                <TableHead className="hidden md:table-cell font-black uppercase text-[10px] tracking-[0.2em] text-zinc-500 py-6">Nivel & Rango</TableHead>
-                <TableHead className="text-right font-black uppercase text-[10px] tracking-[0.2em] text-zinc-500 py-6 pr-8">XP Total</TableHead>
+                <TableHead className="w-[100px] text-center font-black uppercase text-[10px] tracking-[0.2em] text-zinc-500 py-6">Rank</TableHead>
+                <TableHead className="font-black uppercase text-[10px] tracking-[0.2em] text-zinc-500 py-6">User</TableHead>
+                <TableHead className="hidden md:table-cell font-black uppercase text-[10px] tracking-[0.2em] text-zinc-500 py-6">Level & Rank</TableHead>
+                <TableHead className="text-right font-black uppercase text-[10px] tracking-[0.2em] text-zinc-500 py-6 pr-8">Total XP</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {data.data.map((user) => (
-                <TableRow 
-                  key={user.username} 
+                <TableRow
+                  key={user.username}
                   className={cn(
                     "border-white/[0.03] transition-all duration-500 group",
                     user.rank === 1 && "bg-gradient-to-r from-yellow-500/[0.08] to-transparent hover:from-yellow-500/[0.12]",
@@ -101,9 +99,9 @@ export const GlobalLeaderboard = () => {
                       <div className="relative">
                         <Avatar className={cn(
                           "h-12 w-12 border-2",
-                          user.rank === 1 ? "border-yellow-400 bg-yellow-400/10" : 
-                          user.rank === 2 ? "border-slate-300 bg-slate-300/10" : 
-                          user.rank === 3 ? "border-amber-700 bg-amber-700/10" : "border-white/10 bg-white/5"
+                          user.rank === 1 ? "border-yellow-400 bg-yellow-400/10" :
+                            user.rank === 2 ? "border-slate-300 bg-slate-300/10" :
+                              user.rank === 3 ? "border-amber-700 bg-amber-700/10" : "border-white/10 bg-white/5"
                         )}>
                           <AvatarFallback className="bg-transparent text-sm font-bold text-zinc-400">
                             {user.username.substring(0, 2).toUpperCase()}
@@ -112,8 +110,8 @@ export const GlobalLeaderboard = () => {
                         {user.rank <= 3 && (
                           <div className={cn(
                             "absolute -inset-1 blur-md opacity-20 rounded-full -z-10 animate-pulse",
-                            user.rank === 1 ? "bg-yellow-400" : 
-                            user.rank === 2 ? "bg-slate-300" : "bg-amber-700"
+                            user.rank === 1 ? "bg-yellow-400" :
+                              user.rank === 2 ? "bg-slate-300" : "bg-amber-700"
                           )} />
                         )}
                       </div>
@@ -125,13 +123,13 @@ export const GlobalLeaderboard = () => {
                           {user.username}
                         </span>
                         <div className="md:hidden flex items-center gap-1.5 mt-0.5">
-                           {user.level ? (
-                             <span className="text-[10px] text-yellow-500/70 font-black uppercase tracking-widest italic">
-                               {user.level.name}
-                             </span>
-                           ) : (
-                             <span className="text-[10px] text-zinc-600 font-bold uppercase tracking-widest italic">Iniciado</span>
-                           )}
+                          {user.level ? (
+                            <span className="text-[10px] text-yellow-500/70 font-black uppercase tracking-widest italic">
+                              {user.level.name}
+                            </span>
+                          ) : (
+                            <span className="text-[10px] text-zinc-600 font-bold uppercase tracking-widest italic">Rookie</span>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -141,9 +139,9 @@ export const GlobalLeaderboard = () => {
                       {user.level ? (
                         <div className="flex items-center gap-3 bg-white/[0.03] px-3 py-1.5 rounded-full border border-white/5 group-hover:border-white/10 transition-colors">
                           <div className="w-6 h-6 flex items-center justify-center">
-                            <img 
-                              src={user.level.iconUrl} 
-                              alt="" 
+                            <img
+                              src={user.level.iconUrl}
+                              alt=""
                               className="w-full h-full object-contain drop-shadow-[0_0_5px_rgba(255,255,255,0.3)]"
                               onError={(e) => {
                                 (e.target as HTMLImageElement).style.display = 'none';
@@ -156,7 +154,7 @@ export const GlobalLeaderboard = () => {
                           </span>
                         </div>
                       ) : (
-                        <span className="text-zinc-600 font-bold text-xs uppercase italic tracking-[0.1em] opacity-50">✦ Iniciado</span>
+                        <span className="text-zinc-600 font-bold text-xs uppercase italic tracking-[0.1em] opacity-50">✦ Rookie</span>
                       )}
                     </div>
                   </TableCell>
@@ -164,8 +162,8 @@ export const GlobalLeaderboard = () => {
                     <div className="flex flex-col items-end">
                       <span className={cn(
                         "font-black text-xl tabular-nums tracking-tighter italic",
-                        user.rank === 1 ? "text-yellow-400 drop-shadow-[0_0_10px_rgba(250,204,21,0.3)]" : 
-                        user.rank <= 3 ? "text-white" : "text-zinc-400"
+                        user.rank === 1 ? "text-yellow-400 drop-shadow-[0_0_10px_rgba(250,204,21,0.3)]" :
+                          user.rank <= 3 ? "text-white" : "text-zinc-400"
                       )}>
                         {user.xp.toLocaleString()}
                         <span className="ml-1 text-[10px] text-zinc-500 non-italic uppercase font-bold tracking-widest">XP</span>
@@ -181,7 +179,7 @@ export const GlobalLeaderboard = () => {
         {/* Pagination */}
         <div className="flex flex-col md:flex-row items-center justify-between px-8 py-6 bg-white/[0.02] border-t border-white/5 gap-4">
           <div className="text-[11px] text-zinc-500 font-black uppercase tracking-[0.15em]">
-            Mostrando <span className="text-white">{(page - 1) * limit + 1} - {Math.min(page * limit, data.total)}</span> de <span className="text-zinc-300">{data.total} registrados</span>
+            Showing <span className="text-white">{(page - 1) * limit + 1} - {Math.min(page * limit, data.total)}</span> of <span className="text-zinc-300">{data.total} registered</span>
           </div>
           <div className="flex items-center gap-4">
             <Button
@@ -195,11 +193,11 @@ export const GlobalLeaderboard = () => {
               className="h-9 px-4 rounded-xl border-white/10 bg-transparent hover:bg-white/5 hover:text-white transition-all disabled:opacity-20"
             >
               <ChevronLeft className="w-4 h-4 mr-2" />
-              Anterior
+              Previous
             </Button>
             <div className="flex items-center gap-1">
-               <span className="text-white font-black text-sm italic">{page}</span>
-               <span className="text-zinc-600 font-bold text-xs uppercase">/ {totalPages}</span>
+              <span className="text-white font-black text-sm italic">{page}</span>
+              <span className="text-zinc-600 font-bold text-xs uppercase">/ {totalPages}</span>
             </div>
             <Button
               variant="outline"
@@ -211,7 +209,7 @@ export const GlobalLeaderboard = () => {
               }}
               className="h-9 px-4 rounded-xl border-white/10 bg-transparent hover:bg-white/5 hover:text-white transition-all disabled:opacity-20"
             >
-              Siguiente
+              Next
               <ChevronRight className="w-4 h-4 ml-2" />
             </Button>
           </div>
@@ -228,7 +226,7 @@ export const GlobalLeaderboard = () => {
               <Trophy className="w-6 h-6" />
             </div>
             <div>
-              <p className="text-[10px] text-yellow-500/70 uppercase font-black tracking-widest italic">Campeón Actual</p>
+              <p className="text-[10px] text-yellow-500/70 uppercase font-black tracking-widest italic">Current Champion</p>
               <p className="text-xl font-black text-white italic tracking-tighter uppercase">
                 {data.data[0]?.username || "..."}
               </p>
