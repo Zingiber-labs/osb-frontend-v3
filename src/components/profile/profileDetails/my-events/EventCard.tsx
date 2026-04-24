@@ -38,8 +38,6 @@ export default function EventCard({ event }: EventCardProps) {
       .length;
   }, [currentValue, event.steps]);
 
-  console.log("EventCard render", { event, currentValue, completedSegments })
-
   return (
     <>
       <button
