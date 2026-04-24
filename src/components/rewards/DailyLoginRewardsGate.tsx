@@ -14,11 +14,11 @@ import {
   type ClaimedRewardItem,
 } from "@/components/rewards/RewardClaimedToast";
 
-import { useDailyLoginRewardsGate } from "@/hooks/rewards/useDailyLoginRewardsGate";
 import {
   useClaimReward,
   useEventsForDailyLogin,
-} from "@/hooks/rewards/useRewards";
+} from "@/hooks/events-daily-login/useDailyLoginEvent";
+import { useDailyLoginRewardsGate } from "@/hooks/rewards/useDailyLoginRewardsGate";
 
 type EventReward = { type: "CURRENCY" | string; code?: string; amount: number };
 
