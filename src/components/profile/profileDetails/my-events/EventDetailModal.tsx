@@ -92,15 +92,14 @@ export default function EventDetailModal({
   open,
   onOpenChange,
 }: EventDetailModalProps) {
-  if (!event) return null;
+  
   const { mutate: claimReward, isPending } = useClaimReward();
-
-  const currentValue = event.progress?.currentValue ?? 0;
-  const completedSegments = event.steps.filter(
+  const currentValue = event?.progress?.currentValue ?? 0;
+  const completedSegments = event?.steps.filter(
     (step) => currentValue >= step.conditionValue,
   ).length;
-
-  const availableStep = event.steps.find((step) => step.status === "AVAILABLE");
+  
+  if (!event) return null;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
