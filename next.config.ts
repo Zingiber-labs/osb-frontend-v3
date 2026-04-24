@@ -7,12 +7,6 @@ const nextConfig: NextConfig = {
   transpilePackages: ['three'],
   images: {
     unoptimized: true,
-    domains: [
-      's3.us-central-1.wasabisys.com',
-      'wasabisys.com',
-      'example.com',
-      'cdn.example.com',
-    ],
     remotePatterns: [
       {
         protocol: 'https',
@@ -22,24 +16,32 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: '**.wasabisys.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'example.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'cdn.example.com',
+      },
     ],
-  },
-  eslint: {
-    ignoreDuringBuilds: true,
   },
   typescript: {
     ignoreBuildErrors: true,
   },
-  optimizeFonts: false,
-  webpack: (config) => {
-    config.resolve.alias = {
-      ...config.resolve.alias,
-      "asynckit": false,
-      "combined-stream": false,
-      "form-data": false,
-    };
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        "asynckit": false,
+        "combined-stream": false,
+        "form-data": false,
+      };
+    }
     return config;
   },
+  // @ts-ignore - Required for Next.js 16 when using webpack config
+  turbopack: {},
 };
 
 export default nextConfig;
