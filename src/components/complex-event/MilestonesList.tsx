@@ -33,7 +33,7 @@ export default function MilestonesList({
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div>
                     <p className="text-sm font-bold uppercase tracking-wide text-white">
-                      Step {milestone.step}
+                      Goal {milestone.step}
                     </p>
                     <p className="text-xs text-white/65">
                       Target: {milestone.conditionValue}
