@@ -9,13 +9,15 @@ import { Button } from "@/components/ui/button";
 import { useComplexEvents } from "@/hooks/events-complex/useEvents";
 import { useUnreadCount } from "@/hooks/notifications/useNotifications";
 import { useIsMobile } from "@/hooks/useIsMobile";
-import { Bell, CalendarDays } from "lucide-react";
+import { Bell, CalendarDays, Trophy } from "lucide-react";
 import { signOut } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function Home() {
+  const router = useRouter();
   const isMobile = useIsMobile(1200);
   const [isEventsOpen, setIsEventsOpen] = useState(false);
   const [isNotifOpen, setIsNotifOpen] = useState(false);
@@ -95,6 +97,12 @@ export default function Home() {
               ariaLabel="Open events"
               onClick={() => setIsEventsOpen(true)}
               icon={<CalendarDays className="h-5 w-5 text-white" />}
+            />
+
+            <FloatingActionButton
+              ariaLabel="Leaderboard"
+              onClick={() => router.push("/ranking")}
+              icon={<Trophy className="h-5 w-5 text-white" />}
             />
 
             <div className="relative">
@@ -190,6 +198,12 @@ export default function Home() {
               ariaLabel="Open events"
               onClick={() => setIsEventsOpen(true)}
               icon={<CalendarDays className="h-6 w-6 text-white" />}
+            />
+
+            <FloatingActionButton
+              ariaLabel="Leaderboard"
+              onClick={() => router.push("/ranking")}
+              icon={<Trophy className="h-6 w-6 text-white" />}
             />
 
             <div className="relative">

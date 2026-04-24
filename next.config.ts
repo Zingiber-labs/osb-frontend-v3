@@ -31,6 +31,15 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: true,
   },
   optimizeFonts: false,
+  webpack: (config) => {
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      "asynckit": false,
+      "combined-stream": false,
+      "form-data": false,
+    };
+    return config;
+  },
 };
 
 export default nextConfig;
