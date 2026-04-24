@@ -26,7 +26,7 @@ export default function Home() {
   const unreadCount = unreadData?.unreadCount ?? 0;
 
   return (
-    <div className="relative mx-auto min-h-[calc(100dvh-104px-91.83px)] w-full overflow-hidden rounded-2xl border-0 shadow">
+    <div className="relative mx-auto min-h-[calc(100dvh-104px-91.83px)] w-full overflow-auto rounded-2xl border-0 shadow thin-scroll">
       {isMobile ? (
         <>
           <div className="mx-auto flex max-w-md w-full flex-col gap-4 px-4 py-16 text-white">
