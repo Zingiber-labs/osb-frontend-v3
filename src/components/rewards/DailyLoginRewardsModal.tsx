@@ -1,16 +1,15 @@
 "use client";
 
-import * as React from "react";
-import { X } from "lucide-react";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination } from "swiper/modules";
 import { useIsMobile } from "@/hooks/useIsMobile";
+import { X } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Navigation, Pagination } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
 
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
+import RewardCard from "./RewardCard";
 
 export type DailyReward = {
   day: number;
@@ -22,106 +21,16 @@ export type DailyReward = {
 type Props = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-
   title?: string;
   subtitle?: string;
-
   rewards: DailyReward[];
   activeDay: number | null;
-
   isLastEvent?: boolean;
-
   onViewEvent?: () => void;
   onRewardClick?: (day: number) => void;
 };
 
 const MAX_GRID_REWARDS = 7;
-
-function formatAmount(amount: number) {
-  return `x${amount}`;
-}
-
-function RewardCard({
-  reward,
-  activeDay,
-  onRewardClick,
-}: {
-  reward: DailyReward;
-  activeDay: number | null;
-  onRewardClick?: (day: number) => void;
-}) {
-  const isActive = activeDay !== null && reward.day === activeDay;
-
-  const isClaimed =
-    !!reward.claimed ||
-    reward.status === "CLAIMED" ||
-    reward.status === "COMPLETED";
-
-  const isAvailable = reward.status === "AVAILABLE";
-  const disabled = isClaimed || !isAvailable;
-
-  return (
-    <div className="flex h-full flex-col items-center">
-      <button
-        type="button"
-        disabled={disabled}
-        onClick={() => onRewardClick?.(reward.day)}
-        className={[
-          "relative w-full rounded-xl p-3 sm:p-4 text-left",
-          "bg-orange-24 border border-orange-500/80",
-          "backdrop-blur transition",
-          isActive
-            ? "ring-2 ring-cyan-300/70 shadow-[0_0_0_1px_rgba(34,211,238,0.25),0_0_25px_rgba(34,211,238,0.15)]"
-            : "opacity-60",
-          disabled
-            ? "cursor-not-allowed"
-            : "cursor-pointer hover:opacity-100",
-        ]
-          .filter(Boolean)
-          .join(" ")}
-        aria-label={`Claim reward for day ${reward.day}`}
-      >
-        <div className="mx-auto flex aspect-[4/3] w-full items-center justify-center rounded-lg bg-white">
-          <Image
-            src="/img/coin.svg"
-            alt="Coin"
-            width={40}
-            height={40}
-            className="drop-shadow-[0_10px_18px_rgba(0,0,0,0.35)] animate-bob"
-          />
-        </div>
-
-        <div className="font-helvetica mt-2 text-center text-xs sm:text-sm font-semibold text-cyan-200">
-          {formatAmount(reward.amount)}
-        </div>
-
-        {isClaimed && (
-          <div className="absolute left-2 top-2 rounded-md bg-black/70 px-2 py-1 text-[10px] text-white/80">
-            Claimed
-          </div>
-        )}
-
-        {!isClaimed && reward.status === "LOCKED" && (
-          <div className="absolute left-2 top-2 rounded-md bg-black/70 px-2 py-1 text-[10px] text-white/80">
-            Locked
-          </div>
-        )}
-      </button>
-
-      <div
-        className={[
-          "mt-2 w-full text-center rounded-lg py-1.5",
-          "text-sm sm:text-base font-semibold",
-          isActive
-            ? "bg-orange-24 text-white ring-1 ring-cyan-300/60"
-            : "bg-orange-24 text-white/60",
-        ].join(" ")}
-      >
-        day {reward.day}
-      </div>
-    </div>
-  );
-}
 
 export function DailyLoginRewardsModal({
   open,
@@ -138,8 +47,7 @@ export function DailyLoginRewardsModal({
   const isMobile = useIsMobile();
   const safeRewards = rewards?.length ? rewards : [];
 
-  const shouldUseCarousel =
-    isMobile || safeRewards.length > MAX_GRID_REWARDS;
+  const shouldUseCarousel = isMobile || safeRewards.length > MAX_GRID_REWARDS;
 
   if (!open) return null;
 
@@ -153,41 +61,27 @@ export function DailyLoginRewardsModal({
       <button
         aria-label="Close"
         onClick={() => onOpenChange(false)}
-        className="absolute inset-0 bg-black/60"
+        className="absolute inset-0 bg-black/70 backdrop-blur-sm"
       />
 
       <div className="relative mx-auto flex h-full w-full items-center justify-center p-3 sm:p-6">
-        <div
-          className="
-            relative w-full max-w-[1100px]
-            overflow-hidden rounded-2xl
-            border border-orange-500/80
-            bg-gradient-to-b from-[#2a1b16]/90 via-[#1d1210]/85 to-[#120b0a]/90
-            shadow-2xl
-          "
-        >
-          <div className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-[#ff6b2f]/40" />
+        <div className="relative w-full max-w-275 overflow-hidden rounded-2xl border border-orange-400/50 bg-linear-to-br from-[#2d1710]/95 via-[#160d0b]/95 to-[#080506]/95 shadow-[0_30px_90px_rgba(0,0,0,0.65)]">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,114,45,0.25),transparent_38%),radial-gradient(circle_at_top_right,rgba(34,211,238,0.18),transparent_35%)]" />
 
           <button
             onClick={() => onOpenChange(false)}
-            className="
-              absolute right-3 top-3
-              rounded-full p-2
-              text-cyan-200/90 hover:text-cyan-100
-              hover:bg-white/5
-              focus:outline-none focus:ring-2 focus:ring-cyan-300/50
-            "
+            className="absolute right-3 top-3 z-10 rounded-full p-2 text-cyan-200/90 hover:bg-white/10 hover:text-cyan-100 focus:outline-none focus:ring-2 focus:ring-cyan-300/50"
             aria-label="Close modal"
           >
             <X className="h-5 w-5" />
           </button>
 
-          <div className="px-4 pb-5 pt-6 sm:px-8 sm:pb-7 sm:pt-8">
+          <div className="relative px-4 pb-5 pt-6 sm:px-8 sm:pb-7 sm:pt-8">
             <div className="text-center">
-              <h2 className="text-base sm:text-lg tracking-widest text-cyan-300">
+              <h2 className="text-base tracking-[0.28em] text-cyan-300 sm:text-lg">
                 {title}
               </h2>
-              <p className="mt-2 text-sm sm:text-base text-white/80">
+              <p className="mt-2 text-sm text-white/75 sm:text-base">
                 {subtitle}
               </p>
             </div>
@@ -221,7 +115,7 @@ export function DailyLoginRewardsModal({
                 </div>
               ) : (
                 <div
-                  className="mx-auto grid gap-3 sm:gap-4 items-end justify-center"
+                  className="mx-auto grid items-end justify-center gap-3 sm:gap-4"
                   style={{
                     gridTemplateColumns: `repeat(${safeRewards.length}, minmax(0, 150px))`,
                   }}
@@ -238,7 +132,6 @@ export function DailyLoginRewardsModal({
               )}
             </div>
 
-            {/* CTA */}
             <div className="mt-6 flex justify-center">
               <button
                 onClick={() => {
@@ -250,14 +143,7 @@ export function DailyLoginRewardsModal({
 
                   onViewEvent?.();
                 }}
-                className="
-                  rounded-full px-10 py-3
-                  text-sm sm:text-base font-semibold
-                  text-black
-                  bg-cyan-300 hover:bg-cyan-200
-                  shadow-lg
-                  focus:outline-none focus:ring-2 focus:ring-cyan-300/60
-                "
+                className="rounded-full bg-cyan-300 px-10 py-3 text-sm font-semibold text-black shadow-lg transition hover:bg-cyan-200 focus:outline-none focus:ring-2 focus:ring-cyan-300/60 sm:text-base"
               >
                 {isLastEvent ? "My Events" : "Next Event"}
               </button>
@@ -265,7 +151,6 @@ export function DailyLoginRewardsModal({
           </div>
         </div>
       </div>
-
     </div>
   );
 }
