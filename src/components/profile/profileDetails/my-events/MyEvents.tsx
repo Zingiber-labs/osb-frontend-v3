@@ -73,7 +73,7 @@ const MyEvents = () => {
         </Select>
       </div>
 
-      <div>
+      <div className="flex flex-col gap-4">
         {filteredEvents.map((event) => (
           <EventCard key={event.id} event={event} />
         ))}

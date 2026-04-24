@@ -26,6 +26,7 @@ export const useClaimReward = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["profile-data"] });
       queryClient.invalidateQueries({ queryKey: ["notifications"] });
+      queryClient.invalidateQueries({ queryKey: ["my-events"] });
     },
   });
 };

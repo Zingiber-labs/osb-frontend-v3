@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -8,8 +7,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import EventProgressBar from "./EventProgressBar";
+import { useClaimReward } from "@/hooks/events-daily-login/useDailyLoginEvent";
 import { EventItem } from "@/types/event";
+import Image from "next/image";
+import EventProgressBar from "./EventProgressBar";
 
 type EventDetailModalProps = {
   event: EventItem | null;
@@ -92,6 +93,7 @@ export default function EventDetailModal({
   onOpenChange,
 }: EventDetailModalProps) {
   if (!event) return null;
+  const { mutate: claimReward, isPending } = useClaimReward();
 
   const currentValue = event.progress?.currentValue ?? 0;
   const completedSegments = event.steps.filter(
@@ -226,8 +228,17 @@ export default function EventDetailModal({
                               </p>
                             </div>
 
-                            <Button className="h-11 rounded-full bg-cyan-400 px-8 font-semibold text-black hover:bg-cyan-300">
-                              CLAIM
+                            <Button
+                              className="h-11 rounded-full bg-cyan-400 px-8 font-semibold text-black hover:bg-cyan-300"
+                              onClick={() =>
+                                claimReward({
+                                  eventId: event.id,
+                                  step: step.step,
+                                })
+                              }
+                              disabled={isPending}
+                            >
+                              {isPending ? "CLAIMING..." : "CLAIM"}
                             </Button>
                           </div>
                         </div>
