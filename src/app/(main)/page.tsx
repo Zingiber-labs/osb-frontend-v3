@@ -2,11 +2,11 @@
 
 import { AuthPanel } from "@/components/auth/AuthStatus";
 import { HoverImage } from "@/components/commons/HoverImage";
-import FloatingActionButton from "@/components/home/FloatingActionButton";
 import AvailableEvents from "@/components/home/AvailableEvents";
+import FloatingActionButton from "@/components/home/FloatingActionButton";
 import { NotificationPanel } from "@/components/notifications/NotificationPanel";
 import { Button } from "@/components/ui/button";
-import { useEventsForRewards } from "@/hooks/rewards/useRewards";
+import { useComplexEvents } from "@/hooks/events-complex/useEvents";
 import { useUnreadCount } from "@/hooks/notifications/useNotifications";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { Bell, CalendarDays } from "lucide-react";
@@ -15,12 +15,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
-
 export default function Home() {
   const isMobile = useIsMobile(1200);
   const [isEventsOpen, setIsEventsOpen] = useState(false);
   const [isNotifOpen, setIsNotifOpen] = useState(false);
-  const { data: events } = useEventsForRewards();
+  const { data: events, isLoading: isEventsLoading } = useComplexEvents();
   const { data: unreadData } = useUnreadCount();
   const unreadCount = unreadData?.unreadCount ?? 0;
 
@@ -62,7 +61,7 @@ export default function Home() {
             <Link href="/store" passHref>
               <Button
                 variant="outline"
-                className="h-[72px] w-full justify-start gap-3 border-primary bg-[#FF6B2F3D] text-lg text-orange"
+                className="h-18 w-full justify-start gap-3 border-primary bg-[#FF6B2F3D] text-lg text-orange"
               >
                 <Image
                   src="/img/menu/store.svg"
@@ -77,7 +76,7 @@ export default function Home() {
             <Link href="/profile" passHref>
               <Button
                 variant="outline"
-                className="h-[72px] w-full justify-start gap-3 border-primary bg-[#FF6B2F3D] text-lg text-orange"
+                className="h-18 w-full justify-start gap-3 border-primary bg-[#FF6B2F3D] text-lg text-orange"
               >
                 <Image
                   src="/img/menu/avatar2.png"
@@ -110,8 +109,10 @@ export default function Home() {
                     flex items-center justify-center rounded-full
                     text-white text-[10px] font-extrabold z-10 animate-pulse"
                   style={{
-                    background: "linear-gradient(135deg, #ff3b00 0%, #ff6b2f 100%)",
-                    boxShadow: "0 0 10px rgba(255,60,0,0.7), 0 0 4px rgba(255,60,0,0.5)",
+                    background:
+                      "linear-gradient(135deg, #ff3b00 0%, #ff6b2f 100%)",
+                    boxShadow:
+                      "0 0 10px rgba(255,60,0,0.7), 0 0 4px rgba(255,60,0,0.5)",
                     border: "1.5px solid rgba(255,150,100,0.5)",
                   }}
                 >
@@ -203,8 +204,10 @@ export default function Home() {
                     flex items-center justify-center rounded-full
                     text-white text-[10px] font-extrabold z-10 animate-pulse"
                   style={{
-                    background: "linear-gradient(135deg, #ff3b00 0%, #ff6b2f 100%)",
-                    boxShadow: "0 0 12px rgba(255,60,0,0.75), 0 0 5px rgba(255,60,0,0.5)",
+                    background:
+                      "linear-gradient(135deg, #ff3b00 0%, #ff6b2f 100%)",
+                    boxShadow:
+                      "0 0 12px rgba(255,60,0,0.75), 0 0 5px rgba(255,60,0,0.5)",
                     border: "1.5px solid rgba(255,150,100,0.5)",
                   }}
                 >
@@ -220,6 +223,7 @@ export default function Home() {
         open={isEventsOpen}
         onClose={() => setIsEventsOpen(false)}
         events={events || []}
+        isLoading={isEventsLoading}
       />
 
       <NotificationPanel
