@@ -2,8 +2,8 @@ import { GlobalLeaderboard } from "@/components/ranking/GlobalLeaderboard";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Leaderboard Global | Outer Sports Baller",
-  description: "Consulta el ranking mundial de jugadores de Outer Sports Baller y compite por ser el mejor.",
+  title: "Global Leaderboard | Outer Sports Baller",
+  description: "Check the global ranking of Outer Sports Baller players and compete to be the best.",
 };
 
 export default function RankingPage() {
