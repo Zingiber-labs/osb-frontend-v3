@@ -14,7 +14,7 @@ import MissionRow from "./MissionRow";
 export function MissionTerminal() {
   const { data: session } = useSession();
   const router = useRouter();
-  const userId = (session?.user as any)?.profile?.userId;
+  const userId = (session?.user as any)?.userId;
 
   const { data: missions = [], isPending } = useMissions({ userId });
   const [selectedIndex, setSelectedIndex] = useState(0);

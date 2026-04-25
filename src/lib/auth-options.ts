@@ -52,8 +52,7 @@ export const authOptions: AuthOptions = {
             email: profile.email ?? credentials.email,
             accessToken,
             refreshToken,
-
-            profile,
+            userId: profile.userId,
           };
         } catch (err) {
           console.error("Error en authorize() credentials", err);
@@ -62,45 +61,6 @@ export const authOptions: AuthOptions = {
       },
     }),
 
-    CredentialsProvider({
-      id: "backend-token",
-      name: "Backend Token",
-      credentials: {
-        token: { label: "Token", type: "text" },
-      },
-      async authorize(credentials) {
-        if (!credentials?.token) {
-          return null;
-        }
-
-        const accessToken = credentials.token;
-
-        try {
-          const profileRes = await fetch(`${API_URL}/auth/profile`, {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          });
-
-          if (!profileRes.ok) return null;
-
-          const profile = await profileRes.json();
-
-          return {
-            id: String(profile.userId),
-            name: profile.username ?? "User",
-            email: profile.email ?? "no-email@example.com",
-            accessToken,
-            refreshToken: null,
-            profile,
-          };
-        } catch (err) {
-          console.error("Error in backend-token authorize()", err);
-          return null;
-        }
-      },
-    }),
     CredentialsProvider({
       id: "guest",
       name: "Guest",
@@ -141,8 +101,7 @@ export const authOptions: AuthOptions = {
             email: profile.email ?? "guest@guest.local",
             accessToken,
             refreshToken: null,
-
-            profile,
+            userId: profile.userId,
           };
         } catch (err) {
           console.error("Error en authorize() guest", err);
@@ -161,9 +120,8 @@ export const authOptions: AuthOptions = {
       if (user) {
         token.accessToken = (user as any).accessToken;
         token.refreshToken = (user as any).refreshToken;
-
-        if ((user as any).profile) {
-          token.profile = (user as any).profile;
+        if ((user as any).userId) {
+          token.userId = (user as any).userId;
         }
       }
       return token;
@@ -172,7 +130,9 @@ export const authOptions: AuthOptions = {
       if (session.user) {
         (session.user as any).accessToken = token.accessToken;
         (session.user as any).refreshToken = token.refreshToken;
-        (session.user as any).profile = token.profile;
+        if ((token as any).userId) {
+          (session.user as any).userId = (token as any).userId;
+        }
       }
       return session;
     },

@@ -80,7 +80,7 @@ export default function DailyLoginRewardsGate() {
   const [currentEventIndex, setCurrentEventIndex] = useState(0);
 
   const userId =
-    (session?.user as any)?.profile?.userId ?? (session?.user as any)?.id;
+    (session?.user as any)?.userId ?? (session?.user as any)?.id;
 
   const { open, setOpen } = useDailyLoginRewardsGate({
     userId,
