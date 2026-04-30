@@ -1,4 +1,4 @@
-import { api } from "@/lib/axios";
+import { api } from "@/lib/api/client";
 import { ItemType } from "@/types/inventory-items";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 

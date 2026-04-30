@@ -1,6 +1,5 @@
-import { api } from "@/lib/axios";
+import { api } from "@/lib/api/client";
 import { useQuery } from "@tanstack/react-query";
-import { useSession } from "next-auth/react";
 
 export const useProfileStats = () => {
   return useQuery({
@@ -13,7 +12,6 @@ export const useProfileStats = () => {
 };
 
 export const useProfileData = () => {
-  const { status } = useSession();
 
   return useQuery({
     queryKey: ["profile-data"],

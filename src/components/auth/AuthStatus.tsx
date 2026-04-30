@@ -1,11 +1,17 @@
 "use client";
 
-import { useSession } from "next-auth/react";
+import { useSession } from "@/hooks/useSession";
 import Image from "next/image";
 
 export const AuthPanel = () => {
-  const { status } = useSession();
-  
+  const { data: session, isLoading } = useSession();
+  const status = isLoading
+    ? "loading"
+    : !session
+      ? "unauthenticated"
+      : session.type === "guest"
+        ? "guest"
+        : "authenticated";
 
   const statusText: Record<string, string> = {
     loading: "CHECKING AUTH...",

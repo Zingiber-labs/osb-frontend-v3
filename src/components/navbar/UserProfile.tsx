@@ -1,8 +1,9 @@
 "use client";
 
 import { useProfileData } from "@/hooks/profile/useProfile";
+import { useSession } from "@/hooks/useSession";
+import { useLogout } from "@/lib/auth/client";
 import { Loader2, LogOut } from "lucide-react";
-import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -26,17 +27,18 @@ const UserProfile = ({
   href = "/profile",
 }: UserProfileProps) => {
   const router = useRouter();
-  const { data: session, status } = useSession();
+  const { data: session, isLoading: isSessionLoading } = useSession();
   const { data: profileData, isLoading } = useProfileData();
+  const logout = useLogout();
 
   const profile = profileData;
   const coins = profile?.balance?.coins ?? 0;
   const gems = profile?.balance?.gems ?? 0;
   const xp = profile?.balance?.xp ?? 0;
 
-  const isAuthenticated = status === "authenticated";
+  const isAuthenticated = !!session;
 
-  if (status === "loading") return <p>Loading...</p>;
+  if (isSessionLoading) return <p>Loading...</p>;
 
   if (!isAuthenticated) {
     return (
@@ -49,17 +51,23 @@ const UserProfile = ({
     );
   }
 
-  const user = session?.user as any;
-
   const mockAvatar = "/img/avatar.svg";
 
   const displayName =
-    profile?.username || user?.name || user?.email?.split("@")?.[0] || "User";
+    profile?.username ||
+    session?.username ||
+    session?.email?.split("@")?.[0] ||
+    "User";
 
-  const avatarSrc = profile?.avatar || mockAvatar;
+  const avatarSrc = profile?.avatar || session?.avatar || mockAvatar;
 
   const handleLogout = () => {
-    signOut({ callbackUrl: "/" });
+    logout.mutate(undefined, {
+      onSettled: () => {
+        router.push("/login");
+        router.refresh();
+      },
+    });
   };
 
   return (
@@ -154,8 +162,8 @@ const UserProfile = ({
                 <p className="text-sm font-medium leading-none truncate">
                   {displayName}
                 </p>
-                {user?.email && (
-                  <p className="text-xs text-gray-400 truncate">{user.email}</p>
+                {session?.email && (
+                  <p className="text-xs text-gray-400 truncate">{session.email}</p>
                 )}
               </div>
             </div>

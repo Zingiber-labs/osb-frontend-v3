@@ -1,4 +1,4 @@
-import { api } from "@/lib/axios";
+import { api } from "@/lib/api/client";
 import { useQuery } from "@tanstack/react-query";
 import { LeaderboardResponse } from "@/types/ranking";
 

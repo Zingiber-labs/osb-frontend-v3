@@ -1,8 +1,7 @@
-import { api } from "@/lib/axios";
+import { api, ApiError } from "@/lib/api/client";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 
-import { AxiosError } from "axios";
 
 export const useComplexEvents = () => {
   return useQuery({
@@ -26,9 +25,9 @@ export const useJoinEvent = () => {
       queryClient.invalidateQueries({ queryKey: ["notifications"] });
     },
     onError: (error) => {
-      const axiosError = error as AxiosError<any>;
+      const apiError = error as ApiError<any>;
       const message =
-        axiosError.response?.data?.message ||
+        apiError.data?.message ||
         "Failed to join the event. Please try again.";
 
       toast.error(message);
@@ -48,9 +47,9 @@ export const useAcceptEvent = () => {
       queryClient.invalidateQueries({ queryKey: ["notifications"] });
     },
     onError: (error) => {
-      const axiosError = error as AxiosError<any>;
+      const apiError = error as ApiError<any>;
       const message =
-        axiosError.response?.data?.message ||
+        apiError.data?.message ||
         "Failed to accept the event. Please try again.";
 
       toast.error(message);

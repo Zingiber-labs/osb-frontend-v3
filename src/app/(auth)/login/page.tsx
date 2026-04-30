@@ -2,110 +2,75 @@
 
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff, Lock } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { signIn } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
 import { Card, CardContent } from "@/components/ui/card";
 import Starfield from "@/components/commons/Starfield";
-import Link from "next/link";
+import {
+  useGuestLogin,
+  useLogin,
+  startGoogleLogin,
+} from "@/lib/auth/client";
+import { LoginInputSchema, type LoginInput } from "@/lib/auth/schemas";
 
-interface LoginFormData {
-  email: string;
-  password: string;
-}
-
-const Login = () => {
+export default function LoginPage() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false);
 
-  const [isGuestLoading, setIsGuestLoading] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitError, setSubmitError] = useState<string | null>(null);
-
-  const isAnyLoading = isSubmitting || isGuestLoading;
+  const login = useLogin();
+  const guestLogin = useGuestLogin();
+  const isAnyLoading = login.isPending || guestLogin.isPending;
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<LoginFormData>();
+  } = useForm<LoginInput>({
+    resolver: zodResolver(LoginInputSchema),
+  });
 
-  const onSubmit = async (data: LoginFormData) => {
+  const onSubmit = async (data: LoginInput) => {
     if (isAnyLoading) return;
-
-    setSubmitError(null);
-    setIsSubmitting(true);
-
     try {
-      const res = await signIn("credentials", {
-        redirect: false,
-        email: data.email,
-        password: data.password,
-        callbackUrl: "/",
-      });
-
-      if (res?.error) {
-        setSubmitError("Invalid email or password");
-        return;
-      }
-
-      router.push(res?.url ?? "/");
+      await login.mutateAsync(data);
+      router.replace("/");
       router.refresh();
-    } catch (e: any) {
-      setSubmitError(e?.message || "Login failed");
-    } finally {
-      setIsSubmitting(false);
+    } catch {
+      // error surfaced via login.error
     }
   };
 
-  const handleGuestLogin = async () => {
+  const onGuest = async () => {
     if (isAnyLoading) return;
-
-    setIsGuestLoading(true);
-    setSubmitError(null);
-
     try {
-      const res = await signIn("guest", {
-        redirect: false,
-        callbackUrl: "/",
-      });
-
-      if (res?.error) {
-        setSubmitError("Unable to create guest session");
-        return;
-      }
-
-      router.push("/");
+      await guestLogin.mutateAsync();
+      router.replace("/");
       router.refresh();
-    } catch (error) {
-      console.error("Error creating guest session:", error);
-      setSubmitError("Error creating guest session");
-    } finally {
-      setIsGuestLoading(false);
+    } catch {
+      // error surfaced via guestLogin.error
     }
   };
 
-  const handleGoogleLogin = () => {
-    window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/google`;
-  };
+  const submitError =
+    (login.error instanceof Error && login.error.message) ||
+    (guestLogin.error instanceof Error && guestLogin.error.message) ||
+    null;
 
   return (
     <div className="h-screen flex overflow-hidden">
-      {/* Left Section - Branding/Promotional */}
       <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden">
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{ backgroundImage: "url('/img/menu.png')" }}
         />
         <div className="absolute inset-0 bg-black/40" />
-
         <div className="relative z-10 flex flex-col justify-center items-center h-full p-12">
           <div className="text-center items-center mb-8">
             <Image
@@ -120,7 +85,6 @@ const Login = () => {
         </div>
       </div>
 
-      {/* Right Section - Login Form */}
       <div className="w-full lg:w-1/2 flex items-center justify-center p-6 lg:p-12 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-orange-900 via-red-900 to-orange-800">
           <Starfield />
@@ -133,12 +97,8 @@ const Login = () => {
             </h2>
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-              {/* Email Field */}
               <div className="space-y-2">
-                <Label
-                  htmlFor="email"
-                  className="font-helvetica text-orange-200"
-                >
+                <Label htmlFor="email" className="font-helvetica text-orange-200">
                   Email
                 </Label>
                 <Input
@@ -147,13 +107,7 @@ const Login = () => {
                   placeholder="Your email"
                   className="bg-orange-800/50 font-helvetica border-orange-600 text-orange-100 placeholder:text-orange-300 focus:border-cyan-400 focus:ring-cyan-400"
                   disabled={isAnyLoading}
-                  {...register("email", {
-                    required: "Email is required",
-                    pattern: {
-                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                      message: "Invalid email address",
-                    },
-                  })}
+                  {...register("email")}
                 />
                 {errors.email && (
                   <p className="text-red-400 font-helvetica text-sm">
@@ -162,12 +116,8 @@ const Login = () => {
                 )}
               </div>
 
-              {/* Password Field */}
               <div className="space-y-2">
-                <Label
-                  htmlFor="password"
-                  className="text-orange-200 font-helvetica"
-                >
+                <Label htmlFor="password" className="text-orange-200 font-helvetica">
                   Password
                 </Label>
                 <div className="relative">
@@ -178,19 +128,14 @@ const Login = () => {
                     placeholder="Your password"
                     className="bg-orange-800/50 font-helvetica border-orange-600 text-orange-100 placeholder:text-orange-300 focus:border-cyan-400 focus:ring-cyan-400 pl-10 pr-10"
                     disabled={isAnyLoading}
-                    {...register("password", {
-                      required: "Password is required",
-                      minLength: {
-                        value: 6,
-                        message: "Password must be at least 6 characters",
-                      },
-                    })}
+                    {...register("password")}
                   />
                   <button
                     type="button"
-                    onClick={() => setShowPassword(!showPassword)}
+                    onClick={() => setShowPassword((v) => !v)}
                     disabled={isAnyLoading}
                     className="absolute right-3 top-1/2 transform -translate-y-1/2 text-orange-300 hover:text-orange-100 disabled:opacity-50"
+                    aria-label={showPassword ? "Hide password" : "Show password"}
                   >
                     {showPassword ? (
                       <EyeOff className="w-4 h-4" />
@@ -206,36 +151,8 @@ const Login = () => {
                 )}
               </div>
 
-              {/* Remember Me and Forgot Password */}
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <Checkbox
-                    id="rememberMe"
-                    checked={rememberMe}
-                    onCheckedChange={(checked) =>
-                      setRememberMe(checked as boolean)
-                    }
-                    className="border-orange-600 data-[state=checked]:bg-cyan-400 data-[state=checked]:border-cyan-400"
-                    disabled={isAnyLoading}
-                  />
-                  <Label
-                    htmlFor="rememberMe"
-                    className="text-orange-200 text-sm font-helvetica"
-                  >
-                    Remember Me
-                  </Label>
-                </div>
-                <button
-                  type="button"
-                  disabled={isAnyLoading}
-                  className="text-orange-400 font-helvetica hover:text-orange-300 text-sm font-medium disabled:opacity-50"
-                >
-                  Forgot Password?
-                </button>
-              </div>
-
               {submitError && (
-                <p className="text-red-400 text-sm -mt-2 font-helvetica">
+                <p className="text-red-400 text-sm font-helvetica">
                   {submitError}
                 </p>
               )}
@@ -245,26 +162,24 @@ const Login = () => {
                 disabled={isAnyLoading}
                 className="w-full bg-cyan-400 hover:bg-cyan-500 text-white font-bold py-3 text-lg rounded-lg transition-colors disabled:opacity-50"
               >
-                {isSubmitting ? "SIGNING IN..." : "CONTINUE"}
+                {login.isPending ? "SIGNING IN..." : "CONTINUE"}
               </Button>
             </form>
 
-            {/* Login as Guest Button */}
             <div className="mt-4">
               <Button
                 type="button"
                 variant="outline"
-                onClick={handleGuestLogin}
+                onClick={onGuest}
                 disabled={isAnyLoading}
                 className="w-full border-orange-600 text-orange-300 hover:bg-orange-800/50 hover:text-orange-200 font-bold py-3 text-lg rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {isGuestLoading
+                {guestLogin.isPending
                   ? "CREATING GUEST SESSION..."
                   : "LOGIN AS GUEST"}
               </Button>
             </div>
 
-            {/* Separator */}
             <div className="my-6">
               <Separator className="bg-orange-600" />
               <div className="text-center -mt-3">
@@ -274,14 +189,14 @@ const Login = () => {
               </div>
             </div>
 
-            {/* Social Login */}
             <div className="flex justify-center">
               <Button
                 type="button"
                 variant="outline"
-                onClick={handleGoogleLogin}
+                onClick={startGoogleLogin}
                 disabled={isAnyLoading}
                 className="w-12 h-12 rounded-full bg-[#FF6B2F3D] hover:bg-red-700 border-red-600 hover:border-red-700 disabled:opacity-50"
+                aria-label="Continue with Google"
               >
                 <Image
                   src="/img/google.svg"
@@ -292,7 +207,6 @@ const Login = () => {
               </Button>
             </div>
 
-            {/* Sign Up Link */}
             <div className="text-center mt-6">
               <span className="text-orange-300 text-sm font-helvetica">
                 Don&apos;t have an account?{" "}
@@ -309,6 +223,4 @@ const Login = () => {
       </div>
     </div>
   );
-};
-
-export default Login;
+}

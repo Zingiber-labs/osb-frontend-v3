@@ -1,113 +1,87 @@
 "use client";
 
+import { useMemo, useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { Eye, EyeOff, Lock } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import Starfield from "@/components/commons/Starfield";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { useAuth } from "@/contexts/AuthContext";
-import { Eye, EyeOff, Lock } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useSignup, startGoogleLogin } from "@/lib/auth/client";
+import { SignupInputSchema } from "@/lib/auth/schemas";
 
-type SignupFormData = {
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-  acceptTerms: boolean;
-};
+const SignupFormSchema = SignupInputSchema.extend({
+  confirmPassword: z.string().min(1, "Please confirm your password"),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords do not match",
+  path: ["confirmPassword"],
+});
 
-const MIN_PASSWORD = 6;
+type SignupFormData = z.infer<typeof SignupFormSchema>;
 
-export default function Signup() {
+export default function SignupPage() {
   const router = useRouter();
-  const { registerUser } = useAuth();
-
+  const signup = useSignup();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const {
     register,
     handleSubmit,
     watch,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm<SignupFormData>({
+    resolver: zodResolver(SignupFormSchema),
+    mode: "onChange",
     defaultValues: {
       firstName: "",
       lastName: "",
       email: "",
       password: "",
       confirmPassword: "",
-      acceptTerms: false,
     },
   });
 
   const passwordValue = watch("password");
-  const confirmPasswordValue = watch("confirmPassword");
-  const firstName = watch("firstName");
-  const lastName = watch("lastName");
-  const email = watch("email");
 
   const passwordScore = useMemo(() => {
     let score = 0;
-    if (passwordValue?.length >= MIN_PASSWORD) score++;
+    if (passwordValue?.length >= 6) score++;
     if (/[A-Z]/.test(passwordValue)) score++;
     if (/[a-z]/.test(passwordValue)) score++;
     if (/[0-9]/.test(passwordValue)) score++;
     if (/[^A-Za-z0-9]/.test(passwordValue)) score++;
-    return score; // 0 - 5
+    return score;
   }, [passwordValue]);
 
-  const passwordsMatch = useMemo(() => {
-    if (!confirmPasswordValue) return true;
-    return passwordValue === confirmPasswordValue;
-  }, [passwordValue, confirmPasswordValue]);
-
-  const isFormValid = useMemo(() => {
-    return (
-      firstName?.trim().length >= 3 &&
-      lastName?.trim().length >= 3 &&
-      email?.trim().length > 0 &&
-      /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(email) &&
-      passwordValue?.length >= MIN_PASSWORD &&
-      confirmPasswordValue?.length > 0 &&
-      passwordsMatch
-    );
-  }, [firstName, lastName, email, passwordValue, confirmPasswordValue, passwordsMatch]);
-
   const onSubmit = async (data: SignupFormData) => {
-    setSubmitError(null);
-    setIsSubmitting(true);
+    const { confirmPassword, ...input } = data;
+    void confirmPassword;
     try {
-      await registerUser(
-        data.firstName,
-        data.lastName,
-        data.email,
-        data.password
-      );
-      router.push("/login");
-    } catch (e: any) {
-      setSubmitError(e?.message || "Signup failed");
-    } finally {
-      setIsSubmitting(false);
+      const result = await signup.mutateAsync(input);
+      if (result && typeof result === "object" && "id" in result) {
+        router.replace("/");
+        router.refresh();
+      } else {
+        router.push("/login");
+      }
+    } catch {
+      // error surfaced via signup.error
     }
   };
 
-  const handleGoogleSignup = async () => {
-    console.log("Google signup clicked");
-  };
+  const submitError =
+    signup.error instanceof Error ? signup.error.message : null;
 
   return (
     <div className="h-screen flex overflow-hidden">
-      {/* Left Section - Branding/Promotional */}
       <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden">
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
@@ -128,7 +102,6 @@ export default function Signup() {
         </div>
       </div>
 
-      {/* Right Section - Signup Form */}
       <div className="w-full lg:w-1/2 flex items-center justify-center p-6 lg:p-12 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-orange-900 via-red-900 to-orange-800">
           <Starfield />
@@ -141,22 +114,16 @@ export default function Signup() {
             </h2>
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-              {/* Firstname */}
               <div className="space-y-2">
-                <Label
-                  htmlFor="firstname"
-                  className="font-helvetica text-orange-200"
-                >
+                <Label htmlFor="firstname" className="font-helvetica text-orange-200">
                   Firstname
                 </Label>
                 <Input
                   id="firstname"
                   placeholder="Your firstname"
                   className="font-helvetica bg-orange-800/50 border-orange-600 text-orange-100 placeholder:text-orange-300 focus:border-cyan-400 focus:ring-cyan-400"
-                  {...register("firstName", {
-                    required: "Firstname is required",
-                    minLength: { value: 3, message: "At least 3 characters" },
-                  })}
+                  disabled={signup.isPending}
+                  {...register("firstName")}
                 />
                 {errors.firstName && (
                   <p className="text-red-400 font-helvetica text-sm">
@@ -165,22 +132,16 @@ export default function Signup() {
                 )}
               </div>
 
-              {/* Lastname */}
               <div className="space-y-2">
-                <Label
-                  htmlFor="lastname"
-                  className="font-helvetica text-orange-200"
-                >
+                <Label htmlFor="lastname" className="font-helvetica text-orange-200">
                   Lastname
                 </Label>
                 <Input
                   id="lastname"
                   placeholder="Your lastname"
                   className="font-helvetica bg-orange-800/50 border-orange-600 text-orange-100 placeholder:text-orange-300 focus:border-cyan-400 focus:ring-cyan-400"
-                  {...register("lastName", {
-                    required: "Lastname is required",
-                    minLength: { value: 3, message: "At least 3 characters" },
-                  })}
+                  disabled={signup.isPending}
+                  {...register("lastName")}
                 />
                 {errors.lastName && (
                   <p className="text-red-400 font-helvetica text-sm">
@@ -189,12 +150,8 @@ export default function Signup() {
                 )}
               </div>
 
-              {/* Email */}
               <div className="space-y-2">
-                <Label
-                  htmlFor="email"
-                  className="font-helvetica text-orange-200"
-                >
+                <Label htmlFor="email" className="font-helvetica text-orange-200">
                   Email
                 </Label>
                 <Input
@@ -202,13 +159,8 @@ export default function Signup() {
                   type="email"
                   placeholder="Your email"
                   className="font-helvetica bg-orange-800/50 border-orange-600 text-orange-100 placeholder:text-orange-300 focus:border-cyan-400 focus:ring-cyan-400"
-                  {...register("email", {
-                    required: "Email is required",
-                    pattern: {
-                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                      message: "Invalid email address",
-                    },
-                  })}
+                  disabled={signup.isPending}
+                  {...register("email")}
                 />
                 {errors.email && (
                   <p className="text-red-400 font-helvetica text-sm">
@@ -217,12 +169,8 @@ export default function Signup() {
                 )}
               </div>
 
-              {/* Password */}
               <div className="space-y-2">
-                <Label
-                  htmlFor="password"
-                  className="font-helvetica text-orange-200"
-                >
+                <Label htmlFor="password" className="font-helvetica text-orange-200">
                   Password
                 </Label>
                 <div className="relative">
@@ -232,21 +180,14 @@ export default function Signup() {
                     type={showPassword ? "text" : "password"}
                     placeholder="Your password"
                     className="font-helvetica bg-orange-800/50 border-orange-600 text-orange-100 placeholder:text-orange-300 focus:border-cyan-400 focus:ring-cyan-400 pl-10 pr-10"
-                    {...register("password", {
-                      required: "Password is required",
-                      minLength: {
-                        value: MIN_PASSWORD,
-                        message: `Password must be at least ${MIN_PASSWORD} characters`,
-                      },
-                    })}
+                    disabled={signup.isPending}
+                    {...register("password")}
                   />
                   <button
                     type="button"
-                    onClick={() => setShowPassword(!showPassword)}
+                    onClick={() => setShowPassword((v) => !v)}
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-orange-300 hover:text-orange-100"
-                    aria-label={
-                      showPassword ? "Hide password" : "Show password"
-                    }
+                    aria-label={showPassword ? "Hide password" : "Show password"}
                   >
                     {showPassword ? (
                       <EyeOff className="w-4 h-4" />
@@ -256,7 +197,6 @@ export default function Signup() {
                   </button>
                 </div>
 
-                {/* Password strength (simple) */}
                 <div className="mt-1 h-1.5 w-full bg-orange-800/60 rounded">
                   <div
                     className="h-1.5 rounded transition-all"
@@ -266,14 +206,13 @@ export default function Signup() {
                         passwordScore <= 2
                           ? "#f87171"
                           : passwordScore === 3
-                          ? "#fbbf24"
-                          : "#34d399",
+                            ? "#fbbf24"
+                            : "#34d399",
                     }}
                   />
                 </div>
                 <p className="text-xs text-orange-200/80 font-helvetica">
-                  Use upper/lowercase, numbers, and a symbol for a stronger
-                  password.
+                  Use upper/lowercase, numbers, and a symbol for a stronger password.
                 </p>
 
                 {errors.password && (
@@ -283,12 +222,8 @@ export default function Signup() {
                 )}
               </div>
 
-              {/* Confirm Password */}
               <div className="space-y-2">
-                <Label
-                  htmlFor="confirmPassword"
-                  className="font-helvetica text-orange-200"
-                >
+                <Label htmlFor="confirmPassword" className="font-helvetica text-orange-200">
                   Confirm Password
                 </Label>
                 <div className="relative">
@@ -298,19 +233,14 @@ export default function Signup() {
                     type={showConfirmPassword ? "text" : "password"}
                     placeholder="Confirm your password"
                     className="font-helvetica bg-orange-800/50 border-orange-600 text-orange-100 placeholder:text-orange-300 focus:border-cyan-400 focus:ring-cyan-400 pl-10 pr-10"
-                    {...register("confirmPassword", {
-                      required: "Please confirm your password",
-                      validate: (value) =>
-                        value === passwordValue || "Passwords do not match",
-                    })}
+                    disabled={signup.isPending}
+                    {...register("confirmPassword")}
                   />
                   <button
                     type="button"
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    onClick={() => setShowConfirmPassword((v) => !v)}
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-orange-300 hover:text-orange-100"
-                    aria-label={
-                      showConfirmPassword ? "Hide password" : "Show password"
-                    }
+                    aria-label={showConfirmPassword ? "Hide password" : "Show password"}
                   >
                     {showConfirmPassword ? (
                       <EyeOff className="w-4 h-4" />
@@ -320,12 +250,6 @@ export default function Signup() {
                   </button>
                 </div>
 
-                {!passwordsMatch && confirmPasswordValue && (
-                  <p className="text-red-400 font-helvetica text-sm">
-                    Passwords do not match
-                  </p>
-                )}
-
                 {errors.confirmPassword && (
                   <p className="text-red-400 font-helvetica text-sm">
                     {errors.confirmPassword.message}
@@ -333,39 +257,31 @@ export default function Signup() {
                 )}
               </div>
 
-              {/* Terms & Conditions */}
               <p className="font-helvetica text-card-bg text-sm font-extralight">
                 By signing up you agree to our{" "}
-                <Link
-                  className="font-helvetica underline hover:text-secondary"
-                  href={"#"}
-                >
+                <Link className="font-helvetica underline hover:text-secondary" href={"#"}>
                   Terms & Condition
                 </Link>{" "}
                 and{" "}
-                <Link
-                  className="font-helvetica underline hover:text-secondary"
-                  href={"#"}
-                >
+                <Link className="font-helvetica underline hover:text-secondary" href={"#"}>
                   Privacy Policy.
                 </Link>
                 <span className="text-secondary">*</span>
               </p>
 
               {submitError && (
-                <p className="text-red-400 text-sm -mt-2">{submitError}</p>
+                <p className="text-red-400 text-sm">{submitError}</p>
               )}
 
               <Button
                 type="submit"
-                disabled={isSubmitting || !isFormValid}
+                disabled={signup.isPending || !isValid}
                 className="w-full bg-cyan-400 hover:bg-cyan-500 text-white font-bold py-3 text-lg rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {isSubmitting ? "CREATING ACCOUNT..." : "CREATE ACCOUNT"}
+                {signup.isPending ? "CREATING ACCOUNT..." : "CREATE ACCOUNT"}
               </Button>
             </form>
 
-            {/* Separator */}
             <div className="my-6">
               <Separator className="bg-orange-600" />
               <div className="text-center -mt-3">
@@ -375,12 +291,11 @@ export default function Signup() {
               </div>
             </div>
 
-            {/* Social Signup */}
             <div className="flex justify-center">
               <Button
                 type="button"
                 variant="outline"
-                onClick={handleGoogleSignup}
+                onClick={startGoogleLogin}
                 className="w-12 h-12 rounded-full bg-[#FF6B2F3D] hover:bg-red-700 border-red-600 hover:border-red-700"
                 aria-label="Sign up with Google"
               >
@@ -393,7 +308,6 @@ export default function Signup() {
               </Button>
             </div>
 
-            {/* Login Link */}
             <div className="text-center mt-6">
               <span className="text-orange-300 text-sm font-helvetica">
                 Already have an account?{" "}

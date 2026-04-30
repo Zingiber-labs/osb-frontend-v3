@@ -1,43 +1,30 @@
-// src/middleware.ts
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import {
+  ACCESS_TOKEN_COOKIE,
+  LEGACY_ACCESS_TOKEN_COOKIE,
+} from "@/lib/auth/cookies";
 
 const PUBLIC_ROUTES = new Set<string>([
-  "/",
   "/login",
   "/signup",
   "/forgot-password",
-  "/store",
-  "/inventory",
-  "/hangar",
-  "/missions",
-  "/game-play",
-  "/profile",
-  "/ranking"
 ]);
 
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  if (
-    pathname.startsWith("/_next") ||
-    pathname.startsWith("/favicon") ||
-    pathname.startsWith("/img") ||
-    pathname.startsWith("/api")
-  ) {
+  if (PUBLIC_ROUTES.has(pathname)) {
     return NextResponse.next();
   }
 
-  if (pathname.startsWith("/auth")) {
-    return NextResponse.next();
-  }
+  const token =
+    req.cookies.get(ACCESS_TOKEN_COOKIE)?.value ??
+    req.cookies.get(LEGACY_ACCESS_TOKEN_COOKIE)?.value;
 
-  const isPublic = PUBLIC_ROUTES.has(pathname);
-  const token = req.cookies.get("access_token")?.value;
-
-  if (!isPublic && !token) {
+  if (!token) {
     const url = req.nextUrl.clone();
-    url.pathname = "/";
+    url.pathname = "/login";
     url.search = "";
     return NextResponse.redirect(url);
   }
@@ -46,5 +33,7 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|favicon.ico|images).*)"],
+  matcher: [
+    "/((?!api|_next/static|_next/image|favicon.ico|img|images|fonts|.*\\..*).*)",
+  ],
 };

@@ -1,7 +1,7 @@
 "use client";
 
 import { useQueryClient } from "@tanstack/react-query";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/hooks/useSession";
 import { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 
@@ -75,12 +75,12 @@ function getSubtitle(steps: EventStep[]) {
 }
 
 export default function DailyLoginRewardsGate() {
-  const { data: session, status } = useSession();
+  const { data: session, isLoading: isSessionLoading } = useSession();
   const queryClient = useQueryClient();
   const [currentEventIndex, setCurrentEventIndex] = useState(0);
 
   const userId =
-    (session?.user as any)?.userId ?? (session?.user as any)?.id;
+    session?.id;
 
   const { open, setOpen } = useDailyLoginRewardsGate({
     userId,
@@ -171,7 +171,7 @@ export default function DailyLoginRewardsGate() {
     setOpen(true);
   };
 
-  if (status === "loading") return null;
+  if (isSessionLoading) return null;
 
   const canShowModal =
     open && !isLoading && !isError && events.length > 0 && !!currentEvent;

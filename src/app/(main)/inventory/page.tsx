@@ -13,14 +13,14 @@ import InventoryCard from "@/components/inventory/InventoryCard";
 import InventoryDetail from "@/components/inventory/InventoryDetail";
 import { useMyInventory } from "@/hooks/inventory/useMyInventory";
 import { ItemType, MyInventory } from "@/types/inventory-items";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/hooks/useSession";
 
 const Inventory = () => {
   const { data: session } = useSession();
   const [selectedInventory, setSelectedInventory] = useState<any>(null);
   const [selectedType, setSelectedType] = useState<ItemType | undefined>();
 
-  const userId = (session?.user as any)?.userId;
+  const userId = session?.id;
   const { data, isLoading, error } = useMyInventory({
     type: selectedType,
     userId: userId ?? "",

@@ -1,19 +1,23 @@
-"use client";
-
+import { redirect } from "next/navigation";
 import Footer from "@/components/footer/Footer";
 import ClientLayout from "@/components/layout/ClientLayout";
 import Navbar from "@/components/navbar/Navbar";
-import AuthSessionProvider from "@/providers/SessionProvider";
 import { Toaster } from "react-hot-toast";
 import DailyLoginRewardsGate from "@/components/rewards/DailyLoginRewardsGate";
+import { SessionHydrator } from "@/app/providers";
+import { getSession } from "@/lib/auth/session";
 
-export default function MainLayout({
+export default async function MainLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const session = await getSession();
+  if (!session) redirect("/login");
+
   return (
-    <AuthSessionProvider>
+    <>
+      <SessionHydrator session={session} />
       <ClientLayout>
         <Toaster
           position="top-right"
@@ -35,6 +39,6 @@ export default function MainLayout({
           <Footer />
         </div>
       </ClientLayout>
-    </AuthSessionProvider>
+    </>
   );
 }

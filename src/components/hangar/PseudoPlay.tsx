@@ -1,6 +1,6 @@
 "use client";
 
-import { useAuth } from "@/contexts/AuthContext";
+import { useSession } from "@/hooks/useSession";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { X } from "lucide-react";
 import { usePlayByPlay } from "@/hooks/playbyplay/usePlayByPlay";
@@ -39,7 +39,9 @@ export const PseudoPlay = ({ onClose }: PseudoPlayProps) => {
     return [];
   }, [data]);
 
-  const { user, isGuest } = useAuth();
+  const { data: session } = useSession();
+  const user = session;
+  const isGuest = session?.type === "guest";
   const [showLines, setShowLines] = useState({
     command: false,
     init: false,

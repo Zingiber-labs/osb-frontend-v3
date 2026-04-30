@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { AuthProvider } from "@/contexts/AuthContext";
+import { Providers } from "./providers";
 
 const apexMk2 = localFont({
   src: [
@@ -40,7 +40,7 @@ export default function RootLayout({
       <body
         className={`${apexMk2.variable} ${geist.variable} ${geistMono.variable} font-apex relative`}
       >
-        <AuthProvider>{children}</AuthProvider>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

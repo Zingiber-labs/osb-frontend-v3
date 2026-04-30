@@ -1,6 +1,4 @@
 import type { Metadata } from "next";
-
-import AuthSessionProvider from "@/providers/SessionProvider";
 import "../globals.css";
 
 export const metadata: Metadata = {
@@ -13,5 +11,5 @@ export default function LoginLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <AuthSessionProvider>{children}</AuthSessionProvider>;
+  return <>{children}</>;
 }

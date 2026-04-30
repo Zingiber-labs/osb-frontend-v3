@@ -5,7 +5,7 @@ import { MissionProcess, useMissionProcess } from "@/hooks/missions/useMission";
 import { createAssets } from "@/lib/three/assets";
 import { createStaticGroups } from "@/lib/three/static-groups";
 import { Canvas } from "@react-three/fiber";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/hooks/useSession";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import DialogMissionFailed from "./DialogMissionFailed";
@@ -18,7 +18,7 @@ export const ThreeGameplayCanvas = () => {
   const playerId = searchParams.get("playerId") ?? "";
 
   const { data: session } = useSession();
-  const userId = (session?.user as any)?.userId;
+  const userId = session?.id;
 
   const assets = useMemo(() => createAssets(), []);
   const staticGroups = useMemo(() => createStaticGroups(assets), [assets]);

@@ -1,4 +1,4 @@
-import { api } from "@/lib/axios";
+import { api } from "@/lib/api/client";
 import { LockerSeason } from "@/types/locker-room";
 import { useQuery } from "@tanstack/react-query";
 

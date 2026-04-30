@@ -1,0 +1,94 @@
+{
+  "$schema": "https://aka.ms/codetour-schema",
+  "title": "Outer Sports Ballers — Architecture Onboarding",
+  "description": "A top-to-bottom walkthrough for new engineers: auth wiring, route groups, the API layer, and the Three.js gameplay loop.",
+  "ref": "main",
+  "steps": [
+    {
+      "directory": "src",
+      "title": "Source Root",
+      "description": "Everything lives under `src/`. The shape is: `app/` for Next.js routes, `components/` for UI, `hooks/` for data/Three.js logic, `lib/` for shared utilities, `contexts/` for React context, and `types/` for domain types. The route groups `(auth)`, `(main)`, and `(gameplay)` each have their own layout — meaning the Navbar, providers, and chrome differ between the auth pages, the main app, and the full-screen 3D gameplay view."
+    },
+    {
+      "file": "src/app/layout.tsx",
+      "line": 33,
+      "title": "Root Layout — AuthProvider Wraps Everything",
+      "description": "This is the outermost shell for every page. It loads the custom `ApexMk2` font and mounts `AuthProvider` around all children. Crucially, `AuthProvider` comes from `@/contexts/AuthContext` — a *custom* client-side auth layer that runs independently of NextAuth. Both systems coexist: NextAuth manages the server-side session (JWT in a cookie), while `AuthContext` manages the in-memory user state that components consume via `useAuth()`."
+    },
+    {
+      "file": "src/middleware.ts",
+      "line": 19,
+      "title": "Edge Middleware — Cookie-Based Route Guard",
+      "description": "Before any page is served, Next.js Edge middleware checks for an `access_token` cookie. `PUBLIC_ROUTES` (line 5) lists every route that is open without a token — notice that today *all* main routes are in that set, meaning the guard currently only redirects on truly unknown private paths. The middleware intentionally passes `/auth/*` through unconditionally so the NextAuth callback chain is never blocked. If you add a new protected route, add it here only if you *don't* want it in `PUBLIC_ROUTES`."
+    },
+    {
+      "file": "src/lib/auth-options.ts",
+      "line": 6,
+      "title": "NextAuth — Three Login Providers",
+      "description": "Three `CredentialsProvider` entries are registered:\n\n1. **`credentials`** — email/password login: calls `/auth/login`, then `/auth/profile` to inflate the token into a user object.\n2. **`backend-token`** — accepts a raw token directly (used after OAuth redirects from an external backend).\n3. **`guest`** — hits `/auth/guest`, creating an anonymous session backed by a real token.\n\nAll three follow the same pattern: call the API, get an `access_token`, fetch the profile, return the user shape. The JWT callback (line 160) copies the token onto the NextAuth JWT so it survives across requests. The gotcha: `authOptions` is the canonical source of truth for the session token — the custom `AuthContext` reads `localStorage` separately and can drift if they're not kept in sync."
+    },
+    {
+      "file": "src/contexts/AuthContext.tsx",
+      "line": 64,
+      "title": "AuthContext — Client-Side Auth State",
+      "description": "`AuthProvider` is the runtime auth surface for all UI components. It tracks `isAuthenticated`, `isGuest`, `isLoading`, and `user` in React state, persisting the safe user object to `localStorage` so it survives page reloads. On mount (line 267) it runs `checkAuthStatus()`: first checks `localStorage` for a token, then falls back to the session cookie for guest sessions. The `login()` method (line 169) both calls the backend *and* manually sets the `access_token` cookie (line 192) so the middleware guard sees it immediately — no NextAuth round-trip needed for client navigation."
+    },
+    {
+      "file": "src/lib/axios.ts",
+      "line": 11,
+      "title": "Axios Instance — NextAuth Token Injection",
+      "description": "Every API call from hooks goes through this single `axios` instance. The request interceptor (line 11) calls `getSession()` from NextAuth on every request to pull the current `accessToken` and attach it as a `Bearer` header. The response interceptor (line 26) auto-triggers `signOut` on 401/403, redirecting to `/login`. The gotcha: `getSession()` is a round-trip to the NextAuth session endpoint on every request — in high-frequency polling scenarios (like the mission loop) this adds measurable overhead. Consider caching the token in a ref if that becomes a problem."
+    },
+    {
+      "directory": "src/app/(main)",
+      "title": "Main Route Group — App Shell",
+      "description": "All game screens (home, hangar, inventory, missions, store, profile) live under `(main)/`. The shared layout wraps each in `AuthSessionProvider` + `ClientLayout`, mounts the `Navbar`, and renders `DailyLoginRewardsGate` — which silently checks whether to show the daily-login modal on every navigation within this group."
+    },
+    {
+      "file": "src/app/(main)/layout.tsx",
+      "line": 10,
+      "title": "Main Layout — Navbar + Reward Gate",
+      "description": "`DailyLoginRewardsGate` (line 8) is mounted here so it fires on every main-group route, not just the home page. It gates the rewards modal without blocking the page render. The layout also adds the `overlay` div that creates the background vignette effect seen across all main screens. If you're adding a new main-group page, you get the Navbar and reward check for free — no extra wiring needed."
+    },
+    {
+      "file": "src/components/gameplay/ThreeGameplayCanvas.tsx",
+      "line": 15,
+      "title": "Gameplay Canvas — The Orchestrator",
+      "description": "This component is the entry point for the full-screen 3D experience. It reads `gameId` and `playerId` from URL search params, then:\n\n1. Fetches player/game data via `useGameTeam()` (TanStack Query).\n2. Builds a `payload` from the player's live stats (points, blocks, rebounds).\n3. Starts `useMissionProcess()` polling loop with that payload.\n4. Watches mission results and toggles success/failure dialog state.\n\nThe `assets` and `staticGroups` are created once via `useMemo` (lines 23-24) and passed into the Three.js `Scene` — keeping geometry allocation out of the render loop. The `Canvas` component from `@react-three/fiber` provides the WebGL context."
+    },
+    {
+      "file": "src/lib/three/assets.ts",
+      "line": 3,
+      "title": "Three.js Assets — Geometry Factory",
+      "description": "`createAssets()` is a pure factory called once at canvas mount. It pre-allocates every shared `THREE.Geometry` and a single `MeshNormalMaterial` that all meshes share. Sharing one material means one WebGL program draw call for the whole scene. If you need a new shape (e.g., a diamond for a special event), add it here so it's created once and passed through the asset tree rather than instantiated per-component."
+    },
+    {
+      "file": "src/lib/three/static-groups.ts",
+      "line": 5,
+      "title": "Static Groups — Scene Container Factory",
+      "description": "`createStaticGroups()` builds the `THREE.Group` containers that organize the scene's object hierarchy: `groupMain` (player points), `groupTorus` (team rings), `groupCylinders` (background pillars), and `groupBlocks` (block events). Cylinders are the only objects populated here at factory time — the rest start empty and are populated reactively by the hooks in `Scene`. The `matrixAutoUpdate = false` flag (line 17) on cylinders is a perf optimization: their positions never change, so Three.js skips matrix recalculation every frame."
+    },
+    {
+      "file": "src/components/gameplay/Scene.tsx",
+      "line": 14,
+      "title": "Scene — Hook-Per-Layer Composition",
+      "description": "`Scene` is intentionally thin: it delegates all mutation to hooks, then renders the resulting group primitives. Each hook owns one visual layer:\n\n- `useInitScene` — camera + fog setup\n- `useMouseFollowCamera` — parallax camera movement\n- `useApplyTeamsToTorus` — team rings driven by `playerData`\n- `useApplyPointsToMain` — point spheres driven by stats\n- `useApplyBlocksAsCrosses` — block markers\n- `useSpaceBullets` — animated bullet objects\n\nThis pattern keeps each visual concern isolated and testable. Adding a new visual layer means adding one hook and one `<primitive>` render, with no changes to the others."
+    },
+    {
+      "file": "src/hooks/three/useApplyTeamsToTorus.ts",
+      "line": 17,
+      "title": "Data → 3D Mapping Pattern",
+      "description": "This hook shows the canonical pattern used across all Three.js hooks: when `playerData` changes, `groupTorus.clear()` and rebuild from scratch. The home and visitor team each get one torus mesh, positioned symmetrically at opposite ends of the scene (`base = -1000`, `spread = 4000`). Team metadata (id, name, abbreviation, gameId) is stored in `mesh.userData` — enabling raycasting or click events to identify which team object was hit without keeping a separate lookup table. `matrixAutoUpdate = false` + `updateMatrix()` is used again here for the same perf reason."
+    },
+    {
+      "file": "src/hooks/missions/useMission.ts",
+      "line": 36,
+      "title": "Mission Process — Polling Loop with Stop Condition",
+      "description": "`useMissionProcess` POSTs the game payload to `/missions/process-game` and polls every `refetchIntervalMs` (default 5 s) until `stopWhen` returns true. The caller in `ThreeGameplayCanvas` stops when `data.done === true` or `data.status === 'completed'`. The `refetchIntervalInBackground: true` flag means the poll continues even when the browser tab is hidden — important for games where the user switches away during loading. The gotcha: the query key is keyed only on `userId` (line 48), so two different game sessions for the same user would share cache state. If multi-session support is ever needed, include `idGame` in the query key."
+    },
+    {
+      "title": "What You Can Now Do",
+      "description": "You can now trace the full lifecycle:\n\n1. **Request arrives** → middleware cookie check → route allowed/redirected\n2. **Page loads** → AuthContext checks localStorage/session cookie → user state hydrated\n3. **API calls** → axios interceptor injects NextAuth session token → auto-logout on 401\n4. **Gameplay** → URL params → player stats fetched → Three.js groups populated hook-by-hook → mission polling loop runs → success/failure dialogs shown\n\nGood next reads: `src/hooks/hangar/` for the team assembly + socket scoreboard flow, and `src/components/rewards/DailyLoginRewardsGate.tsx` to understand the reward gate that wraps every main-group navigation."
+    }
+  ]
+}

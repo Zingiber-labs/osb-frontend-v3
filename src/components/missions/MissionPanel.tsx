@@ -4,7 +4,7 @@ import { Accordion } from "@/components/ui/accordion";
 import { useAcceptMission, useMissions } from "@/hooks/missions/useMission";
 import { Mission } from "@/types/mission";
 import { Loader } from "lucide-react";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/hooks/useSession";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
@@ -14,7 +14,7 @@ import MissionRow from "./MissionRow";
 export function MissionTerminal() {
   const { data: session } = useSession();
   const router = useRouter();
-  const userId = (session?.user as any)?.userId;
+  const userId = session?.id;
 
   const { data: missions = [], isPending } = useMissions({ userId });
   const [selectedIndex, setSelectedIndex] = useState(0);

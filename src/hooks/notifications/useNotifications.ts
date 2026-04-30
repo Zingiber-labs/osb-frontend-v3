@@ -1,10 +1,10 @@
-import { api } from "@/lib/axios";
+import { api } from "@/lib/api/client";
 import { useQuery, useInfiniteQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { UnreadCountResponse, NotificationPaginatedResponse } from "@/types/notifications";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/hooks/useSession";
 
 export const useUnreadCount = () => {
-  const { status } = useSession();
+  const { data: session } = useSession();
   
   return useQuery<UnreadCountResponse>({
     queryKey: ["notifications", "unread-count"],
@@ -12,13 +12,13 @@ export const useUnreadCount = () => {
       const { data } = await api.get("/notifications/unread-count");
       return data;
     },
-    enabled: status === "authenticated",
+    enabled: !!session,
     refetchInterval: 60000, // refresh every minute
   });
 };
 
 export const useInfiniteNotifications = (unreadOnly: boolean = false) => {
-  const { status } = useSession();
+  const { data: session } = useSession();
   return useInfiniteQuery<NotificationPaginatedResponse>({
     queryKey: ["notifications", "list", { unreadOnly }],
     queryFn: async ({ pageParam = 1 }) => {
@@ -39,7 +39,7 @@ export const useInfiniteNotifications = (unreadOnly: boolean = false) => {
       return undefined;
     },
     initialPageParam: 1,
-    enabled: status === "authenticated",
+    enabled: !!session,
   });
 };
 

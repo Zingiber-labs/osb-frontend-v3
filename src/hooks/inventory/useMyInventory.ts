@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { api } from "@/lib/axios";
+import { api } from "@/lib/api/client";
 import { ItemType } from "@/types/inventory-items";
 
 export const useMyInventory = ({

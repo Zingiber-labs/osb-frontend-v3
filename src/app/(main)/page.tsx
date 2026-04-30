@@ -10,7 +10,7 @@ import { useComplexEvents } from "@/hooks/events-complex/useEvents";
 import { useUnreadCount } from "@/hooks/notifications/useNotifications";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { Bell, CalendarDays, Trophy } from "lucide-react";
-import { signOut } from "next-auth/react";
+import { useLogout } from "@/lib/auth/client";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -24,6 +24,7 @@ export default function Home() {
   const { data: events, isLoading: isEventsLoading } = useComplexEvents();
   const { data: unreadData } = useUnreadCount();
   const unreadCount = unreadData?.unreadCount ?? 0;
+  const logout = useLogout();
 
   return (
     <div className="relative mx-auto min-h-[calc(100dvh-104px-91.83px)] w-full overflow-auto rounded-2xl border-0 shadow thin-scroll">
@@ -189,7 +190,14 @@ export default function Home() {
             className="absolute z-20"
             style={{ right: "4%", bottom: "69%" }}
             tooltipOffset={0}
-            onClick={() => signOut({ callbackUrl: "/" })}
+            onClick={() =>
+              logout.mutate(undefined, {
+                onSettled: () => {
+                  router.push("/login");
+                  router.refresh();
+                },
+              })
+            }
           />
 
           {/* Floating buttons desktop */}
