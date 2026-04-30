@@ -9,6 +9,7 @@ const PUBLIC_ROUTES = new Set<string>([
   "/login",
   "/signup",
   "/forgot-password",
+  "/auth/success",
 ]);
 
 export function middleware(req: NextRequest) {
