@@ -1,94 +1,83 @@
 {
   "$schema": "https://aka.ms/codetour-schema",
   "title": "Outer Sports Ballers — Architecture Onboarding",
-  "description": "A top-to-bottom walkthrough for new engineers: auth wiring, route groups, the API layer, and the Three.js gameplay loop.",
-  "ref": "main",
+  "description": "A top-to-bottom walkthrough for new engineers: BFF auth (HttpOnly cookies + Zod), RSC route groups, the data proxy, and the Three.js gameplay loop.",
+  "ref": "develop",
   "steps": [
     {
       "directory": "src",
       "title": "Source Root",
-      "description": "Everything lives under `src/`. The shape is: `app/` for Next.js routes, `components/` for UI, `hooks/` for data/Three.js logic, `lib/` for shared utilities, `contexts/` for React context, and `types/` for domain types. The route groups `(auth)`, `(main)`, and `(gameplay)` each have their own layout — meaning the Navbar, providers, and chrome differ between the auth pages, the main app, and the full-screen 3D gameplay view."
-    },
-    {
-      "file": "src/app/layout.tsx",
-      "line": 33,
-      "title": "Root Layout — AuthProvider Wraps Everything",
-      "description": "This is the outermost shell for every page. It loads the custom `ApexMk2` font and mounts `AuthProvider` around all children. Crucially, `AuthProvider` comes from `@/contexts/AuthContext` — a *custom* client-side auth layer that runs independently of NextAuth. Both systems coexist: NextAuth manages the server-side session (JWT in a cookie), while `AuthContext` manages the in-memory user state that components consume via `useAuth()`."
+      "description": "Everything lives under `src/`. The shape: `app/` for App Router routes (with route groups `(auth)`, `(main)`, `(gameplay)` — each enforces its own auth posture), `components/` for UI grouped by feature, `hooks/` for data hooks and Three.js layer hooks, `lib/` for shared utilities, `types/` for domain types. Notice there is no `contexts/` and no `providers/` — auth is owned by the BFF route handlers under `app/api/auth/*` and a single TanStack Query hook (`hooks/useSession.ts`)."
     },
     {
       "file": "src/middleware.ts",
-      "line": 19,
-      "title": "Edge Middleware — Cookie-Based Route Guard",
-      "description": "Before any page is served, Next.js Edge middleware checks for an `access_token` cookie. `PUBLIC_ROUTES` (line 5) lists every route that is open without a token — notice that today *all* main routes are in that set, meaning the guard currently only redirects on truly unknown private paths. The middleware intentionally passes `/auth/*` through unconditionally so the NextAuth callback chain is never blocked. If you add a new protected route, add it here only if you *don't* want it in `PUBLIC_ROUTES`."
+      "line": 14,
+      "title": "Edge Middleware — Cookie Guard",
+      "description": "First line of defense before any page is served. It checks an `osb_at` cookie (HttpOnly, set by Next.js BFF routes) and falls back to the legacy `access_token` cookie name for one-deploy cutover compatibility. Public routes are narrow: `/login`, `/signup`, `/forgot-password`. Anything else without a cookie is redirected to `/login` (line 27). The matcher (line 36) excludes `api/`, `_next/static`, and asset paths so internal routes and the BFF proxies are never gated by middleware."
     },
     {
-      "file": "src/lib/auth-options.ts",
-      "line": 6,
-      "title": "NextAuth — Three Login Providers",
-      "description": "Three `CredentialsProvider` entries are registered:\n\n1. **`credentials`** — email/password login: calls `/auth/login`, then `/auth/profile` to inflate the token into a user object.\n2. **`backend-token`** — accepts a raw token directly (used after OAuth redirects from an external backend).\n3. **`guest`** — hits `/auth/guest`, creating an anonymous session backed by a real token.\n\nAll three follow the same pattern: call the API, get an `access_token`, fetch the profile, return the user shape. The JWT callback (line 160) copies the token onto the NextAuth JWT so it survives across requests. The gotcha: `authOptions` is the canonical source of truth for the session token — the custom `AuthContext` reads `localStorage` separately and can drift if they're not kept in sync."
+      "file": "src/lib/auth/schemas.ts",
+      "line": 49,
+      "title": "User Schema & Profile Normalizer",
+      "description": "Zod schemas are the single source of truth for auth shapes. `LoginInput`/`SignupInput` drive both BFF input validation and `react-hook-form` resolvers in the login/signup pages. `UserSchema` (line 35) is the *normalized* user object exposed to all UI. `normalizeProfile()` is the gotcha: the backend returns inconsistent fields (`userId` | `id` | `_id`, `username` | `name`, `roles` | `role`, `avatar` | `image`) — this function picks the right one and coerces `id` to a string so downstream consumers don't have to handle `string | number`."
     },
     {
-      "file": "src/contexts/AuthContext.tsx",
-      "line": 64,
-      "title": "AuthContext — Client-Side Auth State",
-      "description": "`AuthProvider` is the runtime auth surface for all UI components. It tracks `isAuthenticated`, `isGuest`, `isLoading`, and `user` in React state, persisting the safe user object to `localStorage` so it survives page reloads. On mount (line 267) it runs `checkAuthStatus()`: first checks `localStorage` for a token, then falls back to the session cookie for guest sessions. The `login()` method (line 169) both calls the backend *and* manually sets the `access_token` cookie (line 192) so the middleware guard sees it immediately — no NextAuth round-trip needed for client navigation."
+      "file": "src/lib/auth/session.ts",
+      "line": 25,
+      "title": "Server-Side getSession() — RSC Auth Source",
+      "description": "Marked `import \"server-only\"` (line 1) so it can never accidentally ship to the browser. RSC layouts await this to enforce auth before render. It reads the `osb_at` HttpOnly cookie via `next/headers`, fetches `/auth/profile` from the backend with the bearer, runs the response through `normalizeProfile()`, and returns `User | null`. Wrapped in `react.cache` (line 25) so multiple `getSession()` calls inside one request hit the backend exactly once. The `getAccessToken()` helper (line 32) is the escape hatch for server actions that need to call the backend directly with the user's token."
     },
     {
-      "file": "src/lib/axios.ts",
-      "line": 11,
-      "title": "Axios Instance — NextAuth Token Injection",
-      "description": "Every API call from hooks goes through this single `axios` instance. The request interceptor (line 11) calls `getSession()` from NextAuth on every request to pull the current `accessToken` and attach it as a `Bearer` header. The response interceptor (line 26) auto-triggers `signOut` on 401/403, redirecting to `/login`. The gotcha: `getSession()` is a round-trip to the NextAuth session endpoint on every request — in high-frequency polling scenarios (like the mission loop) this adds measurable overhead. Consider caching the token in a ref if that becomes a problem."
-    },
-    {
-      "directory": "src/app/(main)",
-      "title": "Main Route Group — App Shell",
-      "description": "All game screens (home, hangar, inventory, missions, store, profile) live under `(main)/`. The shared layout wraps each in `AuthSessionProvider` + `ClientLayout`, mounts the `Navbar`, and renders `DailyLoginRewardsGate` — which silently checks whether to show the daily-login modal on every navigation within this group."
+      "file": "src/app/providers.tsx",
+      "line": 33,
+      "title": "Root Providers — QueryClient + Session Hydration",
+      "description": "Mounted once in `src/app/layout.tsx` line 43 as `<Providers>`. Owns the singleton TanStack `QueryClient` (created via `useState` so each SSR request gets its own instance — see `makeQueryClient` line 17). `SessionHydrator` (line 38) is the bridge from RSC to client: route-group layouts pass the server-fetched `User | null` into it, which calls `qc.setQueryData(['session'], session)` once. That means the client `useSession()` hook returns hydrated data on first paint — no loading flash, no double-fetch."
     },
     {
       "file": "src/app/(main)/layout.tsx",
-      "line": 10,
-      "title": "Main Layout — Navbar + Reward Gate",
-      "description": "`DailyLoginRewardsGate` (line 8) is mounted here so it fires on every main-group route, not just the home page. It gates the rewards modal without blocking the page render. The layout also adds the `overlay` div that creates the background vignette effect seen across all main screens. If you're adding a new main-group page, you get the Navbar and reward check for free — no extra wiring needed."
+      "line": 15,
+      "title": "Main Route Group — RSC Auth Gate",
+      "description": "This is the auth boundary for every authed page (home, hangar, inventory, missions, store, profile, ranking). The layout is `async` and runs server-side: `await getSession()` then `redirect('/login')` if null (line 16). Below the gate, `<SessionHydrator session={session} />` seeds the client TanStack cache so the first client render has the session already. The `(gameplay)/layout.tsx` mirrors this exact pattern — both share the same auth posture without duplicating logic."
+    },
+    {
+      "file": "src/app/api/auth/login/route.ts",
+      "line": 36,
+      "title": "BFF Auth Login — Backend Proxy + Cookie Setter",
+      "description": "Representative example of the 6 BFF auth routes (login, signup, logout, me, guest, callback). Validates the request body with `LoginInputSchema` (line 28), proxies to the real backend at `${NEXT_PUBLIC_API_URL}/auth/login`, validates the response with `BackendAuthResponseSchema` (line 51), then sets the HttpOnly cookies (lines 68-71). Crucially, the JWT never touches client JS — it goes straight into the cookie header. The backend URL also never reaches the browser. Add new auth flows by mirroring this pattern: validate input → call backend → set/clear cookies → return user."
+    },
+    {
+      "file": "src/app/api/backend/[...path]/route.ts",
+      "line": 26,
+      "title": "BFF Data Proxy — Token Injection",
+      "description": "All non-auth backend traffic flows through this catch-all. It accepts any HTTP method (lines 92-96 export GET/POST/PUT/PATCH/DELETE all bound to `forward`), reads the `osb_at` HttpOnly cookie (line 40), strips browser cookies + hop-by-hop headers (line 45), and reissues the request to the backend with `Authorization: Bearer <token>` (line 49). On a 401 from the backend, it clears all auth cookies (lines 84-86) so the browser's next navigation is caught by middleware and redirected to `/login`. This is why no client code ever sees `NEXT_PUBLIC_API_URL` in network tab — only `/api/backend/*`."
+    },
+    {
+      "file": "src/lib/api/client.ts",
+      "line": 98,
+      "title": "Fetch Wrapper — Axios-Shaped, BFF-Routed",
+      "description": "Replaces the deleted axios instance. Same call shape (`api.get/post/put/patch/delete` returning `{ data, status, headers }`) so the 13 data hooks didn't need per-call edits during the rewrite. Internally it rewrites every relative path through the `/api/backend` BFF prefix (`joinUrl`, line 22). Supports an axios-style `params` option for query strings. On 401, calls `handleUnauthorized()` (line 57) which navigates to `/login` (skipping if already there to avoid loops). When you write a new data hook, import `api` from `@/lib/api/client` and call `api.get('/missions/...')` — never call `fetch` directly."
+    },
+    {
+      "file": "src/hooks/useSession.ts",
+      "line": 15,
+      "title": "useSession() — The Only Auth Hook",
+      "description": "Replaces NextAuth's `useSession` AND the deleted `useAuth()` context. A single TanStack Query against `GET /api/auth/me`, keyed `['session']` (exported as `SESSION_QUERY_KEY` so mutations can update it). 5-minute staleTime, no refetch-on-window-focus (intentional — mid-game focus losses should not refetch the session). Returns `{ data: User | null, isLoading, ... }`. The hydration from `SessionHydrator` means `data` is populated synchronously on first render in `(main)` and `(gameplay)` route groups. Mutations (`useLogin`, `useSignup`, `useLogout`, `useGuestLogin`) live in `src/lib/auth/client.ts` and update the same query key on success."
     },
     {
       "file": "src/components/gameplay/ThreeGameplayCanvas.tsx",
       "line": 15,
-      "title": "Gameplay Canvas — The Orchestrator",
-      "description": "This component is the entry point for the full-screen 3D experience. It reads `gameId` and `playerId` from URL search params, then:\n\n1. Fetches player/game data via `useGameTeam()` (TanStack Query).\n2. Builds a `payload` from the player's live stats (points, blocks, rebounds).\n3. Starts `useMissionProcess()` polling loop with that payload.\n4. Watches mission results and toggles success/failure dialog state.\n\nThe `assets` and `staticGroups` are created once via `useMemo` (lines 23-24) and passed into the Three.js `Scene` — keeping geometry allocation out of the render loop. The `Canvas` component from `@react-three/fiber` provides the WebGL context."
-    },
-    {
-      "file": "src/lib/three/assets.ts",
-      "line": 3,
-      "title": "Three.js Assets — Geometry Factory",
-      "description": "`createAssets()` is a pure factory called once at canvas mount. It pre-allocates every shared `THREE.Geometry` and a single `MeshNormalMaterial` that all meshes share. Sharing one material means one WebGL program draw call for the whole scene. If you need a new shape (e.g., a diamond for a special event), add it here so it's created once and passed through the asset tree rather than instantiated per-component."
-    },
-    {
-      "file": "src/lib/three/static-groups.ts",
-      "line": 5,
-      "title": "Static Groups — Scene Container Factory",
-      "description": "`createStaticGroups()` builds the `THREE.Group` containers that organize the scene's object hierarchy: `groupMain` (player points), `groupTorus` (team rings), `groupCylinders` (background pillars), and `groupBlocks` (block events). Cylinders are the only objects populated here at factory time — the rest start empty and are populated reactively by the hooks in `Scene`. The `matrixAutoUpdate = false` flag (line 17) on cylinders is a perf optimization: their positions never change, so Three.js skips matrix recalculation every frame."
-    },
-    {
-      "file": "src/components/gameplay/Scene.tsx",
-      "line": 14,
-      "title": "Scene — Hook-Per-Layer Composition",
-      "description": "`Scene` is intentionally thin: it delegates all mutation to hooks, then renders the resulting group primitives. Each hook owns one visual layer:\n\n- `useInitScene` — camera + fog setup\n- `useMouseFollowCamera` — parallax camera movement\n- `useApplyTeamsToTorus` — team rings driven by `playerData`\n- `useApplyPointsToMain` — point spheres driven by stats\n- `useApplyBlocksAsCrosses` — block markers\n- `useSpaceBullets` — animated bullet objects\n\nThis pattern keeps each visual concern isolated and testable. Adding a new visual layer means adding one hook and one `<primitive>` render, with no changes to the others."
-    },
-    {
-      "file": "src/hooks/three/useApplyTeamsToTorus.ts",
-      "line": 17,
-      "title": "Data → 3D Mapping Pattern",
-      "description": "This hook shows the canonical pattern used across all Three.js hooks: when `playerData` changes, `groupTorus.clear()` and rebuild from scratch. The home and visitor team each get one torus mesh, positioned symmetrically at opposite ends of the scene (`base = -1000`, `spread = 4000`). Team metadata (id, name, abbreviation, gameId) is stored in `mesh.userData` — enabling raycasting or click events to identify which team object was hit without keeping a separate lookup table. `matrixAutoUpdate = false` + `updateMatrix()` is used again here for the same perf reason."
+      "title": "Gameplay Canvas — Orchestrator",
+      "description": "Entry point for the full-screen 3D experience. Reads `gameId`/`playerId` from URL search params, gets `userId` from `useSession()` (line 20), fetches live player/game data via `useGameTeam()`, then builds a `payload` from the player's stats and starts `useMissionProcess()` polling. The Three.js `assets` and `staticGroups` are created once via `useMemo` (lines 23-24) — keeping geometry allocation outside the render loop. The `Canvas` from `@react-three/fiber` provides the WebGL context for the `<Scene>` child. Watch the `lastTerminalKeyRef` pattern (later in this file) for how mission completion is debounced — it prevents the success/failure dialog from re-firing on every poll."
     },
     {
       "file": "src/hooks/missions/useMission.ts",
-      "line": 36,
-      "title": "Mission Process — Polling Loop with Stop Condition",
-      "description": "`useMissionProcess` POSTs the game payload to `/missions/process-game` and polls every `refetchIntervalMs` (default 5 s) until `stopWhen` returns true. The caller in `ThreeGameplayCanvas` stops when `data.done === true` or `data.status === 'completed'`. The `refetchIntervalInBackground: true` flag means the poll continues even when the browser tab is hidden — important for games where the user switches away during loading. The gotcha: the query key is keyed only on `userId` (line 48), so two different game sessions for the same user would share cache state. If multi-session support is ever needed, include `idGame` in the query key."
+      "line": 39,
+      "title": "Mission Polling Loop — Stop Condition Pattern",
+      "description": "`useMissionProcess` POSTs the game payload to `/missions/process-game` (which becomes `/api/backend/missions/process-game` via the BFF) and polls every 5 seconds (line 48 default) until `stopWhen()` returns true. The caller in `ThreeGameplayCanvas` stops when `data.done === true` or `data.status === 'completed'`. `refetchIntervalInBackground: true` keeps polling alive when the tab is hidden — important if the user switches away mid-game. Query key includes `userId`, `idGame`, `idPlayer` (lines 51-56) so concurrent sessions don't share cache."
     },
     {
       "title": "What You Can Now Do",
-      "description": "You can now trace the full lifecycle:\n\n1. **Request arrives** → middleware cookie check → route allowed/redirected\n2. **Page loads** → AuthContext checks localStorage/session cookie → user state hydrated\n3. **API calls** → axios interceptor injects NextAuth session token → auto-logout on 401\n4. **Gameplay** → URL params → player stats fetched → Three.js groups populated hook-by-hook → mission polling loop runs → success/failure dialogs shown\n\nGood next reads: `src/hooks/hangar/` for the team assembly + socket scoreboard flow, and `src/components/rewards/DailyLoginRewardsGate.tsx` to understand the reward gate that wraps every main-group navigation."
+      "description": "You can now trace the full lifecycle:\n\n1. **Request arrives** → middleware checks `osb_at` cookie → redirect to `/login` if missing\n2. **Page renders** → RSC layout `await getSession()` → backend `/auth/profile` call → `SessionHydrator` seeds TanStack cache\n3. **Client mounts** → `useSession()` reads hydrated cache, no loading flash → components render with `session` populated\n4. **Data hook fires** → `api.get('/X')` → `/api/backend/X` BFF → backend with bearer from cookie → response streamed back\n5. **Auth mutation** (login/logout) → `/api/auth/X` BFF → cookies set/cleared → `qc.setQueryData(['session'], ...)`\n6. **Gameplay** → URL params → player stats fetched → mission polling loop runs → success/failure dialogs shown\n\nGood next reads: `src/lib/auth/client.ts` for the four mutation hooks; `src/components/hangar/` for the team assembly + socket scoreboard flow; `CLAUDE.md` at the project root for the conventions you should follow when adding code."
     }
   ]
 }
