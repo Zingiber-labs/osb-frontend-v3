@@ -50,7 +50,7 @@ export type EventItem = {
 export type EventStep = {
   step: number;
   conditionValue: number;
-  status: "AVAILABLE" | "LOCKED" | "CLAIMED" | string;
+  status: "AVAILABLE" | "CLAIMED" | "LOCKED" | "COMPLETED" | string;
   rewards: Reward[];
 };
 
@@ -98,4 +98,14 @@ export type EventComplexItem = {
     enabled: boolean;
   };
   competitiveRewards?: CompetitiveReward[];
+};
+
+export type EventReward = { type: "CURRENCY" | string; code?: string; amount: number };
+
+export type EventsResponseItem = {
+  id: string;
+  uid: string;
+  name: string;
+  type: "DAILY_LOGIN" | string;
+  steps: EventStep[];
 };

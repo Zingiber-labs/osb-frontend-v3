@@ -1,3 +1,4 @@
+import { EventsResponseItem } from "@/types/event";
 import { Check, Loader2, Lock, X } from "lucide-react";
 import Image from "next/image";
 
@@ -17,11 +18,13 @@ const RewardCard = ({
   activeDay,
   onRewardClick,
   isLoading = false,
+  currentEvent,
 }: {
   reward: DailyReward;
   activeDay: number | null;
   onRewardClick?: (day: number) => void;
   isLoading?: boolean;
+  currentEvent?: EventsResponseItem | null;
 }) => {
   const isActive = activeDay !== null && reward.day === activeDay;
 
@@ -94,8 +97,8 @@ const RewardCard = ({
                       : "/img/coin.svg"
                   }
                   alt={isLocked ? "Locked reward" : "Coin reward"}
-                  width={46}
-                  height={46}
+                  width={66}
+                  height={66}
                   className={[
                     "relative drop-shadow-[0_10px_18px_rgba(0,0,0,0.35)]",
                     isLocked ? "grayscale opacity-70" : "",

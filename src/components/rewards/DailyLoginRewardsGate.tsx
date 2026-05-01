@@ -19,23 +19,7 @@ import {
   useEventsForDailyLogin,
 } from "@/hooks/events-daily-login/useDailyLoginEvent";
 import { useDailyLoginRewardsGate } from "@/hooks/rewards/useDailyLoginRewardsGate";
-
-type EventReward = { type: "CURRENCY" | string; code?: string; amount: number };
-
-type EventStep = {
-  step: number;
-  status: "AVAILABLE" | "CLAIMED" | "LOCKED" | "COMPLETED" | string;
-  rewards: EventReward[];
-  conditionValue: number;
-};
-
-type EventsResponseItem = {
-  id: string;
-  uid: string;
-  name: string;
-  type: "DAILY_LOGIN" | string;
-  steps: EventStep[];
-};
+import { EventsResponseItem, EventStep } from "@/types/event";
 
 function mapStepsToDailyRewards(steps: EventStep[]): DailyReward[] {
   return (steps ?? [])
@@ -185,6 +169,7 @@ export default function DailyLoginRewardsGate() {
           title={currentEvent.name?.toUpperCase() || "DAILY LOGIN REWARDS"}
           subtitle={subtitle}
           rewards={rewards}
+          currentEvent={currentEvent}
           activeDay={activeDay}
           isLastEvent={currentEventIndex >= events.length - 1}
           onRewardClick={handleRewardClick}

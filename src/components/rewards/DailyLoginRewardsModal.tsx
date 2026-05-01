@@ -10,6 +10,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import RewardCard from "./RewardCard";
+import { EventsResponseItem } from "@/types/event";
 
 export type DailyReward = {
   day: number;
@@ -29,6 +30,7 @@ type Props = {
   onViewEvent?: () => void;
   onRewardClick?: (day: number) => void;
   isClaimLoading: boolean;
+  currentEvent: EventsResponseItem | null;
 };
 
 const MAX_GRID_REWARDS = 7;
@@ -44,6 +46,7 @@ export function DailyLoginRewardsModal({
   onViewEvent,
   onRewardClick,
   isClaimLoading = false,
+  currentEvent,
 }: Props) {
   const router = useRouter();
   const isMobile = useIsMobile();
@@ -130,6 +133,7 @@ export function DailyLoginRewardsModal({
                       activeDay={activeDay}
                       onRewardClick={onRewardClick}
                       isLoading={isClaimLoading}
+                      currentEvent={currentEvent}
                     />
                   ))}
                 </div>
