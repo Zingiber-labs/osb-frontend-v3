@@ -2,11 +2,43 @@ import { EventsResponseItem } from "@/types/event";
 import { Check, Loader2, Lock, X } from "lucide-react";
 import Image from "next/image";
 
+type RewardItem = {
+  code: "COINS" | "GEMS" | "XP" | string;
+  amount: number;
+};
+
 export type DailyReward = {
   day: number;
   amount: number;
   claimed?: boolean;
   status?: "AVAILABLE" | "CLAIMED" | "LOCKED" | "COMPLETED" | string;
+  rewards?: RewardItem[];
+};
+
+const rewardImageMap: Record<string, string> = {
+  COINS: "/img/coin.svg",
+  GEMS: "/img/gem.svg",
+  XP: "/img/xp.svg",
+  COINS_XP: "/img/coin_xp.svg",
+  COINS_GEMS: "/img/coin_gem.svg",
+  COINS_GEMS_XP: "/img/coin_gem_xp.svg",
+  GEMS_XP: "/img/gem_xp.svg",
+};
+
+const getRewardImage = (event: EventsResponseItem, status?: string) => {
+  const rewards = event.steps[0]?.rewards;
+  console.log("reward.event", rewards);
+  if (status === "LOCKED" || status === "AVAILABLE") {
+    return "/img/gift/surprise-box.svg";
+  }
+
+  const codes = rewards?.map((item) => item.code) ?? [];
+  const orderedCodes = ["COINS", "GEMS", "XP"].filter((code) =>
+    codes.includes(code),
+  );
+  const key = orderedCodes.join("_");
+
+  return rewardImageMap[key] ?? "/img/coin.svg";
 };
 
 function formatAmount(amount: number) {
@@ -92,13 +124,14 @@ const RewardCard = ({
 
                 <Image
                   src={
-                    isLocked || isAvailable
-                      ? "/img/gift/surprise-box.svg"
-                      : "/img/coin.svg"
+                    getRewardImage(
+                      currentEvent as EventsResponseItem,
+                      reward.status,
+                    ) ?? "/img/coin.svg"
                   }
-                  alt={isLocked ? "Locked reward" : "Coin reward"}
-                  width={66}
-                  height={66}
+                  alt={isLocked ? "Locked reward" : "Reward"}
+                  width={76}
+                  height={76}
                   className={[
                     "relative drop-shadow-[0_10px_18px_rgba(0,0,0,0.35)]",
                     isLocked ? "grayscale opacity-70" : "",
