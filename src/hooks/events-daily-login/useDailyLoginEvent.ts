@@ -1,5 +1,6 @@
 import { api } from "@/lib/api/client";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 
 export const useEventsForDailyLogin = () => {
   return useQuery({
@@ -24,9 +25,17 @@ export const useClaimReward = () => {
       return data;
     },
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["events"] });
       queryClient.invalidateQueries({ queryKey: ["profile-data"] });
       queryClient.invalidateQueries({ queryKey: ["notifications"] });
       queryClient.invalidateQueries({ queryKey: ["my-events"] });
+    },
+    onError: (error) => {
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Failed to claim the reward. Please try again.",
+      );
     },
   });
 };

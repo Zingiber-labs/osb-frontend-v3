@@ -79,8 +79,7 @@ export default function DailyLoginRewardsGate() {
   const queryClient = useQueryClient();
   const [currentEventIndex, setCurrentEventIndex] = useState(0);
 
-  const userId =
-    session?.id;
+  const userId = session?.id;
 
   const { open, setOpen } = useDailyLoginRewardsGate({
     userId,
@@ -88,7 +87,7 @@ export default function DailyLoginRewardsGate() {
   });
 
   const { data: eventsData, isLoading, isError } = useEventsForDailyLogin();
-  const claimMutation = useClaimReward();
+  const { mutate: claimMutation, isPending: isClaimLoading } = useClaimReward();
 
   const [claimedToast, setClaimedToast] = useState<{
     open: boolean;
@@ -139,10 +138,11 @@ export default function DailyLoginRewardsGate() {
     if (!stepObj) return;
 
     try {
-      await claimMutation.mutateAsync({ eventId: currentEvent.id, step: day });
+      claimMutation({ eventId: currentEvent.id, step: day });
+
       await queryClient.invalidateQueries({ queryKey: ["events"] });
     } catch (err: any) {
-      console.warn("Claim failed (showing modal anyway for testing):", err);
+      console.warn("Claim failed:", err);
     } finally {
       setClaimedToast({
         open: true,
@@ -190,14 +190,13 @@ export default function DailyLoginRewardsGate() {
           isLastEvent={currentEventIndex >= events.length - 1}
           onRewardClick={handleRewardClick}
           onViewEvent={handleNextOrClose}
+          isClaimLoading={isClaimLoading}
         />
       )}
       <RewardClaimedToast
         open={claimedToast.open}
         rewards={claimedToast.rewards}
-        onClose={() =>
-          setClaimedToast((prev) => ({ ...prev, open: false }))
-        }
+        onClose={() => setClaimedToast((prev) => ({ ...prev, open: false }))}
       />
     </>
   );

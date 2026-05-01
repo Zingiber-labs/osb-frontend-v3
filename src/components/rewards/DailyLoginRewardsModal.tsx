@@ -28,6 +28,7 @@ type Props = {
   isLastEvent?: boolean;
   onViewEvent?: () => void;
   onRewardClick?: (day: number) => void;
+  isClaimLoading: boolean;
 };
 
 const MAX_GRID_REWARDS = 7;
@@ -42,6 +43,7 @@ export function DailyLoginRewardsModal({
   isLastEvent = false,
   onViewEvent,
   onRewardClick,
+  isClaimLoading = false,
 }: Props) {
   const router = useRouter();
   const isMobile = useIsMobile();
@@ -108,6 +110,7 @@ export function DailyLoginRewardsModal({
                           reward={r}
                           activeDay={activeDay}
                           onRewardClick={onRewardClick}
+                          isLoading={isClaimLoading}
                         />
                       </SwiperSlide>
                     ))}
@@ -126,6 +129,7 @@ export function DailyLoginRewardsModal({
                       reward={r}
                       activeDay={activeDay}
                       onRewardClick={onRewardClick}
+                      isLoading={isClaimLoading}
                     />
                   ))}
                 </div>
