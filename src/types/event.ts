@@ -100,7 +100,11 @@ export type EventComplexItem = {
   competitiveRewards?: CompetitiveReward[];
 };
 
-export type EventReward = { type: "CURRENCY" | string; code?: string; amount: number };
+export type EventReward = {
+  type: "CURRENCY" | string;
+  code?: string;
+  amount: number;
+};
 
 export type EventsResponseItem = {
   id: string;
@@ -108,4 +112,10 @@ export type EventsResponseItem = {
   name: string;
   type: "DAILY_LOGIN" | string;
   steps: EventStep[];
+};
+
+export const rewardLabelMap: Record<string, string> = {
+  COINS: "Coins",
+  GEMS: "Gems",
+  XP: "XP",
 };

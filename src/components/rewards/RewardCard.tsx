@@ -1,5 +1,5 @@
-import { EventsResponseItem } from "@/types/event";
-import { Check, Loader2, Lock, X } from "lucide-react";
+import { EventsResponseItem, rewardLabelMap } from "@/types/event";
+import { Check, Loader2, Lock } from "lucide-react";
 import Image from "next/image";
 
 type RewardItem = {
@@ -27,7 +27,7 @@ const rewardImageMap: Record<string, string> = {
 
 const getRewardImage = (event: EventsResponseItem, status?: string) => {
   const rewards = event.steps[0]?.rewards;
-  console.log("reward.event", rewards);
+  
   if (status === "LOCKED" || status === "AVAILABLE") {
     return "/img/gift/surprise-box.svg";
   }
@@ -41,8 +41,22 @@ const getRewardImage = (event: EventsResponseItem, status?: string) => {
   return rewardImageMap[key] ?? "/img/coin.svg";
 };
 
-function formatAmount(amount: number) {
-  return `x${amount}`;
+function formatRewardName(code: string, amount: number) {
+  const label = rewardLabelMap[code] ?? code;
+
+  if (amount === 1) {
+    return label.replace(/s$/, "");
+  }
+
+  return label;
+}
+
+function formatRewards(rewards?: RewardItem[]) {
+  if (!rewards?.length) return "";
+
+  return rewards
+    .map((item) => `${item.amount} ${formatRewardName(item.code, item.amount)}`)
+    .join(" + ");
 }
 
 const RewardCard = ({
@@ -144,8 +158,8 @@ const RewardCard = ({
                 <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-white/45">
                   Reward
                 </p>
-                <p className="mt-0.5 text-lg font-extrabold text-cyan-200">
-                  {formatAmount(reward.amount)}
+                <p className="mt-0.5 text-sm font-extrabold text-cyan-200">
+                  {formatRewards(currentEvent?.steps[0].rewards)}
                 </p>
               </div>
             </>

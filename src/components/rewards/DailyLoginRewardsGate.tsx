@@ -1,9 +1,8 @@
 "use client";
 
-import { useQueryClient } from "@tanstack/react-query";
 import { useSession } from "@/hooks/useSession";
+import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
-import toast from "react-hot-toast";
 
 import {
   DailyLoginRewardsModal,
