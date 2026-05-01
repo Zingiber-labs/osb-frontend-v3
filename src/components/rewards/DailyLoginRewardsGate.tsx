@@ -96,14 +96,13 @@ export default function DailyLoginRewardsGate() {
 
   const events = useMemo<EventsResponseItem[]>(() => {
     const raw = (eventsData ?? []) as EventsResponseItem[];
-    return raw
-      .filter(
-        (e) =>
-          e?.type === "DAILY_LOGIN" &&
-          Array.isArray(e?.steps) &&
-          e.steps.length > 0,
-      )
-      .slice(0, 2);
+
+    return raw.filter(
+      (e) =>
+        e?.type === "DAILY_LOGIN" &&
+        Array.isArray(e?.steps) &&
+        e.steps.length > 0,
+    );
   }, [eventsData]);
 
   useEffect(() => {
