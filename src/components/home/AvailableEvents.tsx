@@ -1,231 +1,27 @@
 "use client";
 
-import CompetitiveRewardsList from "@/components/complex-event/CompetitiveRewardList";
-import EventOverview from "@/components/complex-event/EventOverview";
-import MilestonesList from "@/components/complex-event/MilestonesList";
-import { Button } from "@/components/ui/button";
 import { useJoinEvent } from "@/hooks/events-complex/useEvents";
-import { formatDate } from "@/lib/event.utils";
-import { EventComplexItem } from "@/types/event";
-import {
-  ArrowLeft,
-  CalendarDays,
-  CheckCircle2,
-  Clock3,
-  Loader2,
-  X,
-} from "lucide-react";
-import { useEffect, useState } from "react";
+import EventDetailPane from "@/components/home/available-events/EventDetailPane";
+import EmptyDetail from "@/components/home/available-events/EmptyDetail";
+import EventListItem from "@/components/home/available-events/EventListItem";
+import { AvailableEventsProps } from "@/components/home/available-events/types";
+import { useSelectedEvent } from "@/components/home/available-events/useSelectedEvent";
+import { CalendarDays, Loader2, X } from "lucide-react";
 
-interface WeekEventsModalProps {
-  open: boolean;
-  onClose: () => void;
-  events: EventComplexItem[];
-  isLoading?: boolean;
-  title?: string;
-  subtitle?: string;
-}
-
-function EventListItem({
-  event,
-  isSelected,
-  onClick,
-}: {
-  event: EventComplexItem;
-  isSelected: boolean;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className="w-full border-b border-white/5 px-3 py-3 text-left transition-all duration-150"
-      style={{
-        background: isSelected
-          ? "linear-gradient(90deg, rgba(124,248,255,0.12) 0%, rgba(0,0,0,0) 100%)"
-          : event.accepted
-            ? "rgba(255,255,255,0.02)"
-            : "transparent",
-        borderLeft: isSelected
-          ? "3px solid #7cf8ff"
-          : event.accepted
-            ? "3px solid rgba(255,122,47,0.28)"
-            : "3px solid transparent",
-      }}
-    >
-      <div className="flex items-start justify-between gap-3">
-        <div className="min-w-0 flex-1">
-          <p
-            className={`line-clamp-2 text-sm font-bold uppercase tracking-wide ${
-              isSelected ? "text-white" : "text-white/82"
-            }`}
-          >
-            {event.name}
-          </p>
-
-          <div className="mt-1 flex flex-wrap items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/35">
-            <span>{event.type ?? "Event"}</span>
-            <span>•</span>
-            <span>{formatDate(event.startDate)}</span>
-          </div>
-        </div>
-
-        {event.accepted ? (
-          <span className="inline-flex shrink-0 items-center gap-1 rounded-full border border-emerald-400/25 bg-emerald-500/10 px-2 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-emerald-100">
-            <CheckCircle2 className="h-3 w-3" />
-            Joined
-          </span>
-        ) : (
-          <span className="shrink-0 rounded-full border border-white/10 bg-white/5 px-2 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-white/55">
-            Open
-          </span>
-        )}
-      </div>
-    </button>
-  );
-}
-
-function EmptyDetail() {
-  return (
-    <div className="flex h-full w-full flex-col items-center justify-center gap-4 px-6 text-center">
-      <div
-        className="flex h-16 w-16 items-center justify-center rounded-full"
-        style={{
-          background: "rgba(255,107,47,0.07)",
-          border: "1px solid rgba(255,122,47,0.15)",
-          boxShadow: "0 0 28px rgba(255,107,47,0.07)",
-        }}
-      >
-        <CalendarDays size={26} color="rgba(255,255,255,0.15)" />
-      </div>
-      <p className="text-xs font-semibold uppercase tracking-widest leading-relaxed text-white/20">
-        Select an event
-      </p>
-    </div>
-  );
-}
-
-function EventDetailPane({
-  event,
-  isPending,
-  onJoin,
-  onBack,
-}: {
-  event: EventComplexItem;
-  isPending: boolean;
-  onJoin: (eventId: string) => void;
-  onBack: () => void;
-}) {
-  const rankingEnabled = event.rankingConfig?.enabled;
-
-  return (
-    <div className="flex h-full w-full overflow-hidden">
-      <button
-        type="button"
-        onClick={onBack}
-        className="flex items-center gap-1.5 px-4 pt-3 pb-1 text-xs text-white/30 transition-colors hover:text-white/60 sm:hidden"
-      >
-        <ArrowLeft size={12} /> Back
-      </button>
-
-      <div className="space-y-5 overflow-y-auto px-5 py-5">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="flex flex-wrap items-center gap-2">
-            <span
-              className="rounded-lg px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-widest"
-              style={{
-                background: "rgba(124,248,255,0.08)",
-                color: "#7cf8ff",
-                border: "1px solid rgba(124,248,255,0.22)",
-              }}
-            >
-              {event.type ?? "Event"}
-            </span>
-
-            <span
-              className="rounded-lg px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-widest"
-              style={{
-                background: event.accepted
-                  ? "rgba(52,211,153,0.12)"
-                  : "rgba(255,255,255,0.05)",
-                color: event.accepted ? "#a7f3d0" : "rgba(255,255,255,0.7)",
-                border: event.accepted
-                  ? "1px solid rgba(52,211,153,0.28)"
-                  : "1px solid rgba(255,255,255,0.08)",
-              }}
-            >
-              {event.accepted ? "Joined" : "Available to Join"}
-            </span>
-          </div>
-
-          <span className="flex items-center gap-1 text-[10px] font-mono text-white/25">
-            <Clock3 size={10} />
-            {formatDate(event.startDate)} - {formatDate(event.endDate)}
-          </span>
-        </div>
-
-        <div className="space-y-3">
-          <h3 className="text-xl font-extrabold uppercase tracking-wide text-white sm:text-2xl">
-            {event.name}
-          </h3>
-
-          <div
-            className="h-px w-full"
-            style={{
-              background:
-                "linear-gradient(90deg, rgba(124,248,255,0.3) 0%, rgba(255,122,47,0.16) 40%, transparent 100%)",
-            }}
-          />
-        </div>
-
-        <EventOverview event={event} />
-
-        <MilestonesList milestones={event.milestones} eventId={event.id} />
-
-        {rankingEnabled && (
-          <CompetitiveRewardsList rewards={event.competitiveRewards} />
-        )}
-
-        <div className="flex justify-end border-t border-white/8 pt-1">
-          <Button
-            disabled={isPending || event.accepted}
-            variant="secondary"
-            onClick={() => onJoin(String(event.id))}
-          >
-            {event.accepted ? "Joined" : isPending ? "Joining..." : "Join Event"}
-          </Button>
-        </div>
-      </div>
-    </div>
-  );
-}
+const DEFAULT_TITLE = "AVAILABLE EVENTS";
+const DEFAULT_SUBTITLE =
+  "In the Outer Sports Ballers galaxy, the competition never stops. In addition to our regular gameplay, we've designed limited-time Special Events to push your skills to the limit and reward the best players in the cosmos.";
 
 const AvailableEvents = ({
   open,
   onClose,
   events,
   isLoading = false,
-  title = "AVAILABLE EVENTS",
-  subtitle = "In the Outer Sports Ballers galaxy, the competition never stops. In addition to our regular gameplay, we've designed limited-time Special Events to push your skills to the limit and reward the best players in the cosmos.",
-}: WeekEventsModalProps) => {
+  title = DEFAULT_TITLE,
+  subtitle = DEFAULT_SUBTITLE,
+}: AvailableEventsProps) => {
   const { mutate: joinEvent, isPending } = useJoinEvent();
-  const [selectedEvent, setSelectedEvent] = useState<EventComplexItem | null>(null);
-
-  useEffect(() => {
-    if (!selectedEvent) return;
-
-    const freshEvent = events.find(
-      (event) => String(event.id) === String(selectedEvent.id)
-    );
-
-    setSelectedEvent(freshEvent ?? null);
-  }, [events, selectedEvent]);
-
-  useEffect(() => {
-    if (!open) {
-      setSelectedEvent(null);
-    }
-  }, [open]);
+  const { selectedEvent, setSelectedEvent } = useSelectedEvent({ open, events });
 
   if (!open) return null;
 
@@ -347,7 +143,7 @@ const AvailableEvents = ({
                     }}
                   >
                     {events.map((event) => (
-                    <EventListItem
+                        <EventListItem
                         key={event.id}
                         event={event}
                         isSelected={selectedEvent?.id === event.id}
