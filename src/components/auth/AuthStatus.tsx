@@ -50,7 +50,7 @@ export const AuthPanel = () => {
 
   return (
     <>
-      <div className="absolute top-4 left-4 z-50 w-[200] h-[200px]">
+      <div className="absolute top-4 left-4 z-50 h-50 w-50">
         <Image
           src="/img/notification.png"
           alt="Auth Status Panel"
