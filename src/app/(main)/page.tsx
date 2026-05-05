@@ -6,6 +6,11 @@ import AvailableEvents from "@/components/home/AvailableEvents";
 import FloatingActionButton from "@/components/home/FloatingActionButton";
 import { NotificationPanel } from "@/components/notifications/NotificationPanel";
 import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { useComplexEvents } from "@/hooks/events-complex/useEvents";
 import { useUnreadCount } from "@/hooks/notifications/useNotifications";
 import { useIsMobile } from "@/hooks/useIsMobile";
@@ -15,6 +20,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+
+const fabTooltipClass =
+  "bg-orange-dark text-white border border-primary-orange/70 shadow-[0_0_12px_rgba(255,107,47,0.35)] font-apex tracking-wide [&_svg]:bg-orange-dark [&_svg]:fill-orange-dark";
 
 export default function Home() {
   const router = useRouter();
@@ -94,24 +102,39 @@ export default function Home() {
 
           {/* Floating buttons mobile */}
           <div className="absolute bottom-4 left-4 z-40 flex gap-3">
-            <FloatingActionButton
-              ariaLabel="Open events"
-              onClick={() => setIsEventsOpen(true)}
-              icon={<CalendarDays className="h-5 w-5 text-white" />}
-            />
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <FloatingActionButton
+                  ariaLabel="Open events"
+                  onClick={() => setIsEventsOpen(true)}
+                  icon={<CalendarDays className="h-5 w-5 text-white" />}
+                />
+              </TooltipTrigger>
+              <TooltipContent className={fabTooltipClass}>Events</TooltipContent>
+            </Tooltip>
 
-            <FloatingActionButton
-              ariaLabel="Leaderboard"
-              onClick={() => router.push("/ranking")}
-              icon={<Trophy className="h-5 w-5 text-white" />}
-            />
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <FloatingActionButton
+                  ariaLabel="Leaderboard"
+                  onClick={() => router.push("/ranking")}
+                  icon={<Trophy className="h-5 w-5 text-white" />}
+                />
+              </TooltipTrigger>
+              <TooltipContent className={fabTooltipClass}>Leaderboard</TooltipContent>
+            </Tooltip>
 
             <div className="relative">
-              <FloatingActionButton
-                ariaLabel="Notifications"
-                onClick={() => setIsNotifOpen(true)}
-                icon={<Bell className="h-5 w-5 text-white" />}
-              />
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <FloatingActionButton
+                    ariaLabel="Notifications"
+                    onClick={() => setIsNotifOpen(true)}
+                    icon={<Bell className="h-5 w-5 text-white" />}
+                  />
+                </TooltipTrigger>
+                <TooltipContent className={fabTooltipClass}>Notifications</TooltipContent>
+              </Tooltip>
               {unreadCount > 0 && (
                 <span
                   className="pointer-events-none absolute -top-1 -right-1 min-w-[20px] h-5 px-1
@@ -202,24 +225,39 @@ export default function Home() {
 
           {/* Floating buttons desktop */}
           <div className="absolute bottom-[18%] left-[3.5%] z-40 flex flex-col gap-4">
-            <FloatingActionButton
-              ariaLabel="Open events"
-              onClick={() => setIsEventsOpen(true)}
-              icon={<CalendarDays className="h-6 w-6 text-white" />}
-            />
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <FloatingActionButton
+                  ariaLabel="Open events"
+                  onClick={() => setIsEventsOpen(true)}
+                  icon={<CalendarDays className="h-6 w-6 text-white" />}
+                />
+              </TooltipTrigger>
+              <TooltipContent side="right" className={fabTooltipClass}>Events</TooltipContent>
+            </Tooltip>
 
-            <FloatingActionButton
-              ariaLabel="Leaderboard"
-              onClick={() => router.push("/ranking")}
-              icon={<Trophy className="h-6 w-6 text-white" />}
-            />
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <FloatingActionButton
+                  ariaLabel="Leaderboard"
+                  onClick={() => router.push("/ranking")}
+                  icon={<Trophy className="h-6 w-6 text-white" />}
+                />
+              </TooltipTrigger>
+              <TooltipContent side="right" className={fabTooltipClass}>Leaderboard</TooltipContent>
+            </Tooltip>
 
             <div className="relative">
-              <FloatingActionButton
-                ariaLabel="Notifications"
-                onClick={() => setIsNotifOpen(true)}
-                icon={<Bell className="h-6 w-6 text-white" />}
-              />
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <FloatingActionButton
+                    ariaLabel="Notifications"
+                    onClick={() => setIsNotifOpen(true)}
+                    icon={<Bell className="h-6 w-6 text-white" />}
+                  />
+                </TooltipTrigger>
+                <TooltipContent side="right" className={fabTooltipClass}>Notifications</TooltipContent>
+              </Tooltip>
               {unreadCount > 0 && (
                 <span
                   className="pointer-events-none absolute -top-1 -right-1 min-w-[20px] h-5 px-1
