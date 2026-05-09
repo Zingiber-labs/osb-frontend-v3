@@ -39,7 +39,7 @@ export default function Home() {
     <div className="relative mx-auto min-h-[calc(100dvh-104px-91.83px)] w-full overflow-auto rounded-2xl border-0 shadow thin-scroll">
       {isMobile ? (
         <>
-          <div className="mx-auto flex max-w-md w-full flex-col gap-4 px-4 py-16 text-white">
+          <div className="mx-auto flex max-w-md w-full flex-col gap-4 px-4 pt-16 pb-32 text-white">
             <Link href="/missions" passHref>
               <Button
                 variant="outline"

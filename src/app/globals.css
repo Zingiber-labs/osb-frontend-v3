@@ -215,10 +215,16 @@
   isolation: isolate;
 }
 
-/* Background for root (menu) — bg lives inside HomeScene SVG so the
-   hangar panel scales together with the cabin background. */
+/* Background for root (menu). On desktop (≥1200px) HomeScene's SVG
+   composite renders on top with the same image, so the panels stay
+   anchored to the bg. On mobile (<1200px) the SVG isn't mounted, so
+   this CSS bg is what the user sees. */
 .layout--menu {
   position: relative;
+  background-image: url("/img/menu.png");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
 }
 
 .layout--menu::before {
