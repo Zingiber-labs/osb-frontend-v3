@@ -215,11 +215,16 @@
   isolation: isolate;
 }
 
-/* Background for root (menu) */
+/* Background for root (menu). On desktop (≥1200px) HomeScene's SVG
+   composite renders on top with the same image, so the panels stay
+   anchored to the bg. On mobile (<1200px) the SVG isn't mounted, so
+   this CSS bg is what the user sees. */
 .layout--menu {
-  background-image: url("/img/menu.png");
-  background-attachment: fixed;
   position: relative;
+  background-image: url("/img/menu.png");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
 }
 
 .layout--menu::before {
@@ -227,12 +232,50 @@
   position: absolute;
   inset: 0;
   background: #11111180;
-  z-index: 0;
+  z-index: 1;
+  pointer-events: none;
 }
 
 .layout--menu > * {
   position: relative;
-  z-index: 1;
+  z-index: 2;
+}
+
+.scene-svg {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.screen-hotspot {
+  pointer-events: auto;
+}
+
+.screen-default,
+.screen-active {
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.screen-active {
+  opacity: 0;
+}
+
+.screen-hotspot:hover .screen-default {
+  opacity: 0;
+}
+
+.screen-hotspot:hover .screen-active {
+  opacity: 1;
+}
+
+.screen-hit {
+  pointer-events: all;
+  cursor: pointer;
 }
 
 /* Background by default */
