@@ -174,28 +174,6 @@ export default function Home() {
           />
 
           <HoverImage
-            src="/img/menu/inventory-v2.svg"
-            activeSrc="/img/menu/inventory-active.png"
-            alt="Inventory"
-            width={220}
-            height={160}
-            className="absolute z-20"
-            href="/inventory"
-            style={{ right: "40%", bottom: "1%" }}
-          />
-
-          <HoverImage
-            src="/img/menu/store-v2.svg"
-            activeSrc="/img/menu/store-active.png"
-            alt="Store"
-            width={190}
-            height={130}
-            className="absolute z-20"
-            href="/store"
-            style={{ right: "48%", bottom: "20%" }}
-          />
-
-          <HoverImage
             src="/img/menu/exit-v2.svg"
             activeSrc="/img/menu/exit-active.png"
             alt="Exit"
