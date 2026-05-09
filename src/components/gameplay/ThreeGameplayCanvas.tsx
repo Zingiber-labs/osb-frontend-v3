@@ -1,5 +1,6 @@
 "use client";
 
+import { useGameSocket } from "@/hooks/gameplay/useGameSocket";
 import { useGameTeam } from "@/hooks/gameplay/useGameplay";
 import { MissionProcess, useMissionProcess } from "@/hooks/missions/useMission";
 import { createAssets } from "@/lib/three/assets";
@@ -24,6 +25,8 @@ export const ThreeGameplayCanvas = () => {
   const staticGroups = useMemo(() => createStaticGroups(assets), [assets]);
 
   const { data: playerData } = useGameTeam(gameId, playerId);
+
+  const { boxScore, receivedAt } = useGameSocket(gameId || null);
 
   const statsArr = playerData?.statistics;
   const stats = Array.isArray(statsArr) ? statsArr[0] : statsArr;
@@ -97,6 +100,8 @@ export const ThreeGameplayCanvas = () => {
           assets={assets}
           staticGroups={staticGroups}
           playerData={playerData}
+          boxScore={boxScore}
+          boxScoreReceivedAt={receivedAt}
         />
         <pointLight position={[10, 10, 10]} />
       </Canvas>

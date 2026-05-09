@@ -10,15 +10,21 @@ import { useApplyTeamsToTorus } from "@/hooks/three/useApplyTeamsToTorus";
 import { PlayerInfo } from "@/types/team";
 import { useApplyPointsToMain } from "@/hooks/three/useApplyPointsToMain";
 import { useApplyBlocksAsCrosses } from "@/hooks/three/useApplyBlockAsCrosses";
+import { useDiscFollowMatch } from "@/hooks/three/useDiscFollowMatch";
+import type { BoxScorePayload } from "@/hooks/gameplay/useGameSocket";
 
 export const Scene = ({
   assets,
   staticGroups,
   playerData,
+  boxScore,
+  boxScoreReceivedAt,
 }: {
   assets: Assets;
   staticGroups: StaticGroups;
   playerData: PlayerInfo;
+  boxScore: BoxScorePayload | null;
+  boxScoreReceivedAt: number | null;
 }) => {
   useInitScene();
   useMouseFollowCamera();
@@ -36,6 +42,12 @@ export const Scene = ({
     assets,
     groupBlocks: staticGroups.groupBlocks,
     playerData,
+  });
+  useDiscFollowMatch({
+    groupCylinders: staticGroups.groupCylinders,
+    groupTorus: staticGroups.groupTorus,
+    boxScore,
+    receivedAt: boxScoreReceivedAt,
   });
 
   const bullets = useSpaceBullets(assets);
