@@ -4,6 +4,7 @@ import { AuthPanel } from "@/components/auth/AuthStatus";
 import { HoverImage } from "@/components/commons/HoverImage";
 import AvailableEvents from "@/components/home/AvailableEvents";
 import FloatingActionButton from "@/components/home/FloatingActionButton";
+import HomeScene from "@/components/home/HomeScene";
 import { NotificationPanel } from "@/components/notifications/NotificationPanel";
 import { Button } from "@/components/ui/button";
 import {
@@ -156,6 +157,8 @@ export default function Home() {
         </>
       ) : (
         <>
+          <HomeScene />
+
           <AuthPanel />
 
           <HoverImage
@@ -168,18 +171,6 @@ export default function Home() {
             href="/profile"
             style={{ left: "6%", bottom: "0%" }}
             tooltipOffset={0}
-          />
-
-          <HoverImage
-            src="/img/menu/hangar-v2.svg"
-            activeSrc="/img/menu/hangar-active.png"
-            alt="Hangar"
-            width={380}
-            height={320}
-            className="absolute z-20"
-            href="/missions"
-            style={{ right: "19%", bottom: "15%" }}
-            tooltipOffset={-70}
           />
 
           <HoverImage

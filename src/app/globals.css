@@ -215,10 +215,9 @@
   isolation: isolate;
 }
 
-/* Background for root (menu) */
+/* Background for root (menu) — bg lives inside HomeScene SVG so the
+   hangar panel scales together with the cabin background. */
 .layout--menu {
-  background-image: url("/img/menu.png");
-  background-attachment: fixed;
   position: relative;
 }
 
@@ -227,12 +226,50 @@
   position: absolute;
   inset: 0;
   background: #11111180;
-  z-index: 0;
+  z-index: 1;
+  pointer-events: none;
 }
 
 .layout--menu > * {
   position: relative;
-  z-index: 1;
+  z-index: 2;
+}
+
+.scene-svg {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.screen-hotspot {
+  pointer-events: auto;
+}
+
+.screen-default,
+.screen-active {
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.screen-active {
+  opacity: 0;
+}
+
+.screen-hotspot:hover .screen-default {
+  opacity: 0;
+}
+
+.screen-hotspot:hover .screen-active {
+  opacity: 1;
+}
+
+.screen-hit {
+  pointer-events: all;
+  cursor: pointer;
 }
 
 /* Background by default */
