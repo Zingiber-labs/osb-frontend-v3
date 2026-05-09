@@ -253,6 +253,13 @@
 
 .screen-hotspot {
   pointer-events: auto;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.screen-hotspot:focus-visible {
+  outline: 2px solid #3df0ff;
+  outline-offset: 2px;
 }
 
 .screen-default,
