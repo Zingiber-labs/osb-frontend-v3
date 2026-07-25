@@ -1,0 +1,25 @@
+version: "3.8"
+
+services:
+  app:
+    image: ghcr.io/zingiber-labs/osb-frontend-v3:develop
+    container_name: osb-frontend
+    restart: unless-stopped
+    networks:
+      - proxy
+    healthcheck:
+      test: ["CMD-SHELL", "wget --quiet --tries=1 -O /dev/null http://localhost:3000 || exit 0"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.osb-frontend.rule=Host(`app.dockinfrax.com`)"
+      - "traefik.http.routers.osb-frontend.entrypoints=websecure"
+      - "traefik.http.routers.osb-frontend.tls.certresolver=letsencrypt"
+      - "traefik.http.services.osb-frontend.loadbalancer.server.port=3000"
+
+networks:
+  proxy:
+    external: true
