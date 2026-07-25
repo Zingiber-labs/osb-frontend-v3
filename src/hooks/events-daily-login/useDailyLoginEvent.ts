@@ -24,11 +24,32 @@ export const useClaimReward = () => {
       const { data } = await api.post(`/events/claim`, payload);
       return data;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["events"] });
-      queryClient.invalidateQueries({ queryKey: ["profile-data"] });
-      queryClient.invalidateQueries({ queryKey: ["notifications"] });
-      queryClient.invalidateQueries({ queryKey: ["my-events"] });
+    onSuccess: (data) => {
+      if (data?.balances) {
+        queryClient.setQueryData(["profile-data"], (old: any) => {
+          if (!old) return old;
+          return {
+            ...old,
+            balance: {
+              ...(old.balance || {}),
+              ...data.balances,
+            },
+            hasUnclaimedDailyReward: false,
+          };
+        });
+      }
+
+      if (data?.event) {
+        queryClient.setQueryData(["events", "daily-login"], (old: any) => {
+          if (!Array.isArray(old)) return old;
+          return old.map((e: any) => e.id === data.event.id ? data.event : e);
+        });
+        
+        queryClient.setQueryData(["events"], (old: any) => {
+          if (!Array.isArray(old)) return old;
+          return old.map((e: any) => e.id === data.event.id ? data.event : e);
+        });
+      }
     },
     onError: (error) => {
       toast.error(

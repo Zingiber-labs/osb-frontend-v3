@@ -25,9 +25,7 @@ const rewardImageMap: Record<string, string> = {
   GEMS_XP: "/img/gem_xp.svg",
 };
 
-const getRewardImage = (event: EventsResponseItem, status?: string) => {
-  const rewards = event.steps[0]?.rewards;
-  
+const getRewardImage = (rewards?: RewardItem[], status?: string) => {
   if (status === "LOCKED" || status === "AVAILABLE") {
     return "/img/gift/surprise-box.svg";
   }
@@ -139,9 +137,9 @@ const RewardCard = ({
                 <Image
                   src={
                     getRewardImage(
-                      currentEvent as EventsResponseItem,
+                      reward.rewards,
                       reward.status,
-                    ) ?? "/img/coin.svg"
+                    )
                   }
                   alt={isLocked ? "Locked reward" : "Reward"}
                   width={76}
@@ -159,7 +157,7 @@ const RewardCard = ({
                   Reward
                 </p>
                 <p className="mt-0.5 text-sm font-extrabold text-cyan-200">
-                  {formatRewards(currentEvent?.steps[0].rewards)}
+                  {formatRewards(reward.rewards)}
                 </p>
               </div>
             </>

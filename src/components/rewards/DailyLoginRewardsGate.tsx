@@ -17,6 +17,7 @@ import {
   useClaimReward,
   useEventsForDailyLogin,
 } from "@/hooks/events-daily-login/useDailyLoginEvent";
+import { useProfileData } from "@/hooks/profile/useProfile";
 import { useDailyLoginRewardsGate } from "@/hooks/rewards/useDailyLoginRewardsGate";
 import { EventsResponseItem, EventStep } from "@/types/event";
 
@@ -37,6 +38,7 @@ function mapStepsToDailyRewards(steps: EventStep[]): DailyReward[] {
         amount,
         claimed,
         status: s.status,
+        rewards: s.rewards as any,
       };
     });
 }
@@ -59,14 +61,12 @@ function getSubtitle(steps: EventStep[]) {
 
 export default function DailyLoginRewardsGate() {
   const { data: session, isLoading: isSessionLoading } = useSession();
+  const { data: profile } = useProfileData();
   const queryClient = useQueryClient();
   const [currentEventIndex, setCurrentEventIndex] = useState(0);
 
-  const userId = session?.id;
-
   const { open, setOpen } = useDailyLoginRewardsGate({
-    userId,
-    storageKeyPrefix: "oat:daily-login-rewards",
+    hasUnclaimedDailyReward: profile?.hasUnclaimedDailyReward,
   });
 
   const { data: eventsData, isLoading, isError } = useEventsForDailyLogin();
@@ -121,8 +121,6 @@ export default function DailyLoginRewardsGate() {
 
     try {
       claimMutation({ eventId: currentEvent.id, step: day });
-
-      await queryClient.invalidateQueries({ queryKey: ["events"] });
     } catch (err: any) {
       console.warn("Claim failed:", err);
     } finally {
