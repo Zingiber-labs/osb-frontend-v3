@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -28,6 +28,14 @@ export const metadata: Metadata = {
   openGraph: {
     images: ["/img/logo_horizontal.svg"],
   },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  // Required for env(safe-area-inset-*) to resolve on notched iPhones,
+  // which MobileTabBar depends on.
+  viewportFit: "cover",
 };
 
 export default function RootLayout({

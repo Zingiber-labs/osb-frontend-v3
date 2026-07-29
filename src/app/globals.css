@@ -11,6 +11,7 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --breakpoint-desktop: 1200px;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -209,22 +210,28 @@
 
 .layout {
   min-height: 100svh;
-  background: no-repeat center / cover;
-  background-attachment: fixed;
   position: relative;
   isolation: isolate;
 }
 
-/* Background for root (menu). On desktop (≥1200px) HomeScene's SVG
-   composite renders on top with the same image, so the panels stay
-   anchored to the bg. On mobile (<1200px) the SVG isn't mounted, so
-   this CSS bg is what the user sees. */
+/* Fixed background layer. Replaces `background-attachment: fixed`, which is
+   unreliable on iOS Safari. `.layout` has no transform, so a fixed-position
+   pseudo-element resolves against the viewport as intended. */
+.layout::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-image: var(--layout-bg, none);
+  background-repeat: no-repeat;
+  background-position: var(--layout-bg-pos, center);
+  background-size: cover;
+  pointer-events: none;
+}
+
 .layout--menu {
   position: relative;
-  background-image: url("/img/menu.png");
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
+  --layout-bg: url("/img/menu.png");
 }
 
 .layout--menu::before {
@@ -285,22 +292,15 @@
   cursor: pointer;
 }
 
-/* Background by default */
 .layout--default {
-  background-image: url("/img/planets.jpg");
-  background-attachment: fixed;
-  background-position: top;
+  --layout-bg: url("/img/planets.jpg");
+  --layout-bg-pos: top;
 }
-
-/* Background for hangar */
 .layout--hangar {
-  background-image: url("/img/hangar.png");
-  background-attachment: fixed;
+  --layout-bg: url("/img/hangar.png");
 }
-
 .layout--missions {
-  background-image: url("/img/missions_2.png");
-  background-attachment: fixed;
+  --layout-bg: url("/img/missions_2.png");
 }
 
 .layout--hangar .overlay,
