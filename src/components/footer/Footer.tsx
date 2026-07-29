@@ -32,12 +32,15 @@ const Footer = () => {
           <Youtube className="w-5 h-5 desktop:w-6 desktop:h-6 cursor-pointer hover:text-cyan-300 transition-colors" />
         </div>
 
-        <a
-          href="#"
+        {/* A button, not an <a href="#">: the anchor would scroll to top and
+            append "#" to the URL on every tap. Support has no destination yet,
+            so this matches the desktop SUPPORT control's inert semantics. */}
+        <button
+          type="button"
           className="desktop:hidden text-xs text-cyan-400 underline underline-offset-2"
         >
-          Support
-        </a>
+          SUPPORT
+        </button>
 
         <div className="text-xs desktop:text-sm text-orange-32 flex items-center gap-1">
           <span>©</span> All rights reserved
