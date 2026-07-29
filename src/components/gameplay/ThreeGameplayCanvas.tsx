@@ -93,7 +93,7 @@ export const ThreeGameplayCanvas = () => {
   return (
     <>
       <Canvas
-        style={{ height: "100vh", width: "100vw" }}
+        style={{ height: "100dvh", width: "100vw" }}
         gl={{ antialias: false }}
       >
         <Scene

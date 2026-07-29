@@ -78,8 +78,8 @@ export default function HangarPage() {
           </div>
         </div>
 
-        <div className="md:col-start-3 md:row-start-1 flex justify-end">
-          <div className="w-full max-w-[320px] rounded-2xl border border-primary-orange/80 bg-orange-24/95 p-5 text-right text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_8px_24px_rgba(0,0,0,0.35)] backdrop-blur-sm">
+        <div className="md:col-start-3 md:row-start-1 flex justify-stretch desktop:justify-end">
+          <div className="w-full desktop:max-w-[320px] rounded-2xl border border-primary-orange/80 bg-orange-24/95 p-5 text-left desktop:text-right text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_8px_24px_rgba(0,0,0,0.35)] backdrop-blur-sm">
             <h3 className="text-lg font-extrabold leading-snug tracking-wider">
               MAKE YOUR CHOICES FOR A
               <br />
@@ -95,7 +95,7 @@ export default function HangarPage() {
             </Button>
 
             {!selectedPlayerData && (
-              <p className="mt-2 text-[11px] text-slate-100/75 text-right">
+              <p className="mt-2 text-[11px] text-slate-100/75 text-left desktop:text-right">
                 Select a player to start.
               </p>
             )}
