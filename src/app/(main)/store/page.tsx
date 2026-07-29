@@ -70,7 +70,7 @@ const Store = () => {
       <p className="text-white text-sm normal-case mt-10">
         Select Item Types
       </p>
-      <div className="mt-4 flex justify-between">
+      <div className="mt-4 flex flex-col sm:flex-row sm:justify-between gap-3">
         <Select
           value={selectedType ?? "ALL"}
           onValueChange={(value) => {
@@ -81,7 +81,7 @@ const Store = () => {
             }
           }}
         >
-          <SelectTrigger className="w-[300px] text-white bg-orange-dark cursor-pointer">
+          <SelectTrigger className="w-full sm:w-[300px] text-white bg-orange-dark cursor-pointer">
             <SelectValue placeholder="Type" />
           </SelectTrigger>
           <SelectContent>
@@ -96,7 +96,7 @@ const Store = () => {
           </SelectContent>
         </Select>
 
-        <div className="relative w-[300px]">
+        <div className="relative w-full sm:w-[300px]">
           <Search className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 size-4 pointer-events-none" />
           <Input
             type="text"
