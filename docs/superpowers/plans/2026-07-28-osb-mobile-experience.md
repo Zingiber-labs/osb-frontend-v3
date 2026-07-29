@@ -265,10 +265,12 @@ import { useMediaQuery } from "@/hooks/useMediaQuery";
 and replace line 52:
 
 ```tsx
-  const isMobile = useMediaQuery("(max-width: 767px)");
+  const isMobile = useMediaQuery("(max-width: 767.98px)");
 ```
 
-The `767px` value preserves the existing `useIsMobile()` default of 768 exactly. **It is not the 1200px shell breakpoint and must not be changed to match it.**
+**It is not the 1200px shell breakpoint and must not be changed to match it.**
+
+The `.98` is deliberate and was measured, not guessed. `useIsMobile()` compared `window.innerWidth` — a WebIDL `long`, so always an integer — against 768. On a display with a non-1.0 `devicePixelRatio` (1.25 is common, and is what this was found on) a nominal 767px viewport is really ~767.2px: `innerWidth` truncates to 767 and counts as mobile, while `max-width: 767px` evaluates the un-truncated 767.2 and does not. Measured at 767px, plain `767px` disagreed with the old hook while `767.98px` agreed, as it did at 700, 766, 768 and 769. Use `767.98px`.
 
 - [ ] **Step 3: Verify the rewards modal still switches to a carousel**
 
