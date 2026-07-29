@@ -59,12 +59,15 @@ Add to the `@theme` block in `globals.css`:
 
 This yields a `desktop:` variant across the codebase. Below it is the mobile shell; at or above it is today's desktop layout. This single token replaces both the `md:` in `NavMenu` and the `useIsMobile(1200)` call in Home.
 
-**The one JS exception is `HomeScene`.** A CSS-hidden element still mounts, so `desktop:hidden` alone would run Three.js on phones for an invisible canvas. Therefore:
+**Correction (found during implementation): there is no JS exception.** This section originally claimed `HomeScene` had to be gated in JS because `desktop:hidden` would still mount it and run Three.js on phones. That was wrong. `HomeScene` contains no Three.js at all — it is a plain `<svg className="scene-svg">` with positioned hotspot images. Three.js lives only in `ThreeGameplayCanvas` on `/game-play` and in `src/hooks/three/*`, none of which Home touches.
 
-- Layout stays CSS-driven — no hydration flash on either side.
-- Only the `Canvas` mount is gated in JS, via a new `useMediaQuery` hook built on `useSyncExternalStore`.
+Because the component is inexpensive, Home is gated **purely in CSS** with no JS branch:
 
-Nothing regresses on desktop, because 3D content cannot render before hydration regardless.
+- Both trees stay in the markup, toggled by the `desktop:` variant.
+- `HomeScene` renders server-side, so the cockpit appears in the desktop first paint. Measured before and after: with the JS gate the scene was absent at first paint and appeared only after hydration; without it, it is present at first paint.
+- On phones the scene stays in the DOM but is `display: none`, so the browser never fetches its hotspot images.
+
+`useMediaQuery` therefore has exactly one consumer in the codebase — `DailyLoginRewardsModal`, choosing carousel vs grid.
 
 ### New files
 

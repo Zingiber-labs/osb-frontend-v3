@@ -597,15 +597,17 @@ Replace the closing `</>` and `)}` at the end of the branch with:
       </div>
 ```
 
-- [ ] **Step 3: Gate the Three.js canvas**
+- [ ] **Step 3: Leave `<HomeScene />` ungated — no JS branch**
 
-Inside the new desktop wrapper, `<HomeScene />` must not mount on phones — CSS `hidden` still mounts a component, which would run Three.js invisibly and drain battery. Change it to:
+This step originally called for `{isDesktop && <HomeScene />}` on the belief that `HomeScene` ran Three.js. **It does not.** `HomeScene` is a plain `<svg className="scene-svg">` with positioned hotspot images; Three.js appears only in `ThreeGameplayCanvas` and `src/hooks/three/*`, neither of which Home imports.
+
+So render it plainly:
 
 ```tsx
-        {isDesktop && <HomeScene />}
+          <HomeScene />
 ```
 
-This is the only remaining JS layout branch in the file, and it is safe: 3D content cannot paint before hydration regardless, so desktop loses nothing.
+Do not import `useMediaQuery` in this file and do not declare `isDesktop`. CSS alone does the gating, which lets the scene server-render so it is present in the desktop first paint — measurably better than the gated version, where it appeared only after hydration. On phones it stays in the DOM under `display: none`, so its images are never fetched.
 
 - [ ] **Step 4: Remove the hardcoded height math**
 

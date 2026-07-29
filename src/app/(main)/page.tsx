@@ -14,7 +14,6 @@ import {
 } from "@/components/ui/tooltip";
 import { useComplexEvents } from "@/hooks/events-complex/useEvents";
 import { useUnreadCount } from "@/hooks/notifications/useNotifications";
-import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { Bell, CalendarDays, Trophy } from "lucide-react";
 import { useLogout } from "@/lib/auth/client";
 import Image from "next/image";
@@ -27,7 +26,6 @@ const fabTooltipClass =
 
 export default function Home() {
   const router = useRouter();
-  const isDesktop = useMediaQuery("(min-width: 1200px)");
   const [isEventsOpen, setIsEventsOpen] = useState(false);
   const [isNotifOpen, setIsNotifOpen] = useState(false);
   const { data: events, isLoading: isEventsLoading } = useComplexEvents();
@@ -156,7 +154,7 @@ export default function Home() {
       </div>
 
       <div className="hidden desktop:block">
-          {isDesktop && <HomeScene />}
+          <HomeScene />
 
           <AuthPanel />
 
