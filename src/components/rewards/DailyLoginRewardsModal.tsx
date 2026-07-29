@@ -1,6 +1,6 @@
 "use client";
 
-import { useIsMobile } from "@/hooks/useIsMobile";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Navigation, Pagination } from "swiper/modules";
@@ -49,7 +49,7 @@ export function DailyLoginRewardsModal({
   currentEvent,
 }: Props) {
   const router = useRouter();
-  const isMobile = useIsMobile();
+  const isMobile = useMediaQuery("(max-width: 767px)");
   const safeRewards = rewards?.length ? rewards : [];
 
   const shouldUseCarousel = isMobile || safeRewards.length > MAX_GRID_REWARDS;
