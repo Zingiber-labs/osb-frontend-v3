@@ -251,9 +251,17 @@
   pointer-events: none;
 }
 
-.layout--menu > * {
-  position: relative;
-  z-index: 2;
+/* Lifts page content above the ::before tint (z-index 1).
+   MUST stay inside @layer components: unlayered CSS beats Tailwind's layered
+   utilities regardless of specificity, so an unlayered version of this rule
+   silently overrode `fixed`/`z-50` on any direct child — which is exactly how
+   MobileTabBar ended up non-fixed on the home route. Layered here, utilities
+   win, so children that opt out (the tab bar) can. */
+@layer components {
+  .layout--menu > * {
+    position: relative;
+    z-index: 2;
+  }
 }
 
 .scene-svg {

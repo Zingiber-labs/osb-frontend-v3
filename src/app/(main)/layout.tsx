@@ -39,18 +39,20 @@ export default async function MainLayout({
           </div>
           <Footer />
         </div>
+        {/*
+          MobileTabBar renders INSIDE ClientLayout deliberately. `.layout` has
+          `isolation: isolate`, so anything outside it can never be covered by
+          content inside it — as a sibling the bar sat on top of the
+          "Accepting mission…" blocker and the daily-rewards modal, letting a
+          user tap through both. Inside, it shares the stacking context and a
+          higher-z-index overlay wins normally.
+
+          This is only safe because `.layout--menu > *` now lives in
+          @layer components (see globals.css); unlayered, it would strip the
+          bar's `position: fixed` on the home route.
+        */}
+        <MobileTabBar />
       </ClientLayout>
-      {/*
-        MobileTabBar must render as a sibling of ClientLayout, not a child.
-        ClientLayout applies `.layout--menu` on the home route, and globals.css
-        has an unlayered `.layout--menu > * { position: relative; z-index: 2; }`
-        rule that beats Tailwind's `@layer utilities` `.fixed` per the CSS
-        cascade-layers spec regardless of specificity/order. As a direct child
-        it would lose `position: fixed` on `/`. It's app chrome, not page
-        content, so it doesn't need the tint-lifting rule; `.layout` has
-        `isolation: isolate` so it still paints above correctly as a sibling.
-      */}
-      <MobileTabBar />
     </>
   );
 }
