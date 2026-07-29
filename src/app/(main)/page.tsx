@@ -14,7 +14,6 @@ import {
 } from "@/components/ui/tooltip";
 import { useComplexEvents } from "@/hooks/events-complex/useEvents";
 import { useUnreadCount } from "@/hooks/notifications/useNotifications";
-import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { Bell, CalendarDays, Trophy } from "lucide-react";
 import { useLogout } from "@/lib/auth/client";
 import Image from "next/image";
@@ -27,7 +26,6 @@ const fabTooltipClass =
 
 export default function Home() {
   const router = useRouter();
-  const isDesktop = useMediaQuery("(min-width: 1200px)");
   const [isEventsOpen, setIsEventsOpen] = useState(false);
   const [isNotifOpen, setIsNotifOpen] = useState(false);
   const { data: events, isLoading: isEventsLoading } = useComplexEvents();
@@ -162,22 +160,15 @@ export default function Home() {
       </div>
 
       <div className="hidden desktop:block">
-          {/* Gated in JS, not just CSS. `display: none` does NOT stop these from
-              loading: HomeScene's hotspots are raw SVG <image href> elements,
-              which fetch on insertion regardless of visibility, and AuthPanel
-              uses next/image with `priority`, which forces a preload link.
-              Measured on a 390px load: hangar-v2.svg fetched with
-              initiatorType "image", notification.png with initiatorType "link".
-              Mounting these on phones would download desktop-only artwork that
-              is never shown. (This is NOT about three.js -- HomeScene is an
-              SVG; the original rationale for this gate was wrong.) */}
-          {isDesktop && (
-            <>
-              <HomeScene />
+          {/* No JS gate. These used to be wrapped in `isDesktop && …` because
+              `display: none` does not stop SVG <image href> or a next/image
+              `priority` preload from downloading. Both now use assets that ARE
+              skipped while hidden — CSS backgrounds in HomeScene, lazy loading
+              in AuthPanel — so rendering them unconditionally costs phones
+              nothing and restores desktop's server-rendered first paint. */}
+          <HomeScene />
 
-              <AuthPanel />
-            </>
-          )}
+          <AuthPanel />
 
           <HoverImage
             src="/img/menu/avatar-v2.svg"

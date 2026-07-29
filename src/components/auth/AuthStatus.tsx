@@ -51,12 +51,15 @@ export const AuthPanel = () => {
   return (
     <>
       <div className="absolute top-4 left-4 z-50 h-50 w-50">
+        {/* No `priority`: it emits a preload <link>, which fetches even when an
+            ancestor is display:none — so phones downloaded this desktop-only
+            image. Default lazy loading skips hidden images, letting this panel
+            render unconditionally instead of behind a JS breakpoint gate. */}
         <Image
           src="/img/notification.png"
           alt="Auth Status Panel"
           fill
           className="object-contain"
-          priority
         />
 
         <div
