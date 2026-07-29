@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/tooltip";
 import { useComplexEvents } from "@/hooks/events-complex/useEvents";
 import { useUnreadCount } from "@/hooks/notifications/useNotifications";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { Bell, CalendarDays, Trophy } from "lucide-react";
 import { useLogout } from "@/lib/auth/client";
 import Image from "next/image";
@@ -26,6 +27,7 @@ const fabTooltipClass =
 
 export default function Home() {
   const router = useRouter();
+  const isDesktop = useMediaQuery("(min-width: 1200px)");
   const [isEventsOpen, setIsEventsOpen] = useState(false);
   const [isNotifOpen, setIsNotifOpen] = useState(false);
   const { data: events, isLoading: isEventsLoading } = useComplexEvents();
@@ -34,7 +36,13 @@ export default function Home() {
   const logout = useLogout();
 
   return (
-    <div className="relative mx-auto w-full overflow-auto rounded-2xl border-0 shadow thin-scroll">
+    // The desktop min-height is required, not decorative: every child of the
+    // desktop tree is absolutely or fixed positioned, so without it this block
+    // collapses to 0px and the percentage `bottom` offsets (avatar, exit, FAB
+    // column) resolve against nothing and render off the top of the screen.
+    // Scoped to desktop: the mobile tree is in normal flow and sizes itself,
+    // which is why the old unscoped version had the wrong footer constant.
+    <div className="relative mx-auto w-full overflow-auto rounded-2xl border-0 shadow thin-scroll desktop:min-h-[calc(100dvh-104px-91.83px)]">
       <div className="desktop:hidden">
           <div className="mx-auto flex max-w-md w-full flex-col gap-4 px-4 pt-16 pb-32 text-white">
             <Link href="/missions" passHref>
@@ -154,9 +162,22 @@ export default function Home() {
       </div>
 
       <div className="hidden desktop:block">
-          <HomeScene />
+          {/* Gated in JS, not just CSS. `display: none` does NOT stop these from
+              loading: HomeScene's hotspots are raw SVG <image href> elements,
+              which fetch on insertion regardless of visibility, and AuthPanel
+              uses next/image with `priority`, which forces a preload link.
+              Measured on a 390px load: hangar-v2.svg fetched with
+              initiatorType "image", notification.png with initiatorType "link".
+              Mounting these on phones would download desktop-only artwork that
+              is never shown. (This is NOT about three.js -- HomeScene is an
+              SVG; the original rationale for this gate was wrong.) */}
+          {isDesktop && (
+            <>
+              <HomeScene />
 
-          <AuthPanel />
+              <AuthPanel />
+            </>
+          )}
 
           <HoverImage
             src="/img/menu/avatar-v2.svg"
