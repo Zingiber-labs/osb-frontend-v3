@@ -140,7 +140,11 @@ export function MissionTerminal() {
           </div>
         </div>
       </div>
-      <div className="w-full max-w-4xl mt-4 relative">
+      {/* Console art is desktop-only. Below the breakpoint its painted slots sit
+          empty (the controls are real buttons underneath), which read as 118px
+          of dead space — 14% of a 390x844 screen — so it is hidden rather than
+          shown decoratively. */}
+      <div className="hidden desktop:block w-full max-w-4xl mt-4 relative">
         <Image
           src="/img/missions/console_mission.svg"
           alt=""
@@ -189,7 +193,8 @@ export function MissionTerminal() {
         </div>
       </div>
 
-      {/* Mobile: real buttons beneath the (now decorative) console art. */}
+      {/* Mobile: the controls, sitting directly under the terminal panel since
+          the console art above is desktop-only. */}
       <div className="mt-4 flex w-full max-w-4xl items-center gap-2 desktop:hidden">
         <button
           type="button"
