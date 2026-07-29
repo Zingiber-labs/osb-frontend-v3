@@ -14,7 +14,6 @@ import {
 } from "@/components/ui/tooltip";
 import { useComplexEvents } from "@/hooks/events-complex/useEvents";
 import { useUnreadCount } from "@/hooks/notifications/useNotifications";
-import { useIsMobile } from "@/hooks/useIsMobile";
 import { Bell, CalendarDays, Trophy } from "lucide-react";
 import { useLogout } from "@/lib/auth/client";
 import Image from "next/image";
@@ -27,7 +26,6 @@ const fabTooltipClass =
 
 export default function Home() {
   const router = useRouter();
-  const isMobile = useIsMobile(1200);
   const [isEventsOpen, setIsEventsOpen] = useState(false);
   const [isNotifOpen, setIsNotifOpen] = useState(false);
   const { data: events, isLoading: isEventsLoading } = useComplexEvents();
@@ -36,9 +34,14 @@ export default function Home() {
   const logout = useLogout();
 
   return (
-    <div className="relative mx-auto min-h-[calc(100dvh-104px-91.83px)] w-full overflow-auto rounded-2xl border-0 shadow thin-scroll">
-      {isMobile ? (
-        <>
+    // The desktop min-height is required, not decorative: every child of the
+    // desktop tree is absolutely or fixed positioned, so without it this block
+    // collapses to 0px and the percentage `bottom` offsets (avatar, exit, FAB
+    // column) resolve against nothing and render off the top of the screen.
+    // Scoped to desktop: the mobile tree is in normal flow and sizes itself,
+    // which is why the old unscoped version had the wrong footer constant.
+    <div className="relative mx-auto w-full overflow-auto rounded-2xl border-0 shadow thin-scroll desktop:min-h-[calc(100dvh-104px-91.83px)]">
+      <div className="desktop:hidden">
           <div className="mx-auto flex max-w-md w-full flex-col gap-4 px-4 pt-16 pb-32 text-white">
             <Link href="/missions" passHref>
               <Button
@@ -73,7 +76,7 @@ export default function Home() {
             <Link href="/store" passHref>
               <Button
                 variant="outline"
-                className="h-18 w-full justify-start gap-3 border-primary bg-[#FF6B2F3D] text-lg text-orange"
+                className="h-[72px] w-full justify-start gap-3 border-primary bg-[#FF6B2F3D] text-lg text-orange"
               >
                 <Image
                   src="/img/menu/store.svg"
@@ -88,7 +91,7 @@ export default function Home() {
             <Link href="/profile" passHref>
               <Button
                 variant="outline"
-                className="h-18 w-full justify-start gap-3 border-primary bg-[#FF6B2F3D] text-lg text-orange"
+                className="h-[72px] w-full justify-start gap-3 border-primary bg-[#FF6B2F3D] text-lg text-orange"
               >
                 <Image
                   src="/img/menu/avatar2.png"
@@ -154,9 +157,15 @@ export default function Home() {
               )}
             </div>
           </div>
-        </>
-      ) : (
-        <>
+      </div>
+
+      <div className="hidden desktop:block">
+          {/* No JS gate. These used to be wrapped in `isDesktop && …` because
+              `display: none` does not stop SVG <image href> or a next/image
+              `priority` preload from downloading. Both now use assets that ARE
+              skipped while hidden — CSS backgrounds in HomeScene, lazy loading
+              in AuthPanel — so rendering them unconditionally costs phones
+              nothing and restores desktop's server-rendered first paint. */}
           <HomeScene />
 
           <AuthPanel />
@@ -245,8 +254,7 @@ export default function Home() {
               )}
             </div>
           </div>
-        </>
-      )}
+      </div>
 
       <AvailableEvents
         open={isEventsOpen}

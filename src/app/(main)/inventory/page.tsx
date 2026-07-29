@@ -55,7 +55,7 @@ const Inventory = () => {
   if (isLoading) {
     return (
       <div className="px-4">
-        <p className="text-secondary text-5xl font-bold mt-14 mb-6">
+        <p className="text-secondary text-3xl desktop:text-5xl font-bold mt-14 mb-6">
           My inventory
         </p>
         <div className="mt-20 mb-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -78,7 +78,7 @@ const Inventory = () => {
   if (error) {
     return (
       <div className="px-4">
-        <p className="text-secondary text-5xl font-bold mt-14 mb-6">
+        <p className="text-secondary text-3xl desktop:text-5xl font-bold mt-14 mb-6">
           My inventory
         </p>
         <div className="mt-20 mb-8 text-center">
@@ -97,7 +97,7 @@ const Inventory = () => {
   if (!data?.items || data.items.length === 0) {
     return (
       <div className="px-4">
-        <p className="text-secondary text-5xl font-bold mt-14 mb-6">
+        <p className="text-secondary text-3xl desktop:text-5xl font-bold mt-14 mb-6">
           My inventory
         </p>
         <div className="mt-20 mb-8 text-center">
@@ -112,15 +112,15 @@ const Inventory = () => {
 
   return (
     <div className="px-4">
-      <p className="text-secondary text-5xl font-bold mt-14 mb-6">
+      <p className="text-secondary text-3xl desktop:text-5xl font-bold mt-14 mb-6">
         My inventory
       </p>
       <p className="font-helvetica text-white text-sm normal-case mt-10">
         Select Item Types
       </p>
-      <div className="mt-4 flex justify-between">
+      <div className="mt-4 flex flex-col sm:flex-row sm:justify-between gap-3">
         <Select value={selectedType ?? "ALL"} onValueChange={handleTypeChange}>
-          <SelectTrigger className="w-[300px] text-white bg-orange-dark cursor-pointer">
+          <SelectTrigger className="w-full sm:w-[300px] text-white bg-orange-dark cursor-pointer">
             <SelectValue className="text-white" placeholder="Types" />
           </SelectTrigger>
           <SelectContent>

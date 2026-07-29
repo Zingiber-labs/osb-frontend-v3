@@ -52,7 +52,7 @@ export const GlobalLeaderboard = () => {
   const totalPages = Math.ceil(data.total / limit);
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-1000 max-w-6xl mx-auto px-4 py-12">
+    <div className="space-y-8 animate-in fade-in duration-1000 max-w-6xl mx-auto px-4 py-12 overflow-x-hidden">
       <div className="relative text-center space-y-4 mb-16">
         <div className="absolute -top-20 left-1/2 -translate-x-1/2 w-96 h-96 bg-yellow-500/10 blur-[120px] rounded-full -z-10" />
         <div className="flex items-center justify-center gap-4 mb-4">
@@ -68,13 +68,18 @@ export const GlobalLeaderboard = () => {
 
       <Card className="border border-white/10 bg-black/40 backdrop-blur-3xl shadow-[0_0_50px_-12px_rgba(0,0,0,0.5)] overflow-hidden rounded-3xl">
         <div className="overflow-x-auto">
-          <Table>
+          {/* table-fixed below md is what actually lets the username truncate.
+              With auto layout a table sizes columns to max-content, so the
+              cell never gets narrower than the name and `truncate` never
+              engages, pushing Total XP off-screen. Measured at 375px: the
+              table went 385px -> 358px, and at 320px 385px -> 303px. */}
+          <Table className="table-fixed md:table-auto">
             <TableHeader className="bg-white/[0.02] border-b border-white/5">
               <TableRow className="hover:bg-transparent border-none">
-                <TableHead className="w-[100px] text-center font-black uppercase text-[10px] tracking-[0.2em] text-zinc-500 py-6">Rank</TableHead>
+                <TableHead className="w-14 md:w-[100px] text-center font-black uppercase text-[10px] tracking-[0.2em] text-zinc-500 py-6">Rank</TableHead>
                 <TableHead className="font-black uppercase text-[10px] tracking-[0.2em] text-zinc-500 py-6">User</TableHead>
                 <TableHead className="hidden md:table-cell font-black uppercase text-[10px] tracking-[0.2em] text-zinc-500 py-6">Level & Rank</TableHead>
-                <TableHead className="text-right font-black uppercase text-[10px] tracking-[0.2em] text-zinc-500 py-6 pr-8">Total XP</TableHead>
+                <TableHead className="w-[84px] md:w-auto text-right font-black uppercase text-[10px] tracking-[0.2em] text-zinc-500 py-6 pr-4 md:pr-8">Total XP</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -95,7 +100,7 @@ export const GlobalLeaderboard = () => {
                     </div>
                   </TableCell>
                   <TableCell className="py-5">
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-4 min-w-0">
                       <div className="relative">
                         <Avatar className={cn(
                           "h-12 w-12 border-2",
@@ -115,9 +120,9 @@ export const GlobalLeaderboard = () => {
                           )} />
                         )}
                       </div>
-                      <div className="flex flex-col">
+                      <div className="flex flex-col min-w-0">
                         <span className={cn(
-                          "font-bold text-lg tracking-tight group-hover:text-white transition-colors",
+                          "font-bold text-lg tracking-tight group-hover:text-white transition-colors truncate",
                           user.rank <= 3 ? "text-white" : "text-zinc-400"
                         )}>
                           {user.username}
@@ -158,7 +163,7 @@ export const GlobalLeaderboard = () => {
                       )}
                     </div>
                   </TableCell>
-                  <TableCell className="text-right py-5 pr-8">
+                  <TableCell className="text-right py-5 pr-4 md:pr-8">
                     <div className="flex flex-col items-end">
                       <span className={cn(
                         "font-black text-xl tabular-nums tracking-tighter italic",

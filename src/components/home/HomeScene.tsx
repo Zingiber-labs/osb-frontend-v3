@@ -88,14 +88,23 @@ export default function HomeScene() {
       onMouseLeave={() => setCursor(null)}
       style={debug ? { pointerEvents: "auto" } : undefined}
     >
-      <image
-        href="/img/menu.png"
-        x="0"
-        y="0"
-        width="1440"
-        height="1440"
-        preserveAspectRatio="xMidYMid slice"
-      />
+      {/* foreignObject + CSS background rather than <image href>. SVG <image>
+          fetches as soon as it is inserted, even under an ancestor with
+          display:none, which meant phones downloaded this desktop-only art.
+          CSS background-image is not fetched while hidden, so this component
+          can render unconditionally and keep its desktop first paint.
+          x/y/width/height are unchanged, so the geometry is identical. */}
+      <foreignObject x="0" y="0" width="1440" height="1440">
+        <div
+          style={{
+            width: "100%",
+            height: "100%",
+            backgroundImage: 'url("/img/menu.png")',
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+        />
+      </foreignObject>
 
       {SCREENS.map((s, i) => {
         const dx = s.activeOffsetX ?? -6;
@@ -110,24 +119,38 @@ export default function HomeScene() {
             role="button"
             tabIndex={0}
           >
-            <image
+            <foreignObject
               className="screen-default"
-              href={s.defaultSrc}
               x={s.x}
               y={s.y}
               width={s.width}
               height={s.height}
-              preserveAspectRatio="none"
-            />
-            <image
+            >
+              <div
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  backgroundImage: `url("${s.defaultSrc}")`,
+                  backgroundSize: "100% 100%",
+                }}
+              />
+            </foreignObject>
+            <foreignObject
               className="screen-active"
-              href={s.activeSrc}
               x={s.x + dx}
               y={s.y + dy}
               width={s.width + dw}
               height={s.height + dh}
-              preserveAspectRatio="none"
-            />
+            >
+              <div
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  backgroundImage: `url("${s.activeSrc}")`,
+                  backgroundSize: "100% 100%",
+                }}
+              />
+            </foreignObject>
             <rect
               className="screen-hit"
               x={s.x}

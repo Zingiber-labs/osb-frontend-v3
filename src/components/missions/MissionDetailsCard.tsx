@@ -29,7 +29,7 @@ const MissionDetailsCard = ({
     >
       <div className="pointer-events-none absolute right-3 top-3 bottom-3 w-[7px] rounded-full bg-cyan-400/90" />
 
-      <div className="flex items-start justify-between gap-4 pr-6">
+      <div className="flex flex-col sm:flex-row items-start justify-between gap-1 sm:gap-4 pr-6">
         <div>
           <h2 className="text-[16px] sm:text-[18px] font-bold text-white">
             {title}

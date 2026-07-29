@@ -106,14 +106,7 @@ export function MissionTerminal() {
                 <Loader className="h-8 w-8 animate-spin text-cyan-300" />
               </div>
             ) : (
-              <div
-                className="
-                  max-h-[320px]
-                  overflow-y-auto
-                  custom-scroll-thin
-                  pr-1
-                "
-              >
+              <div className="desktop:max-h-[320px] desktop:overflow-y-auto custom-scroll-thin pr-1">
                 <Accordion
                   type="single"
                   collapsible
@@ -147,16 +140,22 @@ export function MissionTerminal() {
           </div>
         </div>
       </div>
-      <div className="w-full max-w-4xl mt-4 relative">
+      {/* Console art is desktop-only. Below the breakpoint its painted slots sit
+          empty (the controls are real buttons underneath), which read as 118px
+          of dead space — 14% of a 390x844 screen — so it is hidden rather than
+          shown decoratively. */}
+      <div className="hidden desktop:block w-full max-w-4xl mt-4 relative">
         <Image
           src="/img/missions/console_mission.svg"
-          alt="console mission"
+          alt=""
+          aria-hidden="true"
           width={1520}
           height={566}
-          className="w-full h-auto select-none"
+          className="w-full h-auto select-none pointer-events-none"
         />
 
-        <div className="absolute inset-0 flex items-center">
+        {/* Desktop: controls overlaid on the painted console slots. */}
+        <div className="absolute inset-0 hidden desktop:flex items-center">
           <div className="w-[22%] flex justify-center translate-x-25 -translate-y-5">
             <Image
               src="/img/missions/arrow_hover_left.svg"
@@ -168,10 +167,7 @@ export function MissionTerminal() {
             />
           </div>
 
-          <div
-            className="w-[22%] flex justify-center translate-x-5 -translate-y-5
-"
-          >
+          <div className="w-[22%] flex justify-center translate-x-5 -translate-y-5">
             <Image
               src="/img/missions/arrow_hover_right.svg"
               alt="Next mission"
@@ -195,6 +191,39 @@ export function MissionTerminal() {
             />
           </div>
         </div>
+      </div>
+
+      {/* Mobile: the controls, sitting directly under the terminal panel since
+          the console art above is desktop-only. */}
+      <div className="mt-4 mb-8 flex w-full max-w-4xl items-center gap-2 desktop:hidden">
+        <button
+          type="button"
+          onClick={handlePrev}
+          disabled={missions.length === 0}
+          aria-label="Previous mission"
+          className="flex h-11 w-11 flex-none items-center justify-center rounded-xl border border-primary-orange bg-orange-24 text-2xl leading-none text-primary-orange disabled:opacity-40"
+        >
+          ‹
+        </button>
+
+        <button
+          type="button"
+          onClick={handleAccept}
+          disabled={missions.length === 0 || isAccepting}
+          className="h-11 flex-1 rounded-xl border border-[#ffd9a0] bg-gradient-to-b from-[#ff7a45] to-[#d63a12] text-sm font-extrabold uppercase tracking-[0.16em] text-white shadow-[0_3px_12px_rgba(255,80,20,0.45)] disabled:opacity-40"
+        >
+          {isAccepting ? "Accepting..." : "Accept"}
+        </button>
+
+        <button
+          type="button"
+          onClick={handleNext}
+          disabled={missions.length === 0}
+          aria-label="Next mission"
+          className="flex h-11 w-11 flex-none items-center justify-center rounded-xl border border-primary-orange bg-orange-24 text-2xl leading-none text-primary-orange disabled:opacity-40"
+        >
+          ›
+        </button>
       </div>
       {isAccepting && (
         <div
