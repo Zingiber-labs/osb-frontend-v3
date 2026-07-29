@@ -216,7 +216,12 @@
 
 /* Fixed background layer. Replaces `background-attachment: fixed`, which is
    unreliable on iOS Safari. `.layout` has no transform, so a fixed-position
-   pseudo-element resolves against the viewport as intended. */
+   pseudo-element resolves against the viewport as intended.
+
+   Assumes everything on the page lives inside `.layout` — it does today, since
+   Navbar, Footer and Toaster all render as children of ClientLayout. Because
+   this layer is sized to the viewport rather than clipped to `.layout`'s box,
+   a sibling added outside `.layout` later would be covered by it. */
 .layout::after {
   content: "";
   position: fixed;
@@ -229,6 +234,9 @@
   pointer-events: none;
 }
 
+/* On desktop (>=1200px) HomeScene's SVG composite renders on top with this same
+   image, so its panels stay anchored to the background. Below 1200px HomeScene
+   is not mounted, so this is the background the user actually sees. */
 .layout--menu {
   position: relative;
   --layout-bg: url("/img/menu.png");
