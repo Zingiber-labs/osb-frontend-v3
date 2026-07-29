@@ -9,12 +9,16 @@ const Footer = () => {
     <footer className="relative w-full bg-gradient-to-t from-black via-black/90 to-transparent text-white py-3 desktop:py-6">
       <div className="container mx-auto flex flex-row flex-wrap desktop:flex-nowrap justify-between items-center gap-3 desktop:gap-6 px-4">
         <div className="flex-shrink-0">
+          {/* desktop:h-[50px] restores the pre-existing rendering exactly: the
+              logo's natural aspect is 146x40, so h-auto alone renders 160x44,
+              whereas the width/height attributes previously stretched it to
+              160x50. Mobile intentionally uses the undistorted h-auto. */}
           <Image
             src="/img/logo_horizontal.svg"
             alt="Outer Sports Ballers"
             width={160}
             height={50}
-            className="w-24 h-auto desktop:w-40"
+            className="w-24 h-auto desktop:w-40 desktop:h-[50px]"
           />
         </div>
 
