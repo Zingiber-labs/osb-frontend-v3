@@ -67,7 +67,11 @@ So Home is CSS-driven for layout, with exactly one JS branch:
 
 - Both trees stay in the markup, toggled by the `desktop:` variant.
 - `HomeScene` and `AuthPanel` are additionally wrapped in `{isDesktop && …}` so phones never request desktop-only artwork.
-- The trade-off accepted: on desktop these two mount after hydration rather than in the first paint. That matches the behaviour that ships today, so it is not a regression.
+- The trade-off accepted: on desktop these two mount after hydration rather than in the first paint.
+
+**Correction — this trade-off IS a desktop regression, contrary to what this document previously claimed.** The earlier text said it "matches the behaviour that ships today". It does not. On `develop`, `useIsMobile` initialises to `false`, so `isMobile ? mobile : desktop` server-renders the **desktop** branch: the cockpit hotspot SVG and the auth panel are in the SSR HTML and in the desktop first paint. With the gate, `useMediaQuery` returns `false` during SSR and the hydration render, so at ≥1200px those elements are absent until hydration completes and then pop in. The `menu.png` backdrop still paints, so the page is never blank, but desktop LCP regresses by a hydration cycle on the highest-traffic route.
+
+The gate is still justified — the mobile asset downloads it prevents were measured and real — but it is a genuine trade, not a free win, and it does breach the "desktop must not change" constraint. If the desktop paint matters more, the alternatives are to drop the gate and accept a few desktop-only assets on phones, or to convert `HomeScene`'s hotspot `<image href>` elements to CSS backgrounds, which *are* suppressed under `display: none`.
 
 **Also required:** the root container keeps a **desktop-scoped** `min-h`. Every child of the desktop tree is absolutely or fixed positioned, so with no height the block collapses to 0px and the percentage `bottom` offsets resolve against nothing. Measured with it removed: the avatar rendered at `top: -296` and the floating-button column at `top: -102`, both off the top of the screen. It is scoped `desktop:` so the mobile tree, which is in normal flow, is unaffected by the stale footer constant.
 
