@@ -42,3 +42,6 @@ next-env.d.ts
 
 # brainstorming session scratch (mockups, server state)
 .superpowers/
+
+# agent-generated specs/plans — keep local, not in the repo
+docs/superpowers/
