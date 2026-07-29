@@ -1,12 +1,9 @@
 import React from "react";
 import NavLink from "./NavLink";
+import type { NavLink as NavLinkItem } from "./navLinks";
 
 interface NavMenuProps {
-  links: Array<{
-    label: string;
-    href?: string;
-    onClick?: () => void;
-  }>;
+  links: NavLinkItem[];
   className?: string;
 }
 
@@ -14,14 +11,13 @@ const NavMenu = ({ links, className = "" }: NavMenuProps) => {
   return (
     <nav
       aria-label="Navegación principal"
-      className={`hidden md:flex items-center space-x-6 ${className}`}
+      className={`hidden desktop:flex items-center space-x-6 ${className}`}
     >
       {links.map((link, index) => (
         <NavLink
           key={`nav-link-${index}`}
           label={link.label}
           href={link.href}
-          onClick={link.onClick}
         />
       ))}
     </nav>

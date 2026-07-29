@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import Footer from "@/components/footer/Footer";
 import ClientLayout from "@/components/layout/ClientLayout";
 import Navbar from "@/components/navbar/Navbar";
+import MobileTabBar from "@/components/navbar/MobileTabBar";
 import { Toaster } from "react-hot-toast";
 import DailyLoginRewardsGate from "@/components/rewards/DailyLoginRewardsGate";
 import { SessionHydrator } from "@/app/providers";
@@ -29,7 +30,7 @@ export default async function MainLayout({
             },
           }}
         />
-        <div className="flex flex-col min-h-screen">
+        <div className="flex flex-col min-h-screen pb-[calc(3.5rem+env(safe-area-inset-bottom))] desktop:pb-0">
           <div className="lg:px-[5.625rem] flex-1">
             <div className="overlay" />
             <Navbar />
@@ -38,6 +39,7 @@ export default async function MainLayout({
           </div>
           <Footer />
         </div>
+        <MobileTabBar />
       </ClientLayout>
     </>
   );
