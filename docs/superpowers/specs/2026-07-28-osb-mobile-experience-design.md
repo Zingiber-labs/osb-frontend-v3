@@ -59,15 +59,19 @@ Add to the `@theme` block in `globals.css`:
 
 This yields a `desktop:` variant across the codebase. Below it is the mobile shell; at or above it is today's desktop layout. This single token replaces both the `md:` in `NavMenu` and the `useIsMobile(1200)` call in Home.
 
-**Correction (found during implementation): there is no JS exception.** This section originally claimed `HomeScene` had to be gated in JS because `desktop:hidden` would still mount it and run Three.js on phones. That was wrong. `HomeScene` contains no Three.js at all — it is a plain `<svg className="scene-svg">` with positioned hotspot images. Three.js lives only in `ThreeGameplayCanvas` on `/game-play` and in `src/hooks/three/*`, none of which Home touches.
+**Correction (found during implementation).** This section originally justified the JS gate by claiming `desktop:hidden` would still mount `HomeScene` and run Three.js on phones. The Three.js part was wrong: `HomeScene` contains none. It is a plain `<svg className="scene-svg">` with positioned hotspot images, and Three.js lives only in `ThreeGameplayCanvas` on `/game-play` and `src/hooks/three/*`, none of which Home touches.
 
-Because the component is inexpensive, Home is gated **purely in CSS** with no JS branch:
+The gate is still required, for a different and measured reason: **`display: none` does not prevent these assets from loading.** `HomeScene`'s hotspots are raw SVG `<image href>` elements, which fetch on insertion regardless of visibility, and `AuthPanel` uses `next/image` with `priority`, which emits a preload link. Measured on a 390px load with the gate removed: `hangar-v2.svg` was fetched with `initiatorType: "image"` and `notification.png` with `initiatorType: "link"`. With the gate restored, the same check returns an empty list.
+
+So Home is CSS-driven for layout, with exactly one JS branch:
 
 - Both trees stay in the markup, toggled by the `desktop:` variant.
-- `HomeScene` renders server-side, so the cockpit appears in the desktop first paint. Measured before and after: with the JS gate the scene was absent at first paint and appeared only after hydration; without it, it is present at first paint.
-- On phones the scene stays in the DOM but is `display: none`, so the browser never fetches its hotspot images.
+- `HomeScene` and `AuthPanel` are additionally wrapped in `{isDesktop && …}` so phones never request desktop-only artwork.
+- The trade-off accepted: on desktop these two mount after hydration rather than in the first paint. That matches the behaviour that ships today, so it is not a regression.
 
-`useMediaQuery` therefore has exactly one consumer in the codebase — `DailyLoginRewardsModal`, choosing carousel vs grid.
+**Also required:** the root container keeps a **desktop-scoped** `min-h`. Every child of the desktop tree is absolutely or fixed positioned, so with no height the block collapses to 0px and the percentage `bottom` offsets resolve against nothing. Measured with it removed: the avatar rendered at `top: -296` and the floating-button column at `top: -102`, both off the top of the screen. It is scoped `desktop:` so the mobile tree, which is in normal flow, is unaffected by the stale footer constant.
+
+`useMediaQuery` therefore has two consumers: Home's desktop-visual gate, and `DailyLoginRewardsModal` choosing carousel vs grid.
 
 ### New files
 
@@ -78,7 +82,7 @@ Because the component is inexpensive, Home is gated **purely in CSS** with no JS
 
 `useIsMobile` has two consumers, and **both** must migrate before it can be deleted:
 
-1. `(main)/page.tsx:30` — `useIsMobile(1200)`. Layout branching moves to CSS; only the `HomeScene` canvas mount keeps a JS gate, via `useMediaQuery`.
+1. `(main)/page.tsx:30` — `useIsMobile(1200)`. Layout branching moves to CSS; a JS gate via `useMediaQuery` is kept only around Home's desktop-only visuals (`HomeScene`, `AuthPanel`), because their assets load even under `display: none`.
 2. `components/rewards/DailyLoginRewardsModal.tsx:52` — `useIsMobile()`, defaulting to **768**, choosing carousel vs grid. This is legitimate JS branching (it selects a component, not a layout) and becomes `useMediaQuery("(max-width: 767px)")`. Its 768 threshold is deliberate and must not be folded into the new 1200 breakpoint — the two decisions are unrelated.
 
 ### Tab bar contents

@@ -4,9 +4,9 @@
 
 **Goal:** Give the OSB web client a working mobile experience — a persistent bottom tab bar, a usable mission terminal, and no broken layouts — without changing the desktop experience.
 
-**Architecture:** Layout selection moves out of JavaScript and into CSS via a single Tailwind 4 custom breakpoint (`desktop`, 1200px), so phones get the correct layout in the first server-rendered paint instead of flashing the desktop tree. The only remaining JS branch is the Three.js canvas mount, gated by a new SSR-safe `useMediaQuery` hook. All navigation destinations come from one shared `navLinks` array consumed by both the desktop nav row and the new mobile tab bar.
+**Architecture:** Layout selection moves out of JavaScript and into CSS via a single Tailwind 4 custom breakpoint (`desktop`, 1200px), so phones get the correct layout in the first server-rendered paint instead of flashing the desktop tree. The only remaining JS branch gates Home's desktop-only visuals (`HomeScene`, `AuthPanel`) via a new SSR-safe `useMediaQuery` hook — not for Three.js reasons (`HomeScene` is an SVG), but because their assets load even under `display: none`. All navigation destinations come from one shared `navLinks` array consumed by both the desktop nav row and the new mobile tab bar.
 
-**Tech Stack:** Next.js 15 App Router, React 19, TypeScript strict, Tailwind 4 (CSS-first, no config file), shadcn/ui, lucide-react, Three.js / @react-three/fiber.
+**Tech Stack:** Next.js 15 App Router, React 19, TypeScript strict, Tailwind 4 (CSS-first, no config file), shadcn/ui, lucide-react. (Three.js / @react-three/fiber exists in this repo but only on the `/game-play` route — no task here touches it except a `100dvh` fix.)
 
 **Spec:** `docs/superpowers/specs/2026-07-28-osb-mobile-experience-design.md`
 
@@ -43,7 +43,7 @@
 | `src/components/navbar/NavMenu.tsx` | `md:` → `desktop:` |
 | `src/components/footer/Footer.tsx` | Compact single row below `desktop:` |
 | `src/components/rewards/DailyLoginRewardsModal.tsx` | `useIsMobile()` → `useMediaQuery("(max-width: 767px)")` |
-| `src/app/(main)/page.tsx` | CSS branching; canvas mount gate; drop `min-h` magic numbers; normalise tile heights |
+| `src/app/(main)/page.tsx` | CSS branching; JS gate on desktop-only visuals; scope `min-h` to desktop; normalise tile heights |
 | `src/components/missions/MissionPanel.tsx` | Mobile button row; desktop overlay hidden below breakpoint |
 | `src/components/missions/MissionDetailsCard.tsx` | Header stacks below `sm` |
 | `src/components/ranking/GlobalLeaderboard.tsx` | Truncate username; narrow rank column; clip decorative blob |
@@ -219,7 +219,7 @@ git commit -m "feat(mobile): add desktop breakpoint, viewport-fit, iOS-safe back
 
 **Interfaces:**
 - Consumes: nothing.
-- Produces: `useMediaQuery(query: string): boolean` — a client hook returning `false` during SSR and the live `matchMedia` result after hydration. Task 5 consumes it to gate the Three.js canvas.
+- Produces: `useMediaQuery(query: string): boolean` — a client hook returning `false` during SSR and the live `matchMedia` result after hydration. Task 5 consumes it to gate Home's desktop-only visuals (`HomeScene`, `AuthPanel`), whose assets load even when hidden.
 
 - [ ] **Step 1: Create the hook**
 
@@ -549,7 +549,7 @@ git commit -m "feat(mobile): compact footer below desktop breakpoint"
 
 ---
 
-## Task 5: Home — CSS branching, canvas gate, and layout math
+## Task 5: Home — CSS branching, desktop-visual gate, and layout math
 
 **Files:**
 - Modify: `src/app/(main)/page.tsx:17,30,41,42,140` and the surrounding JSX
@@ -639,13 +639,20 @@ Expected: no output. If anything is returned, migrate it to `useMediaQuery` befo
 
 - [ ] **Step 8: Verify Home on both sides of the breakpoint**
 
-At 390px: the four tiles render, the three floating buttons (events, leaderboard, notifications) are present, and no 3D canvas exists. Confirm with:
+At 390px: the four tiles render and the three floating buttons (events, leaderboard, notifications) are present. `HomeScene` must NOT be mounted. Confirm with:
 
 ```js
-document.querySelectorAll('canvas').length
+// Must be false at 390px, true at ≥1200px.
+!!document.querySelector('svg.scene-svg')
 ```
 
-Expected: `0` at 390px, `1` at ≥1200px.
+There is no `<canvas>` on this page at any width — `HomeScene` is an SVG. Also confirm no desktop-only art is requested on mobile:
+
+```js
+performance.getEntriesByType('resource').map(r => r.name.split('/').pop())
+  .filter(n => /hangar-v2|store-v2|inventory-v2|-active\.png|notification\.png/.test(n))
+// Expected: [] at 390px
+```
 
 At ≥1200px: the cockpit scene, avatar, exit control and floating column all render exactly as before.
 
@@ -663,7 +670,7 @@ Expected: clean.
 
 ```bash
 git add "src/app/(main)/page.tsx" src/hooks/useIsMobile.ts
-git commit -m "feat(mobile): move home layout branching to CSS and gate 3D canvas"
+git commit -m "feat(mobile): move home layout branching to CSS and gate desktop visuals"
 ```
 
 ---
