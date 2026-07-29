@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/tooltip";
 import { useComplexEvents } from "@/hooks/events-complex/useEvents";
 import { useUnreadCount } from "@/hooks/notifications/useNotifications";
-import { useIsMobile } from "@/hooks/useIsMobile";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { Bell, CalendarDays, Trophy } from "lucide-react";
 import { useLogout } from "@/lib/auth/client";
 import Image from "next/image";
@@ -27,7 +27,7 @@ const fabTooltipClass =
 
 export default function Home() {
   const router = useRouter();
-  const isMobile = useIsMobile(1200);
+  const isDesktop = useMediaQuery("(min-width: 1200px)");
   const [isEventsOpen, setIsEventsOpen] = useState(false);
   const [isNotifOpen, setIsNotifOpen] = useState(false);
   const { data: events, isLoading: isEventsLoading } = useComplexEvents();
@@ -36,9 +36,8 @@ export default function Home() {
   const logout = useLogout();
 
   return (
-    <div className="relative mx-auto min-h-[calc(100dvh-104px-91.83px)] w-full overflow-auto rounded-2xl border-0 shadow thin-scroll">
-      {isMobile ? (
-        <>
+    <div className="relative mx-auto w-full overflow-auto rounded-2xl border-0 shadow thin-scroll">
+      <div className="desktop:hidden">
           <div className="mx-auto flex max-w-md w-full flex-col gap-4 px-4 pt-16 pb-32 text-white">
             <Link href="/missions" passHref>
               <Button
@@ -73,7 +72,7 @@ export default function Home() {
             <Link href="/store" passHref>
               <Button
                 variant="outline"
-                className="h-18 w-full justify-start gap-3 border-primary bg-[#FF6B2F3D] text-lg text-orange"
+                className="h-[72px] w-full justify-start gap-3 border-primary bg-[#FF6B2F3D] text-lg text-orange"
               >
                 <Image
                   src="/img/menu/store.svg"
@@ -88,7 +87,7 @@ export default function Home() {
             <Link href="/profile" passHref>
               <Button
                 variant="outline"
-                className="h-18 w-full justify-start gap-3 border-primary bg-[#FF6B2F3D] text-lg text-orange"
+                className="h-[72px] w-full justify-start gap-3 border-primary bg-[#FF6B2F3D] text-lg text-orange"
               >
                 <Image
                   src="/img/menu/avatar2.png"
@@ -154,10 +153,10 @@ export default function Home() {
               )}
             </div>
           </div>
-        </>
-      ) : (
-        <>
-          <HomeScene />
+      </div>
+
+      <div className="hidden desktop:block">
+          {isDesktop && <HomeScene />}
 
           <AuthPanel />
 
@@ -245,8 +244,7 @@ export default function Home() {
               )}
             </div>
           </div>
-        </>
-      )}
+      </div>
 
       <AvailableEvents
         open={isEventsOpen}
