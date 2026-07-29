@@ -195,7 +195,7 @@ export function MissionTerminal() {
 
       {/* Mobile: the controls, sitting directly under the terminal panel since
           the console art above is desktop-only. */}
-      <div className="mt-4 flex w-full max-w-4xl items-center gap-2 desktop:hidden">
+      <div className="mt-4 mb-8 flex w-full max-w-4xl items-center gap-2 desktop:hidden">
         <button
           type="button"
           onClick={handlePrev}
