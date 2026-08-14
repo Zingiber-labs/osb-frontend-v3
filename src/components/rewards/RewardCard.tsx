@@ -5,6 +5,7 @@ import Image from "next/image";
 type RewardItem = {
   code: "COINS" | "GEMS" | "XP" | string;
   amount: number;
+  isSurprise?: boolean;
 };
 
 export type DailyReward = {
@@ -79,6 +80,7 @@ const RewardCard = ({
 
   const isAvailable = reward.status === "AVAILABLE";
   const isLocked = reward.status === "LOCKED";
+  const isSurprise = reward.rewards?.some((item) => item.isSurprise) ?? false;
   const disabled = !isAvailable;
 
   return (
@@ -157,7 +159,7 @@ const RewardCard = ({
                   Reward
                 </p>
                 <p className="mt-0.5 text-sm font-extrabold text-cyan-200">
-                  {formatRewards(reward.rewards)}
+                  {isSurprise ? "\u00a0" : formatRewards(reward.rewards)}
                 </p>
               </div>
             </>
