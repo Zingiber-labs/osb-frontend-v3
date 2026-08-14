@@ -159,7 +159,9 @@ const RewardCard = ({
                   Reward
                 </p>
                 <p className="mt-0.5 text-sm font-extrabold text-cyan-200">
-                  {isSurprise ? "\u00a0" : formatRewards(reward.rewards)}
+                  <span className={isSurprise && !isClaimed ? "invisible" : ""}>
+                    {formatRewards(reward.rewards)}
+                  </span>
                 </p>
               </div>
             </>
