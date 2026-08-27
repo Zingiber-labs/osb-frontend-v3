@@ -22,6 +22,9 @@ export const useBuyStoreItem = () => {
       return await api.post("/store/purchase", payload);
     },
     onSettled: () =>
-      queryClient.invalidateQueries({ queryKey: ["inventory-items"] }),
+      Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["inventory-items"] }),
+        queryClient.invalidateQueries({ queryKey: ["profile-data"] }),
+      ]),
   });
 };
