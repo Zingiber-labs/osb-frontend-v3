@@ -24,6 +24,8 @@ export function SetupPanel({ games, initialGameId, initialPlayerId, error, onSta
   const [target, setTarget] = useState(20);
   const [speed, setSpeed] = useState(16);
 
+  const effectivePlayerId = playerId || roster[0]?.id || "";
+
   if (!game) {
     return <p className="text-rose-400">No recorded games are available. Run `npm run record-game -- &lt;espnEventId&gt;` first.</p>;
   }
@@ -33,8 +35,8 @@ export function SetupPanel({ games, initialGameId, initialPlayerId, error, onSta
       className="flex max-w-md flex-col gap-3"
       onSubmit={(e) => {
         e.preventDefault();
-        if (!playerId) return;
-        onStart({ gameId: game.id, playerId, mission: { stat, target }, speed });
+        if (!effectivePlayerId) return;
+        onStart({ gameId: game.id, playerId: effectivePlayerId, mission: { stat, target }, speed });
       }}
     >
       {error ? <p className="text-rose-400">{error}</p> : null}
@@ -48,7 +50,7 @@ export function SetupPanel({ games, initialGameId, initialPlayerId, error, onSta
       </label>
       <label className="flex flex-col gap-1 text-sm">
         Player
-        <select className={selectClass} value={playerId || roster[0]?.id} onChange={(e) => setPlayerId(e.target.value)}>
+        <select className={selectClass} value={effectivePlayerId} onChange={(e) => setPlayerId(e.target.value)}>
           {roster.map((p) => (
             <option key={p.id} value={p.id}>{p.team} · {p.name}</option>
           ))}

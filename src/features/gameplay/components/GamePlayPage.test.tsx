@@ -48,7 +48,10 @@ describe("GamePlayPage", () => {
 
     expect(screen.getByText(/mission (success|failed)/i)).toBeInTheDocument();
     expect(syncState).toHaveBeenCalled();
-    expect(screen.getByTestId("score").textContent).not.toBe("0 - 0");
+    const last = game.plays[game.plays.length - 1];
+    expect(screen.getByTestId("score").textContent).toBe(
+      `${game.home.abbreviation} ${last.homeScore} - ${last.awayScore} ${game.away.abbreviation}`,
+    );
   });
 
   it("shows an error when the URL points at a game that is not recorded", () => {

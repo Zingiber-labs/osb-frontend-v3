@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { NULL_RENDERER, type RendererPort } from "@/features/gameplay/renderer/RendererPort";
-import { ScenarioRenderer } from "@/features/gameplay/renderer/ScenarioRenderer";
+import type { ScenarioRenderer } from "@/features/gameplay/renderer/ScenarioRenderer";
 
 type Props = { onReady: (renderer: RendererPort) => void };
 
@@ -11,19 +11,21 @@ export function ScenarioCanvas({ onReady }: Props) {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const renderer = new ScenarioRenderer();
+    let renderer: ScenarioRenderer | null = null;
     let cancelled = false;
     let mounted = false;
 
-    renderer
-      .mount(canvas)
-      .then(() => {
+    import("@/features/gameplay/renderer/ScenarioRenderer")
+      .then(async ({ ScenarioRenderer: Renderer }) => {
+        const r = new Renderer();
+        renderer = r;
+        await r.mount(canvas);
         mounted = true;
         if (cancelled) {
-          renderer.destroy();
+          r.destroy();
           return;
         }
-        onReady(renderer);
+        onReady(r);
       })
       .catch((err: unknown) => {
         console.warn("scene could not start, running HUD-only", err);
@@ -35,7 +37,7 @@ export function ScenarioCanvas({ onReady }: Props) {
 
     return () => {
       cancelled = true;
-      if (mounted) renderer.destroy();
+      if (mounted) renderer?.destroy();
     };
   }, [onReady]);
 
