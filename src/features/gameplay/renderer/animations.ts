@@ -1,5 +1,6 @@
 import { Graphics } from "pixi.js";
 import type { EnemySize, ShipAction } from "@/features/gameplay/engine/types";
+import { callout, CALLOUT_COLORS } from "./callout";
 import { COLORS, dot, laser, SHIP_SCALE, type World } from "./world";
 import { easeOut, tween } from "./tween";
 
@@ -48,7 +49,7 @@ async function burst(world: World, x: number, y: number, scale: number, ms: numb
   for (const { p } of parts) p.destroy();
 }
 
-async function fire(world: World, size: EnemySize, charged: boolean) {
+async function fire(world: World, size: EnemySize, charged: boolean, caption?: string) {
   const { app, ship, squadron, squadronView } = world;
   let member = squadron.takeNearest(ship.x, ship.y);
   if (!member) {
@@ -71,6 +72,7 @@ async function fire(world: World, size: EnemySize, charged: boolean) {
     shot.y = lerp(ship.y, enemy.y, t);
   });
   shot.destroy();
+  if (caption) callout(world, enemy.x, enemy.y - 30, caption, charged ? CALLOUT_COLORS.charged : CALLOUT_COLORS.mine);
   const base = enemy.scale.x;
   const burstDone = burst(world, enemy.x, enemy.y, BURST_SCALE[size] * (charged ? 1.3 : 1), DURATION.fire - travel);
   await tween(app.ticker, (DURATION.fire - travel) * 0.5, (t) => {
@@ -81,7 +83,7 @@ async function fire(world: World, size: EnemySize, charged: boolean) {
   await burstDone;
 }
 
-async function hit(world: World, points: 1 | 2 | 3, absorbed: boolean) {
+async function hit(world: World, points: 1 | 2 | 3, absorbed: boolean, caption?: string) {
   const { app, ship, shipBody, shieldRing, shipBase, squadron, squadronView } = world;
   const source = squadron.pick();
   const from = (source && squadronView.positionOf(source.id)) ?? { x: world.width * 0.85, y: ship.y + (Math.random() - 0.5) * 80 };
@@ -93,6 +95,7 @@ async function hit(world: World, points: 1 | 2 | 3, absorbed: boolean) {
     shot.y = lerp(from.y, ship.y, t);
   });
   shot.destroy();
+  if (caption) callout(world, ship.x + 70, ship.y - 30, caption, CALLOUT_COLORS.theirs);
   if (absorbed) {
     await tween(app.ticker, DURATION.hit - travel, (t) => {
       shieldRing.alpha = lerp(1, world.shieldAlpha, t);
@@ -111,8 +114,9 @@ async function hit(world: World, points: 1 | 2 | 3, absorbed: boolean) {
   shipBody.tint = 0xffffff;
 }
 
-async function shieldUp(world: World) {
+async function shieldUp(world: World, caption?: string) {
   const { app, shieldRing } = world;
+  if (caption) callout(world, world.ship.x, world.ship.y - 50, caption, CALLOUT_COLORS.mine);
   await tween(app.ticker, DURATION.shieldUp, (t) => {
     const grow = t < 0.5 ? lerp(1, 1.3, t * 2) : lerp(1.3, 1, (t - 0.5) * 2);
     shieldRing.scale.set(SHIP_SCALE * grow);
@@ -124,8 +128,9 @@ async function shieldUp(world: World) {
   shieldRing.alpha = world.shieldAlpha;
 }
 
-async function fizzle(world: World) {
+async function fizzle(world: World, caption?: string) {
   const { app, ship } = world;
+  if (caption) callout(world, ship.x + 40 + world.width * 0.12, ship.y - 20, caption, CALLOUT_COLORS.theirs);
   const shot = laser(world, "mine");
   await tween(app.ticker, DURATION.fizzle, (t) => {
     shot.x = ship.x + 40 + t * world.width * 0.25;
@@ -135,8 +140,9 @@ async function fizzle(world: World) {
   shot.destroy();
 }
 
-async function stall(world: World) {
+async function stall(world: World, caption?: string) {
   const { app, ship, shipBase } = world;
+  if (caption) callout(world, ship.x, ship.y - 50, caption, CALLOUT_COLORS.mine);
   await tween(app.ticker, DURATION.stall, (t) => {
     ship.rotation = Math.PI * 2 * easeOut(t);
     ship.x = shipBase.x - 20 * Math.sin(t * Math.PI);
@@ -145,7 +151,7 @@ async function stall(world: World) {
   ship.x = shipBase.x;
 }
 
-async function enemyMalfunction(world: World) {
+async function enemyMalfunction(world: World, caption?: string) {
   const { squadron, squadronView } = world;
   let member = squadron.takeAny();
   if (!member) {
@@ -155,6 +161,7 @@ async function enemyMalfunction(world: World) {
   }
   // Invariant: the model was just synced, so the member's sprite exists.
   const enemy = squadronView.detach(member.id)!;
+  if (caption) callout(world, enemy.x, enemy.y - 30, caption, CALLOUT_COLORS.theirs);
   const startY = enemy.y;
   const startRot = enemy.rotation;
   await tween(world.app.ticker, DURATION.enemyMalfunction, (t) => {
@@ -198,17 +205,17 @@ async function explode(world: World) {
 export function runAnimation(world: World, action: ShipAction): Promise<void> {
   switch (action.type) {
     case "fire":
-      return fire(world, action.size, action.charged);
+      return fire(world, action.size, action.charged, action.caption);
     case "hit":
-      return hit(world, action.points, action.absorbed);
+      return hit(world, action.points, action.absorbed, action.caption);
     case "shieldUp":
-      return shieldUp(world);
+      return shieldUp(world, action.caption);
     case "fizzle":
-      return fizzle(world);
+      return fizzle(world, action.caption);
     case "stall":
-      return stall(world);
+      return stall(world, action.caption);
     case "enemyMalfunction":
-      return enemyMalfunction(world);
+      return enemyMalfunction(world, action.caption);
     case "objectiveComplete":
       return objectiveComplete(world);
     case "warpOut":
