@@ -1,0 +1,6612 @@
+{
+  "id": "401809958",
+  "date": "2025-10-26T00:00Z",
+  "home": {
+    "id": "29",
+    "name": "Memphis Grizzlies",
+    "abbreviation": "MEM",
+    "players": [
+      {
+        "id": "4277961",
+        "name": "Jaren Jackson Jr."
+      },
+      {
+        "id": "5112087",
+        "name": "Jaylen Wells"
+      },
+      {
+        "id": "3146557",
+        "name": "Jock Landale"
+      },
+      {
+        "id": "2581018",
+        "name": "Kentavious Caldwell-Pope"
+      },
+      {
+        "id": "4279888",
+        "name": "Ja Morant"
+      },
+      {
+        "id": "4593125",
+        "name": "Santi Aldama"
+      },
+      {
+        "id": "4595400",
+        "name": "Olivier-Maxence Prosper"
+      },
+      {
+        "id": "4903027",
+        "name": "Cedric Coward"
+      },
+      {
+        "id": "5105550",
+        "name": "GG Jackson"
+      },
+      {
+        "id": "4701225",
+        "name": "PJ Hall"
+      },
+      {
+        "id": "3134932",
+        "name": "John Konchar"
+      },
+      {
+        "id": "4433083",
+        "name": "Cam Spencer"
+      },
+      {
+        "id": "4781746",
+        "name": "Javon Small"
+      }
+    ]
+  },
+  "away": {
+    "id": "11",
+    "name": "Indiana Pacers",
+    "abbreviation": "IND",
+    "players": [
+      {
+        "id": "3149673",
+        "name": "Pascal Siakam"
+      },
+      {
+        "id": "4432808",
+        "name": "James Wiseman"
+      },
+      {
+        "id": "4396909",
+        "name": "Aaron Nesmith"
+      },
+      {
+        "id": "4433076",
+        "name": "Ben Sheppard"
+      },
+      {
+        "id": "4683634",
+        "name": "Bennedict Mathurin"
+      },
+      {
+        "id": "4278355",
+        "name": "Obi Toppin"
+      },
+      {
+        "id": "4432170",
+        "name": "Isaiah Jackson"
+      },
+      {
+        "id": "5106060",
+        "name": "Jarace Walker"
+      },
+      {
+        "id": "4065673",
+        "name": "Tony Bradley"
+      },
+      {
+        "id": "4065731",
+        "name": "Jay Huff"
+      },
+      {
+        "id": "4431941",
+        "name": "RayJ Dennis"
+      },
+      {
+        "id": "4703421",
+        "name": "Taelon Peter"
+      }
+    ]
+  },
+  "plays": [
+    {
+      "order": 0,
+      "period": 1,
+      "clockSeconds": 720,
+      "homeScore": 0,
+      "awayScore": 0,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4432808",
+        "4277961",
+        "4432808"
+      ]
+    },
+    {
+      "order": 1,
+      "period": 1,
+      "clockSeconds": 695,
+      "homeScore": 0,
+      "awayScore": 2,
+      "kind": "score",
+      "teamId": "11",
+      "playerIds": [
+        "4433076"
+      ],
+      "points": 2
+    },
+    {
+      "order": 2,
+      "period": 1,
+      "clockSeconds": 676,
+      "homeScore": 0,
+      "awayScore": 2,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "3146557"
+      ]
+    },
+    {
+      "order": 3,
+      "period": 1,
+      "clockSeconds": 674,
+      "homeScore": 0,
+      "awayScore": 2,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4683634"
+      ]
+    },
+    {
+      "order": 4,
+      "period": 1,
+      "clockSeconds": 670,
+      "homeScore": 0,
+      "awayScore": 2,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "3149673"
+      ]
+    },
+    {
+      "order": 5,
+      "period": 1,
+      "clockSeconds": 670,
+      "homeScore": 0,
+      "awayScore": 2,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": []
+    },
+    {
+      "order": 6,
+      "period": 1,
+      "clockSeconds": 655,
+      "homeScore": 0,
+      "awayScore": 2,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "2581018"
+      ]
+    },
+    {
+      "order": 7,
+      "period": 1,
+      "clockSeconds": 651,
+      "homeScore": 0,
+      "awayScore": 2,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "3149673"
+      ]
+    },
+    {
+      "order": 8,
+      "period": 1,
+      "clockSeconds": 645,
+      "homeScore": 0,
+      "awayScore": 2,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "3149673"
+      ]
+    },
+    {
+      "order": 9,
+      "period": 1,
+      "clockSeconds": 645,
+      "homeScore": 0,
+      "awayScore": 2,
+      "kind": "turnover",
+      "teamId": "11",
+      "playerIds": [
+        "3149673"
+      ]
+    },
+    {
+      "order": 10,
+      "period": 1,
+      "clockSeconds": 629,
+      "homeScore": 0,
+      "awayScore": 2,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "2581018"
+      ]
+    },
+    {
+      "order": 11,
+      "period": 1,
+      "clockSeconds": 628,
+      "homeScore": 0,
+      "awayScore": 2,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": []
+    },
+    {
+      "order": 12,
+      "period": 1,
+      "clockSeconds": 625,
+      "homeScore": 2,
+      "awayScore": 2,
+      "kind": "score",
+      "teamId": "29",
+      "playerIds": [
+        "4279888"
+      ],
+      "points": 2
+    },
+    {
+      "order": 13,
+      "period": 1,
+      "clockSeconds": 613,
+      "homeScore": 2,
+      "awayScore": 2,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4277961"
+      ]
+    },
+    {
+      "order": 14,
+      "period": 1,
+      "clockSeconds": 613,
+      "homeScore": 2,
+      "awayScore": 2,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "3149673"
+      ]
+    },
+    {
+      "order": 15,
+      "period": 1,
+      "clockSeconds": 613,
+      "homeScore": 2,
+      "awayScore": 2,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": []
+    },
+    {
+      "order": 16,
+      "period": 1,
+      "clockSeconds": 613,
+      "homeScore": 2,
+      "awayScore": 3,
+      "kind": "score",
+      "teamId": "11",
+      "playerIds": [
+        "3149673"
+      ],
+      "points": 1
+    },
+    {
+      "order": 17,
+      "period": 1,
+      "clockSeconds": 591,
+      "homeScore": 4,
+      "awayScore": 3,
+      "kind": "score",
+      "teamId": "29",
+      "playerIds": [
+        "4277961"
+      ],
+      "points": 2
+    },
+    {
+      "order": 18,
+      "period": 1,
+      "clockSeconds": 574,
+      "homeScore": 4,
+      "awayScore": 3,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4683634"
+      ]
+    },
+    {
+      "order": 19,
+      "period": 1,
+      "clockSeconds": 572,
+      "homeScore": 4,
+      "awayScore": 3,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "2581018"
+      ]
+    },
+    {
+      "order": 20,
+      "period": 1,
+      "clockSeconds": 568,
+      "homeScore": 4,
+      "awayScore": 3,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4277961"
+      ]
+    },
+    {
+      "order": 21,
+      "period": 1,
+      "clockSeconds": 564,
+      "homeScore": 4,
+      "awayScore": 3,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4683634"
+      ]
+    },
+    {
+      "order": 22,
+      "period": 1,
+      "clockSeconds": 555,
+      "homeScore": 4,
+      "awayScore": 3,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "3149673"
+      ]
+    },
+    {
+      "order": 23,
+      "period": 1,
+      "clockSeconds": 550,
+      "homeScore": 4,
+      "awayScore": 3,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4279888"
+      ]
+    },
+    {
+      "order": 24,
+      "period": 1,
+      "clockSeconds": 545,
+      "homeScore": 4,
+      "awayScore": 3,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "2581018"
+      ]
+    },
+    {
+      "order": 25,
+      "period": 1,
+      "clockSeconds": 545,
+      "homeScore": 4,
+      "awayScore": 3,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": []
+    },
+    {
+      "order": 26,
+      "period": 1,
+      "clockSeconds": 535,
+      "homeScore": 4,
+      "awayScore": 3,
+      "kind": "turnover",
+      "teamId": "11",
+      "playerIds": [
+        "4432808"
+      ]
+    },
+    {
+      "order": 27,
+      "period": 1,
+      "clockSeconds": 535,
+      "homeScore": 4,
+      "awayScore": 3,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4903027",
+        "2581018"
+      ]
+    },
+    {
+      "order": 28,
+      "period": 1,
+      "clockSeconds": 535,
+      "homeScore": 4,
+      "awayScore": 3,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "3134932",
+        "4277961"
+      ]
+    },
+    {
+      "order": 29,
+      "period": 1,
+      "clockSeconds": 519,
+      "homeScore": 4,
+      "awayScore": 3,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4279888"
+      ]
+    },
+    {
+      "order": 30,
+      "period": 1,
+      "clockSeconds": 518,
+      "homeScore": 4,
+      "awayScore": 3,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": []
+    },
+    {
+      "order": 31,
+      "period": 1,
+      "clockSeconds": 505,
+      "homeScore": 4,
+      "awayScore": 3,
+      "kind": "block",
+      "teamId": "29",
+      "playerIds": [
+        "3134932"
+      ]
+    },
+    {
+      "order": 32,
+      "period": 1,
+      "clockSeconds": 501,
+      "homeScore": 4,
+      "awayScore": 3,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "3134932"
+      ]
+    },
+    {
+      "order": 33,
+      "period": 1,
+      "clockSeconds": 496,
+      "homeScore": 4,
+      "awayScore": 3,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "5112087"
+      ]
+    },
+    {
+      "order": 34,
+      "period": 1,
+      "clockSeconds": 493,
+      "homeScore": 4,
+      "awayScore": 3,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "3149673"
+      ]
+    },
+    {
+      "order": 35,
+      "period": 1,
+      "clockSeconds": 489,
+      "homeScore": 4,
+      "awayScore": 3,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "3149673"
+      ]
+    },
+    {
+      "order": 36,
+      "period": 1,
+      "clockSeconds": 485,
+      "homeScore": 4,
+      "awayScore": 3,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "3134932"
+      ]
+    },
+    {
+      "order": 37,
+      "period": 1,
+      "clockSeconds": 480,
+      "homeScore": 6,
+      "awayScore": 3,
+      "kind": "score",
+      "teamId": "29",
+      "playerIds": [
+        "3146557"
+      ],
+      "points": 2
+    },
+    {
+      "order": 38,
+      "period": 1,
+      "clockSeconds": 478,
+      "homeScore": 6,
+      "awayScore": 3,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": []
+    },
+    {
+      "order": 39,
+      "period": 1,
+      "clockSeconds": 478,
+      "homeScore": 6,
+      "awayScore": 3,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4278355",
+        "3149673"
+      ]
+    },
+    {
+      "order": 40,
+      "period": 1,
+      "clockSeconds": 458,
+      "homeScore": 6,
+      "awayScore": 3,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4683634"
+      ]
+    },
+    {
+      "order": 41,
+      "period": 1,
+      "clockSeconds": 453,
+      "homeScore": 6,
+      "awayScore": 3,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4432808"
+      ]
+    },
+    {
+      "order": 42,
+      "period": 1,
+      "clockSeconds": 452,
+      "homeScore": 6,
+      "awayScore": 3,
+      "kind": "turnover",
+      "teamId": "11",
+      "playerIds": [
+        "4432808"
+      ]
+    },
+    {
+      "order": 43,
+      "period": 1,
+      "clockSeconds": 452,
+      "homeScore": 6,
+      "awayScore": 3,
+      "kind": "steal",
+      "teamId": "29",
+      "playerIds": [
+        "3134932"
+      ]
+    },
+    {
+      "order": 44,
+      "period": 1,
+      "clockSeconds": 443,
+      "homeScore": 6,
+      "awayScore": 3,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "5112087"
+      ]
+    },
+    {
+      "order": 45,
+      "period": 1,
+      "clockSeconds": 440,
+      "homeScore": 6,
+      "awayScore": 3,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4278355"
+      ]
+    },
+    {
+      "order": 46,
+      "period": 1,
+      "clockSeconds": 429,
+      "homeScore": 6,
+      "awayScore": 3,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4433076"
+      ]
+    },
+    {
+      "order": 47,
+      "period": 1,
+      "clockSeconds": 426,
+      "homeScore": 6,
+      "awayScore": 3,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "3146557"
+      ]
+    },
+    {
+      "order": 48,
+      "period": 1,
+      "clockSeconds": 423,
+      "homeScore": 8,
+      "awayScore": 3,
+      "kind": "score",
+      "teamId": "29",
+      "playerIds": [
+        "4903027"
+      ],
+      "points": 2
+    },
+    {
+      "order": 49,
+      "period": 1,
+      "clockSeconds": 398,
+      "homeScore": 8,
+      "awayScore": 3,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4396909"
+      ]
+    },
+    {
+      "order": 50,
+      "period": 1,
+      "clockSeconds": 396,
+      "homeScore": 8,
+      "awayScore": 3,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4279888"
+      ]
+    },
+    {
+      "order": 51,
+      "period": 1,
+      "clockSeconds": 392,
+      "homeScore": 10,
+      "awayScore": 3,
+      "kind": "score",
+      "teamId": "29",
+      "playerIds": [
+        "3134932"
+      ],
+      "points": 2
+    },
+    {
+      "order": 52,
+      "period": 1,
+      "clockSeconds": 375,
+      "homeScore": 10,
+      "awayScore": 3,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "3146557"
+      ]
+    },
+    {
+      "order": 53,
+      "period": 1,
+      "clockSeconds": 375,
+      "homeScore": 10,
+      "awayScore": 3,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4593125",
+        "5112087"
+      ]
+    },
+    {
+      "order": 54,
+      "period": 1,
+      "clockSeconds": 375,
+      "homeScore": 10,
+      "awayScore": 3,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4277961",
+        "4279888"
+      ]
+    },
+    {
+      "order": 55,
+      "period": 1,
+      "clockSeconds": 375,
+      "homeScore": 10,
+      "awayScore": 3,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4781746",
+        "3146557"
+      ]
+    },
+    {
+      "order": 56,
+      "period": 1,
+      "clockSeconds": 375,
+      "homeScore": 10,
+      "awayScore": 3,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4431941",
+        "4432808"
+      ]
+    },
+    {
+      "order": 57,
+      "period": 1,
+      "clockSeconds": 375,
+      "homeScore": 10,
+      "awayScore": 3,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "3149673",
+        "4433076"
+      ]
+    },
+    {
+      "order": 58,
+      "period": 1,
+      "clockSeconds": 368,
+      "homeScore": 10,
+      "awayScore": 5,
+      "kind": "score",
+      "teamId": "11",
+      "playerIds": [
+        "3149673"
+      ],
+      "points": 2
+    },
+    {
+      "order": 59,
+      "period": 1,
+      "clockSeconds": 346,
+      "homeScore": 12,
+      "awayScore": 5,
+      "kind": "score",
+      "teamId": "29",
+      "playerIds": [
+        "4277961"
+      ],
+      "points": 2
+    },
+    {
+      "order": 60,
+      "period": 1,
+      "clockSeconds": 336,
+      "homeScore": 12,
+      "awayScore": 5,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "3149673"
+      ]
+    },
+    {
+      "order": 61,
+      "period": 1,
+      "clockSeconds": 333,
+      "homeScore": 12,
+      "awayScore": 5,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4593125"
+      ]
+    },
+    {
+      "order": 62,
+      "period": 1,
+      "clockSeconds": 330,
+      "homeScore": 12,
+      "awayScore": 5,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "3134932"
+      ]
+    },
+    {
+      "order": 63,
+      "period": 1,
+      "clockSeconds": 327,
+      "homeScore": 12,
+      "awayScore": 5,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4278355"
+      ]
+    },
+    {
+      "order": 64,
+      "period": 1,
+      "clockSeconds": 315,
+      "homeScore": 12,
+      "awayScore": 5,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4278355"
+      ]
+    },
+    {
+      "order": 65,
+      "period": 1,
+      "clockSeconds": 313,
+      "homeScore": 12,
+      "awayScore": 5,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4593125"
+      ]
+    },
+    {
+      "order": 66,
+      "period": 1,
+      "clockSeconds": 304,
+      "homeScore": 12,
+      "awayScore": 5,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4593125"
+      ]
+    },
+    {
+      "order": 67,
+      "period": 1,
+      "clockSeconds": 302,
+      "homeScore": 12,
+      "awayScore": 5,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4396909"
+      ]
+    },
+    {
+      "order": 68,
+      "period": 1,
+      "clockSeconds": 295,
+      "homeScore": 12,
+      "awayScore": 7,
+      "kind": "score",
+      "teamId": "11",
+      "playerIds": [
+        "4683634"
+      ],
+      "points": 2
+    },
+    {
+      "order": 69,
+      "period": 1,
+      "clockSeconds": 295,
+      "homeScore": 12,
+      "awayScore": 7,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "3134932"
+      ]
+    },
+    {
+      "order": 70,
+      "period": 1,
+      "clockSeconds": 295,
+      "homeScore": 12,
+      "awayScore": 7,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "2581018",
+        "3134932"
+      ]
+    },
+    {
+      "order": 71,
+      "period": 1,
+      "clockSeconds": 295,
+      "homeScore": 12,
+      "awayScore": 7,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "5106060",
+        "4396909"
+      ]
+    },
+    {
+      "order": 72,
+      "period": 1,
+      "clockSeconds": 295,
+      "homeScore": 12,
+      "awayScore": 7,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4683634"
+      ]
+    },
+    {
+      "order": 73,
+      "period": 1,
+      "clockSeconds": 292,
+      "homeScore": 12,
+      "awayScore": 7,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4593125"
+      ]
+    },
+    {
+      "order": 74,
+      "period": 1,
+      "clockSeconds": 287,
+      "homeScore": 12,
+      "awayScore": 7,
+      "kind": "block",
+      "teamId": "11",
+      "playerIds": [
+        "5106060"
+      ]
+    },
+    {
+      "order": 75,
+      "period": 1,
+      "clockSeconds": 287,
+      "homeScore": 12,
+      "awayScore": 7,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": []
+    },
+    {
+      "order": 76,
+      "period": 1,
+      "clockSeconds": 284,
+      "homeScore": 12,
+      "awayScore": 7,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4903027"
+      ]
+    },
+    {
+      "order": 77,
+      "period": 1,
+      "clockSeconds": 281,
+      "homeScore": 12,
+      "awayScore": 7,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "5106060"
+      ]
+    },
+    {
+      "order": 78,
+      "period": 1,
+      "clockSeconds": 270,
+      "homeScore": 12,
+      "awayScore": 10,
+      "kind": "score",
+      "teamId": "11",
+      "playerIds": [
+        "4431941"
+      ],
+      "points": 3
+    },
+    {
+      "order": 79,
+      "period": 1,
+      "clockSeconds": 250,
+      "homeScore": 14,
+      "awayScore": 10,
+      "kind": "score",
+      "teamId": "29",
+      "playerIds": [
+        "4277961"
+      ],
+      "points": 2
+    },
+    {
+      "order": 80,
+      "period": 1,
+      "clockSeconds": 237,
+      "homeScore": 14,
+      "awayScore": 12,
+      "kind": "score",
+      "teamId": "11",
+      "playerIds": [
+        "4683634"
+      ],
+      "points": 2
+    },
+    {
+      "order": 81,
+      "period": 1,
+      "clockSeconds": 222,
+      "homeScore": 14,
+      "awayScore": 12,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "2581018"
+      ]
+    },
+    {
+      "order": 82,
+      "period": 1,
+      "clockSeconds": 218,
+      "homeScore": 14,
+      "awayScore": 12,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4593125"
+      ]
+    },
+    {
+      "order": 83,
+      "period": 1,
+      "clockSeconds": 218,
+      "homeScore": 14,
+      "awayScore": 12,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4593125"
+      ]
+    },
+    {
+      "order": 84,
+      "period": 1,
+      "clockSeconds": 218,
+      "homeScore": 14,
+      "awayScore": 12,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4593125"
+      ]
+    },
+    {
+      "order": 85,
+      "period": 1,
+      "clockSeconds": 205,
+      "homeScore": 14,
+      "awayScore": 12,
+      "kind": "turnover",
+      "teamId": "29",
+      "playerIds": []
+    },
+    {
+      "order": 86,
+      "period": 1,
+      "clockSeconds": 182,
+      "homeScore": 14,
+      "awayScore": 14,
+      "kind": "score",
+      "teamId": "11",
+      "playerIds": [
+        "4683634"
+      ],
+      "points": 2
+    },
+    {
+      "order": 87,
+      "period": 1,
+      "clockSeconds": 168,
+      "homeScore": 17,
+      "awayScore": 14,
+      "kind": "score",
+      "teamId": "29",
+      "playerIds": [
+        "4781746"
+      ],
+      "points": 3
+    },
+    {
+      "order": 88,
+      "period": 1,
+      "clockSeconds": 154,
+      "homeScore": 17,
+      "awayScore": 14,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4431941"
+      ]
+    },
+    {
+      "order": 89,
+      "period": 1,
+      "clockSeconds": 150,
+      "homeScore": 17,
+      "awayScore": 14,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "2581018"
+      ]
+    },
+    {
+      "order": 90,
+      "period": 1,
+      "clockSeconds": 143,
+      "homeScore": 17,
+      "awayScore": 14,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4278355"
+      ]
+    },
+    {
+      "order": 91,
+      "period": 1,
+      "clockSeconds": 143,
+      "homeScore": 17,
+      "awayScore": 14,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": []
+    },
+    {
+      "order": 92,
+      "period": 1,
+      "clockSeconds": 143,
+      "homeScore": 17,
+      "awayScore": 14,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "5112087",
+        "4781746"
+      ]
+    },
+    {
+      "order": 93,
+      "period": 1,
+      "clockSeconds": 143,
+      "homeScore": 17,
+      "awayScore": 14,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4279888",
+        "4903027"
+      ]
+    },
+    {
+      "order": 94,
+      "period": 1,
+      "clockSeconds": 143,
+      "homeScore": 17,
+      "awayScore": 14,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4277961"
+      ]
+    },
+    {
+      "order": 95,
+      "period": 1,
+      "clockSeconds": 143,
+      "homeScore": 17,
+      "awayScore": 14,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": []
+    },
+    {
+      "order": 96,
+      "period": 1,
+      "clockSeconds": 143,
+      "homeScore": 17,
+      "awayScore": 14,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4703421",
+        "4683634"
+      ]
+    },
+    {
+      "order": 97,
+      "period": 1,
+      "clockSeconds": 143,
+      "homeScore": 17,
+      "awayScore": 14,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4277961"
+      ]
+    },
+    {
+      "order": 98,
+      "period": 1,
+      "clockSeconds": 140,
+      "homeScore": 17,
+      "awayScore": 14,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "5106060"
+      ]
+    },
+    {
+      "order": 99,
+      "period": 1,
+      "clockSeconds": 126,
+      "homeScore": 17,
+      "awayScore": 14,
+      "kind": "turnover",
+      "teamId": "11",
+      "playerIds": [
+        "4431941"
+      ]
+    },
+    {
+      "order": 100,
+      "period": 1,
+      "clockSeconds": 126,
+      "homeScore": 17,
+      "awayScore": 14,
+      "kind": "steal",
+      "teamId": "29",
+      "playerIds": [
+        "2581018"
+      ]
+    },
+    {
+      "order": 101,
+      "period": 1,
+      "clockSeconds": 123,
+      "homeScore": 19,
+      "awayScore": 14,
+      "kind": "score",
+      "teamId": "29",
+      "playerIds": [
+        "2581018"
+      ],
+      "points": 2
+    },
+    {
+      "order": 102,
+      "period": 1,
+      "clockSeconds": 108,
+      "homeScore": 19,
+      "awayScore": 17,
+      "kind": "score",
+      "teamId": "11",
+      "playerIds": [
+        "4278355"
+      ],
+      "points": 3
+    },
+    {
+      "order": 103,
+      "period": 1,
+      "clockSeconds": 85,
+      "homeScore": 19,
+      "awayScore": 17,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "5112087"
+      ]
+    },
+    {
+      "order": 104,
+      "period": 1,
+      "clockSeconds": 82,
+      "homeScore": 19,
+      "awayScore": 17,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "3149673"
+      ]
+    },
+    {
+      "order": 105,
+      "period": 1,
+      "clockSeconds": 73,
+      "homeScore": 19,
+      "awayScore": 17,
+      "kind": "turnover",
+      "teamId": "11",
+      "playerIds": [
+        "4278355"
+      ]
+    },
+    {
+      "order": 106,
+      "period": 1,
+      "clockSeconds": 73,
+      "homeScore": 19,
+      "awayScore": 17,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "3146557",
+        "4593125"
+      ]
+    },
+    {
+      "order": 107,
+      "period": 1,
+      "clockSeconds": 73,
+      "homeScore": 19,
+      "awayScore": 17,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "3134932",
+        "4277961"
+      ]
+    },
+    {
+      "order": 108,
+      "period": 1,
+      "clockSeconds": 73,
+      "homeScore": 19,
+      "awayScore": 17,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4065731",
+        "3149673"
+      ]
+    },
+    {
+      "order": 109,
+      "period": 1,
+      "clockSeconds": 65,
+      "homeScore": 19,
+      "awayScore": 17,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "3146557"
+      ]
+    },
+    {
+      "order": 110,
+      "period": 1,
+      "clockSeconds": 62,
+      "homeScore": 19,
+      "awayScore": 17,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "3146557"
+      ]
+    },
+    {
+      "order": 111,
+      "period": 1,
+      "clockSeconds": 61,
+      "homeScore": 19,
+      "awayScore": 17,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "3146557"
+      ]
+    },
+    {
+      "order": 112,
+      "period": 1,
+      "clockSeconds": 60,
+      "homeScore": 19,
+      "awayScore": 17,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "3146557"
+      ]
+    },
+    {
+      "order": 113,
+      "period": 1,
+      "clockSeconds": 59,
+      "homeScore": 19,
+      "awayScore": 17,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "5112087"
+      ]
+    },
+    {
+      "order": 114,
+      "period": 1,
+      "clockSeconds": 57,
+      "homeScore": 19,
+      "awayScore": 17,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4278355"
+      ]
+    },
+    {
+      "order": 115,
+      "period": 1,
+      "clockSeconds": 39,
+      "homeScore": 19,
+      "awayScore": 17,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "5106060"
+      ]
+    },
+    {
+      "order": 116,
+      "period": 1,
+      "clockSeconds": 36,
+      "homeScore": 19,
+      "awayScore": 17,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4278355"
+      ]
+    },
+    {
+      "order": 117,
+      "period": 1,
+      "clockSeconds": 36,
+      "homeScore": 19,
+      "awayScore": 19,
+      "kind": "score",
+      "teamId": "11",
+      "playerIds": [
+        "4278355"
+      ],
+      "points": 2
+    },
+    {
+      "order": 118,
+      "period": 1,
+      "clockSeconds": 33,
+      "homeScore": 21,
+      "awayScore": 19,
+      "kind": "score",
+      "teamId": "29",
+      "playerIds": [
+        "4279888"
+      ],
+      "points": 2
+    },
+    {
+      "order": 119,
+      "period": 1,
+      "clockSeconds": 22,
+      "homeScore": 21,
+      "awayScore": 19,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4431941"
+      ]
+    },
+    {
+      "order": 120,
+      "period": 1,
+      "clockSeconds": 17,
+      "homeScore": 21,
+      "awayScore": 19,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4279888"
+      ]
+    },
+    {
+      "order": 121,
+      "period": 1,
+      "clockSeconds": 17,
+      "homeScore": 21,
+      "awayScore": 19,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4703421"
+      ]
+    },
+    {
+      "order": 122,
+      "period": 1,
+      "clockSeconds": 17,
+      "homeScore": 22,
+      "awayScore": 19,
+      "kind": "score",
+      "teamId": "29",
+      "playerIds": [
+        "4279888"
+      ],
+      "points": 1
+    },
+    {
+      "order": 123,
+      "period": 1,
+      "clockSeconds": 17,
+      "homeScore": 22,
+      "awayScore": 19,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4433076",
+        "4703421"
+      ]
+    },
+    {
+      "order": 124,
+      "period": 1,
+      "clockSeconds": 17,
+      "homeScore": 23,
+      "awayScore": 19,
+      "kind": "score",
+      "teamId": "29",
+      "playerIds": [
+        "4279888"
+      ],
+      "points": 1
+    },
+    {
+      "order": 125,
+      "period": 1,
+      "clockSeconds": 2,
+      "homeScore": 23,
+      "awayScore": 19,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4279888"
+      ]
+    },
+    {
+      "order": 126,
+      "period": 1,
+      "clockSeconds": 2,
+      "homeScore": 23,
+      "awayScore": 20,
+      "kind": "score",
+      "teamId": "11",
+      "playerIds": [
+        "4431941"
+      ],
+      "points": 1
+    },
+    {
+      "order": 127,
+      "period": 1,
+      "clockSeconds": 2,
+      "homeScore": 23,
+      "awayScore": 21,
+      "kind": "score",
+      "teamId": "11",
+      "playerIds": [
+        "4431941"
+      ],
+      "points": 1
+    },
+    {
+      "order": 128,
+      "period": 1,
+      "clockSeconds": 0,
+      "homeScore": 23,
+      "awayScore": 21,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4279888"
+      ]
+    },
+    {
+      "order": 129,
+      "period": 1,
+      "clockSeconds": 0,
+      "homeScore": 23,
+      "awayScore": 21,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": []
+    },
+    {
+      "order": 130,
+      "period": 2,
+      "clockSeconds": 720,
+      "homeScore": 23,
+      "awayScore": 21,
+      "kind": "period",
+      "playerIds": []
+    },
+    {
+      "order": 131,
+      "period": 2,
+      "clockSeconds": 720,
+      "homeScore": 23,
+      "awayScore": 21,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4433083",
+        "2581018"
+      ]
+    },
+    {
+      "order": 132,
+      "period": 2,
+      "clockSeconds": 711,
+      "homeScore": 23,
+      "awayScore": 21,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4431941"
+      ]
+    },
+    {
+      "order": 133,
+      "period": 2,
+      "clockSeconds": 703,
+      "homeScore": 25,
+      "awayScore": 21,
+      "kind": "score",
+      "teamId": "29",
+      "playerIds": [
+        "5112087"
+      ],
+      "points": 2
+    },
+    {
+      "order": 134,
+      "period": 2,
+      "clockSeconds": 683,
+      "homeScore": 25,
+      "awayScore": 23,
+      "kind": "score",
+      "teamId": "11",
+      "playerIds": [
+        "4065731"
+      ],
+      "points": 2
+    },
+    {
+      "order": 135,
+      "period": 2,
+      "clockSeconds": 671,
+      "homeScore": 25,
+      "awayScore": 23,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4278355"
+      ]
+    },
+    {
+      "order": 136,
+      "period": 2,
+      "clockSeconds": 671,
+      "homeScore": 25,
+      "awayScore": 23,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "3146557"
+      ]
+    },
+    {
+      "order": 137,
+      "period": 2,
+      "clockSeconds": 671,
+      "homeScore": 25,
+      "awayScore": 23,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": []
+    },
+    {
+      "order": 138,
+      "period": 2,
+      "clockSeconds": 671,
+      "homeScore": 26,
+      "awayScore": 23,
+      "kind": "score",
+      "teamId": "29",
+      "playerIds": [
+        "3146557"
+      ],
+      "points": 1
+    },
+    {
+      "order": 139,
+      "period": 2,
+      "clockSeconds": 663,
+      "homeScore": 26,
+      "awayScore": 23,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "5112087"
+      ]
+    },
+    {
+      "order": 140,
+      "period": 2,
+      "clockSeconds": 654,
+      "homeScore": 26,
+      "awayScore": 23,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "5106060"
+      ]
+    },
+    {
+      "order": 141,
+      "period": 2,
+      "clockSeconds": 651,
+      "homeScore": 26,
+      "awayScore": 23,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "5112087"
+      ]
+    },
+    {
+      "order": 142,
+      "period": 2,
+      "clockSeconds": 637,
+      "homeScore": 26,
+      "awayScore": 23,
+      "kind": "turnover",
+      "teamId": "29",
+      "playerIds": [
+        "5112087"
+      ]
+    },
+    {
+      "order": 143,
+      "period": 2,
+      "clockSeconds": 637,
+      "homeScore": 26,
+      "awayScore": 23,
+      "kind": "steal",
+      "teamId": "11",
+      "playerIds": [
+        "4433076"
+      ]
+    },
+    {
+      "order": 144,
+      "period": 2,
+      "clockSeconds": 633,
+      "homeScore": 26,
+      "awayScore": 25,
+      "kind": "score",
+      "teamId": "11",
+      "playerIds": [
+        "4433076"
+      ],
+      "points": 2
+    },
+    {
+      "order": 145,
+      "period": 2,
+      "clockSeconds": 622,
+      "homeScore": 26,
+      "awayScore": 25,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "3134932"
+      ]
+    },
+    {
+      "order": 146,
+      "period": 2,
+      "clockSeconds": 620,
+      "homeScore": 26,
+      "awayScore": 25,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4431941"
+      ]
+    },
+    {
+      "order": 147,
+      "period": 2,
+      "clockSeconds": 617,
+      "homeScore": 26,
+      "awayScore": 25,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4433076"
+      ]
+    },
+    {
+      "order": 148,
+      "period": 2,
+      "clockSeconds": 614,
+      "homeScore": 26,
+      "awayScore": 25,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4433083"
+      ]
+    },
+    {
+      "order": 149,
+      "period": 2,
+      "clockSeconds": 610,
+      "homeScore": 28,
+      "awayScore": 25,
+      "kind": "score",
+      "teamId": "29",
+      "playerIds": [
+        "3134932"
+      ],
+      "points": 2
+    },
+    {
+      "order": 150,
+      "period": 2,
+      "clockSeconds": 590,
+      "homeScore": 28,
+      "awayScore": 25,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "5106060"
+      ]
+    },
+    {
+      "order": 151,
+      "period": 2,
+      "clockSeconds": 586,
+      "homeScore": 28,
+      "awayScore": 25,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4433083"
+      ]
+    },
+    {
+      "order": 152,
+      "period": 2,
+      "clockSeconds": 576,
+      "homeScore": 30,
+      "awayScore": 25,
+      "kind": "score",
+      "teamId": "29",
+      "playerIds": [
+        "3134932"
+      ],
+      "points": 2
+    },
+    {
+      "order": 153,
+      "period": 2,
+      "clockSeconds": 576,
+      "homeScore": 30,
+      "awayScore": 25,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4431941"
+      ]
+    },
+    {
+      "order": 154,
+      "period": 2,
+      "clockSeconds": 576,
+      "homeScore": 30,
+      "awayScore": 25,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": []
+    },
+    {
+      "order": 155,
+      "period": 2,
+      "clockSeconds": 576,
+      "homeScore": 30,
+      "awayScore": 25,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4593125",
+        "3146557"
+      ]
+    },
+    {
+      "order": 156,
+      "period": 2,
+      "clockSeconds": 576,
+      "homeScore": 30,
+      "awayScore": 25,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4432808",
+        "4278355"
+      ]
+    },
+    {
+      "order": 157,
+      "period": 2,
+      "clockSeconds": 576,
+      "homeScore": 30,
+      "awayScore": 25,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "3149673",
+        "5106060"
+      ]
+    },
+    {
+      "order": 158,
+      "period": 2,
+      "clockSeconds": 576,
+      "homeScore": 30,
+      "awayScore": 25,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4683634",
+        "4431941"
+      ]
+    },
+    {
+      "order": 159,
+      "period": 2,
+      "clockSeconds": 576,
+      "homeScore": 30,
+      "awayScore": 25,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4396909",
+        "4065731"
+      ]
+    },
+    {
+      "order": 160,
+      "period": 2,
+      "clockSeconds": 576,
+      "homeScore": 31,
+      "awayScore": 25,
+      "kind": "score",
+      "teamId": "29",
+      "playerIds": [
+        "3134932"
+      ],
+      "points": 1
+    },
+    {
+      "order": 161,
+      "period": 2,
+      "clockSeconds": 564,
+      "homeScore": 31,
+      "awayScore": 27,
+      "kind": "score",
+      "teamId": "11",
+      "playerIds": [
+        "4433076"
+      ],
+      "points": 2
+    },
+    {
+      "order": 162,
+      "period": 2,
+      "clockSeconds": 539,
+      "homeScore": 33,
+      "awayScore": 27,
+      "kind": "score",
+      "teamId": "29",
+      "playerIds": [
+        "4433083"
+      ],
+      "points": 2
+    },
+    {
+      "order": 163,
+      "period": 2,
+      "clockSeconds": 525,
+      "homeScore": 33,
+      "awayScore": 27,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4396909"
+      ]
+    },
+    {
+      "order": 164,
+      "period": 2,
+      "clockSeconds": 522,
+      "homeScore": 33,
+      "awayScore": 27,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "3134932"
+      ]
+    },
+    {
+      "order": 165,
+      "period": 2,
+      "clockSeconds": 516,
+      "homeScore": 36,
+      "awayScore": 27,
+      "kind": "score",
+      "teamId": "29",
+      "playerIds": [
+        "4433083"
+      ],
+      "points": 3
+    },
+    {
+      "order": 166,
+      "period": 2,
+      "clockSeconds": 493,
+      "homeScore": 36,
+      "awayScore": 27,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "3149673"
+      ]
+    },
+    {
+      "order": 167,
+      "period": 2,
+      "clockSeconds": 492,
+      "homeScore": 36,
+      "awayScore": 27,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": []
+    },
+    {
+      "order": 168,
+      "period": 2,
+      "clockSeconds": 492,
+      "homeScore": 36,
+      "awayScore": 27,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4432808"
+      ]
+    },
+    {
+      "order": 169,
+      "period": 2,
+      "clockSeconds": 492,
+      "homeScore": 36,
+      "awayScore": 27,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4781746",
+        "5112087"
+      ]
+    },
+    {
+      "order": 170,
+      "period": 2,
+      "clockSeconds": 492,
+      "homeScore": 36,
+      "awayScore": 27,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4277961",
+        "4279888"
+      ]
+    },
+    {
+      "order": 171,
+      "period": 2,
+      "clockSeconds": 492,
+      "homeScore": 36,
+      "awayScore": 27,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4903027",
+        "3134932"
+      ]
+    },
+    {
+      "order": 172,
+      "period": 2,
+      "clockSeconds": 478,
+      "homeScore": 36,
+      "awayScore": 27,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4593125"
+      ]
+    },
+    {
+      "order": 173,
+      "period": 2,
+      "clockSeconds": 476,
+      "homeScore": 36,
+      "awayScore": 27,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "3149673"
+      ]
+    },
+    {
+      "order": 174,
+      "period": 2,
+      "clockSeconds": 463,
+      "homeScore": 36,
+      "awayScore": 27,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4432808"
+      ]
+    },
+    {
+      "order": 175,
+      "period": 2,
+      "clockSeconds": 460,
+      "homeScore": 36,
+      "awayScore": 27,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4433083"
+      ]
+    },
+    {
+      "order": 176,
+      "period": 2,
+      "clockSeconds": 447,
+      "homeScore": 38,
+      "awayScore": 27,
+      "kind": "score",
+      "teamId": "29",
+      "playerIds": [
+        "4277961"
+      ],
+      "points": 2
+    },
+    {
+      "order": 177,
+      "period": 2,
+      "clockSeconds": 436,
+      "homeScore": 38,
+      "awayScore": 27,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "3149673"
+      ]
+    },
+    {
+      "order": 178,
+      "period": 2,
+      "clockSeconds": 434,
+      "homeScore": 38,
+      "awayScore": 27,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4781746"
+      ]
+    },
+    {
+      "order": 179,
+      "period": 2,
+      "clockSeconds": 430,
+      "homeScore": 38,
+      "awayScore": 27,
+      "kind": "block",
+      "teamId": "11",
+      "playerIds": [
+        "3149673"
+      ]
+    },
+    {
+      "order": 180,
+      "period": 2,
+      "clockSeconds": 430,
+      "homeScore": 38,
+      "awayScore": 27,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": []
+    },
+    {
+      "order": 181,
+      "period": 2,
+      "clockSeconds": 430,
+      "homeScore": 38,
+      "awayScore": 27,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4278355",
+        "4432808"
+      ]
+    },
+    {
+      "order": 182,
+      "period": 2,
+      "clockSeconds": 424,
+      "homeScore": 41,
+      "awayScore": 27,
+      "kind": "score",
+      "teamId": "29",
+      "playerIds": [
+        "4903027"
+      ],
+      "points": 3
+    },
+    {
+      "order": 183,
+      "period": 2,
+      "clockSeconds": 422,
+      "homeScore": 41,
+      "awayScore": 27,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": []
+    },
+    {
+      "order": 184,
+      "period": 2,
+      "clockSeconds": 422,
+      "homeScore": 41,
+      "awayScore": 27,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4431941",
+        "4433076"
+      ]
+    },
+    {
+      "order": 185,
+      "period": 2,
+      "clockSeconds": 406,
+      "homeScore": 41,
+      "awayScore": 27,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4278355"
+      ]
+    },
+    {
+      "order": 186,
+      "period": 2,
+      "clockSeconds": 401,
+      "homeScore": 41,
+      "awayScore": 27,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4903027"
+      ]
+    },
+    {
+      "order": 187,
+      "period": 2,
+      "clockSeconds": 394,
+      "homeScore": 43,
+      "awayScore": 27,
+      "kind": "score",
+      "teamId": "29",
+      "playerIds": [
+        "4781746"
+      ],
+      "points": 2
+    },
+    {
+      "order": 188,
+      "period": 2,
+      "clockSeconds": 385,
+      "homeScore": 43,
+      "awayScore": 29,
+      "kind": "score",
+      "teamId": "11",
+      "playerIds": [
+        "4683634"
+      ],
+      "points": 2
+    },
+    {
+      "order": 189,
+      "period": 2,
+      "clockSeconds": 370,
+      "homeScore": 45,
+      "awayScore": 29,
+      "kind": "score",
+      "teamId": "29",
+      "playerIds": [
+        "4593125"
+      ],
+      "points": 2
+    },
+    {
+      "order": 190,
+      "period": 2,
+      "clockSeconds": 349,
+      "homeScore": 45,
+      "awayScore": 29,
+      "kind": "block",
+      "teamId": "29",
+      "playerIds": [
+        "4593125"
+      ]
+    },
+    {
+      "order": 191,
+      "period": 2,
+      "clockSeconds": 347,
+      "homeScore": 45,
+      "awayScore": 29,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4903027"
+      ]
+    },
+    {
+      "order": 192,
+      "period": 2,
+      "clockSeconds": 342,
+      "homeScore": 48,
+      "awayScore": 29,
+      "kind": "score",
+      "teamId": "29",
+      "playerIds": [
+        "4781746"
+      ],
+      "points": 3
+    },
+    {
+      "order": 193,
+      "period": 2,
+      "clockSeconds": 334,
+      "homeScore": 48,
+      "awayScore": 29,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4433083"
+      ]
+    },
+    {
+      "order": 194,
+      "period": 2,
+      "clockSeconds": 334,
+      "homeScore": 48,
+      "awayScore": 30,
+      "kind": "score",
+      "teamId": "11",
+      "playerIds": [
+        "4683634"
+      ],
+      "points": 1
+    },
+    {
+      "order": 195,
+      "period": 2,
+      "clockSeconds": 334,
+      "homeScore": 48,
+      "awayScore": 30,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "2581018",
+        "4593125"
+      ]
+    },
+    {
+      "order": 196,
+      "period": 2,
+      "clockSeconds": 334,
+      "homeScore": 48,
+      "awayScore": 30,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "3146557",
+        "4277961"
+      ]
+    },
+    {
+      "order": 197,
+      "period": 2,
+      "clockSeconds": 334,
+      "homeScore": 48,
+      "awayScore": 30,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "3134932",
+        "4433083"
+      ]
+    },
+    {
+      "order": 198,
+      "period": 2,
+      "clockSeconds": 334,
+      "homeScore": 48,
+      "awayScore": 30,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4432170",
+        "4278355"
+      ]
+    },
+    {
+      "order": 199,
+      "period": 2,
+      "clockSeconds": 334,
+      "homeScore": 48,
+      "awayScore": 31,
+      "kind": "score",
+      "teamId": "11",
+      "playerIds": [
+        "4683634"
+      ],
+      "points": 1
+    },
+    {
+      "order": 200,
+      "period": 2,
+      "clockSeconds": 322,
+      "homeScore": 48,
+      "awayScore": 31,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4903027"
+      ]
+    },
+    {
+      "order": 201,
+      "period": 2,
+      "clockSeconds": 320,
+      "homeScore": 48,
+      "awayScore": 31,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": []
+    },
+    {
+      "order": 202,
+      "period": 2,
+      "clockSeconds": 320,
+      "homeScore": 48,
+      "awayScore": 31,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4903027"
+      ]
+    },
+    {
+      "order": 203,
+      "period": 2,
+      "clockSeconds": 300,
+      "homeScore": 48,
+      "awayScore": 34,
+      "kind": "score",
+      "teamId": "11",
+      "playerIds": [
+        "4396909"
+      ],
+      "points": 3
+    },
+    {
+      "order": 204,
+      "period": 2,
+      "clockSeconds": 285,
+      "homeScore": 48,
+      "awayScore": 34,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4781746"
+      ]
+    },
+    {
+      "order": 205,
+      "period": 2,
+      "clockSeconds": 285,
+      "homeScore": 48,
+      "awayScore": 34,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": []
+    },
+    {
+      "order": 206,
+      "period": 2,
+      "clockSeconds": 274,
+      "homeScore": 48,
+      "awayScore": 36,
+      "kind": "score",
+      "teamId": "11",
+      "playerIds": [
+        "4396909"
+      ],
+      "points": 2
+    },
+    {
+      "order": 207,
+      "period": 2,
+      "clockSeconds": 273,
+      "homeScore": 48,
+      "awayScore": 36,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": []
+    },
+    {
+      "order": 208,
+      "period": 2,
+      "clockSeconds": 273,
+      "homeScore": 48,
+      "awayScore": 36,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4593125",
+        "4781746"
+      ]
+    },
+    {
+      "order": 209,
+      "period": 2,
+      "clockSeconds": 273,
+      "homeScore": 48,
+      "awayScore": 36,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4277961",
+        "4903027"
+      ]
+    },
+    {
+      "order": 210,
+      "period": 2,
+      "clockSeconds": 273,
+      "homeScore": 48,
+      "awayScore": 36,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "5112087",
+        "3146557"
+      ]
+    },
+    {
+      "order": 211,
+      "period": 2,
+      "clockSeconds": 273,
+      "homeScore": 48,
+      "awayScore": 36,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4279888",
+        "3134932"
+      ]
+    },
+    {
+      "order": 212,
+      "period": 2,
+      "clockSeconds": 261,
+      "homeScore": 48,
+      "awayScore": 36,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "3149673"
+      ]
+    },
+    {
+      "order": 213,
+      "period": 2,
+      "clockSeconds": 261,
+      "homeScore": 49,
+      "awayScore": 36,
+      "kind": "score",
+      "teamId": "29",
+      "playerIds": [
+        "4277961"
+      ],
+      "points": 1
+    },
+    {
+      "order": 214,
+      "period": 2,
+      "clockSeconds": 261,
+      "homeScore": 50,
+      "awayScore": 36,
+      "kind": "score",
+      "teamId": "29",
+      "playerIds": [
+        "4277961"
+      ],
+      "points": 1
+    },
+    {
+      "order": 215,
+      "period": 2,
+      "clockSeconds": 251,
+      "homeScore": 50,
+      "awayScore": 36,
+      "kind": "turnover",
+      "teamId": "11",
+      "playerIds": [
+        "4683634"
+      ]
+    },
+    {
+      "order": 216,
+      "period": 2,
+      "clockSeconds": 227,
+      "homeScore": 50,
+      "awayScore": 36,
+      "kind": "block",
+      "teamId": "11",
+      "playerIds": [
+        "4432170"
+      ]
+    },
+    {
+      "order": 217,
+      "period": 2,
+      "clockSeconds": 224,
+      "homeScore": 50,
+      "awayScore": 36,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "3149673"
+      ]
+    },
+    {
+      "order": 218,
+      "period": 2,
+      "clockSeconds": 221,
+      "homeScore": 50,
+      "awayScore": 36,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4396909"
+      ]
+    },
+    {
+      "order": 219,
+      "period": 2,
+      "clockSeconds": 217,
+      "homeScore": 50,
+      "awayScore": 36,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4432170"
+      ]
+    },
+    {
+      "order": 220,
+      "period": 2,
+      "clockSeconds": 212,
+      "homeScore": 50,
+      "awayScore": 39,
+      "kind": "score",
+      "teamId": "11",
+      "playerIds": [
+        "4396909"
+      ],
+      "points": 3
+    },
+    {
+      "order": 221,
+      "period": 2,
+      "clockSeconds": 197,
+      "homeScore": 50,
+      "awayScore": 39,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4396909"
+      ]
+    },
+    {
+      "order": 222,
+      "period": 2,
+      "clockSeconds": 197,
+      "homeScore": 50,
+      "awayScore": 39,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "5112087"
+      ]
+    },
+    {
+      "order": 223,
+      "period": 2,
+      "clockSeconds": 197,
+      "homeScore": 50,
+      "awayScore": 39,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": []
+    },
+    {
+      "order": 224,
+      "period": 2,
+      "clockSeconds": 197,
+      "homeScore": 51,
+      "awayScore": 39,
+      "kind": "score",
+      "teamId": "29",
+      "playerIds": [
+        "5112087"
+      ],
+      "points": 1
+    },
+    {
+      "order": 225,
+      "period": 2,
+      "clockSeconds": 185,
+      "homeScore": 51,
+      "awayScore": 39,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4432170"
+      ]
+    },
+    {
+      "order": 226,
+      "period": 2,
+      "clockSeconds": 182,
+      "homeScore": 51,
+      "awayScore": 39,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "3149673"
+      ]
+    },
+    {
+      "order": 227,
+      "period": 2,
+      "clockSeconds": 180,
+      "homeScore": 51,
+      "awayScore": 42,
+      "kind": "score",
+      "teamId": "11",
+      "playerIds": [
+        "3149673"
+      ],
+      "points": 3
+    },
+    {
+      "order": 228,
+      "period": 2,
+      "clockSeconds": 170,
+      "homeScore": 51,
+      "awayScore": 42,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4396909"
+      ]
+    },
+    {
+      "order": 229,
+      "period": 2,
+      "clockSeconds": 170,
+      "homeScore": 52,
+      "awayScore": 42,
+      "kind": "score",
+      "teamId": "29",
+      "playerIds": [
+        "4279888"
+      ],
+      "points": 1
+    },
+    {
+      "order": 230,
+      "period": 2,
+      "clockSeconds": 170,
+      "homeScore": 53,
+      "awayScore": 42,
+      "kind": "score",
+      "teamId": "29",
+      "playerIds": [
+        "4279888"
+      ],
+      "points": 1
+    },
+    {
+      "order": 231,
+      "period": 2,
+      "clockSeconds": 157,
+      "homeScore": 53,
+      "awayScore": 42,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "5112087"
+      ]
+    },
+    {
+      "order": 232,
+      "period": 2,
+      "clockSeconds": 150,
+      "homeScore": 53,
+      "awayScore": 44,
+      "kind": "score",
+      "teamId": "11",
+      "playerIds": [
+        "4683634"
+      ],
+      "points": 2
+    },
+    {
+      "order": 233,
+      "period": 2,
+      "clockSeconds": 137,
+      "homeScore": 53,
+      "awayScore": 44,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "3149673"
+      ]
+    },
+    {
+      "order": 234,
+      "period": 2,
+      "clockSeconds": 137,
+      "homeScore": 54,
+      "awayScore": 44,
+      "kind": "score",
+      "teamId": "29",
+      "playerIds": [
+        "4277961"
+      ],
+      "points": 1
+    },
+    {
+      "order": 235,
+      "period": 2,
+      "clockSeconds": 137,
+      "homeScore": 54,
+      "awayScore": 44,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4278355",
+        "3149673"
+      ]
+    },
+    {
+      "order": 236,
+      "period": 2,
+      "clockSeconds": 137,
+      "homeScore": 55,
+      "awayScore": 44,
+      "kind": "score",
+      "teamId": "29",
+      "playerIds": [
+        "4277961"
+      ],
+      "points": 1
+    },
+    {
+      "order": 237,
+      "period": 2,
+      "clockSeconds": 120,
+      "homeScore": 55,
+      "awayScore": 44,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4431941"
+      ]
+    },
+    {
+      "order": 238,
+      "period": 2,
+      "clockSeconds": 118,
+      "homeScore": 55,
+      "awayScore": 44,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "5112087"
+      ]
+    },
+    {
+      "order": 239,
+      "period": 2,
+      "clockSeconds": 115,
+      "homeScore": 55,
+      "awayScore": 44,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "2581018"
+      ]
+    },
+    {
+      "order": 240,
+      "period": 2,
+      "clockSeconds": 112,
+      "homeScore": 55,
+      "awayScore": 44,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4593125"
+      ]
+    },
+    {
+      "order": 241,
+      "period": 2,
+      "clockSeconds": 109,
+      "homeScore": 58,
+      "awayScore": 44,
+      "kind": "score",
+      "teamId": "29",
+      "playerIds": [
+        "2581018"
+      ],
+      "points": 3
+    },
+    {
+      "order": 242,
+      "period": 2,
+      "clockSeconds": 100,
+      "homeScore": 58,
+      "awayScore": 46,
+      "kind": "score",
+      "teamId": "11",
+      "playerIds": [
+        "4432170"
+      ],
+      "points": 2
+    },
+    {
+      "order": 243,
+      "period": 2,
+      "clockSeconds": 100,
+      "homeScore": 58,
+      "awayScore": 46,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4279888"
+      ]
+    },
+    {
+      "order": 244,
+      "period": 2,
+      "clockSeconds": 100,
+      "homeScore": 58,
+      "awayScore": 47,
+      "kind": "score",
+      "teamId": "11",
+      "playerIds": [
+        "4432170"
+      ],
+      "points": 1
+    },
+    {
+      "order": 245,
+      "period": 2,
+      "clockSeconds": 85,
+      "homeScore": 58,
+      "awayScore": 47,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4279888"
+      ]
+    },
+    {
+      "order": 246,
+      "period": 2,
+      "clockSeconds": 82,
+      "homeScore": 58,
+      "awayScore": 47,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4432170"
+      ]
+    },
+    {
+      "order": 247,
+      "period": 2,
+      "clockSeconds": 75,
+      "homeScore": 58,
+      "awayScore": 50,
+      "kind": "score",
+      "teamId": "11",
+      "playerIds": [
+        "4396909"
+      ],
+      "points": 3
+    },
+    {
+      "order": 248,
+      "period": 2,
+      "clockSeconds": 60,
+      "homeScore": 58,
+      "awayScore": 50,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "5112087"
+      ]
+    },
+    {
+      "order": 249,
+      "period": 2,
+      "clockSeconds": 58,
+      "homeScore": 58,
+      "awayScore": 50,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4278355"
+      ]
+    },
+    {
+      "order": 250,
+      "period": 2,
+      "clockSeconds": 50,
+      "homeScore": 58,
+      "awayScore": 50,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4277961"
+      ]
+    },
+    {
+      "order": 251,
+      "period": 2,
+      "clockSeconds": 50,
+      "homeScore": 58,
+      "awayScore": 51,
+      "kind": "score",
+      "teamId": "11",
+      "playerIds": [
+        "4683634"
+      ],
+      "points": 1
+    },
+    {
+      "order": 252,
+      "period": 2,
+      "clockSeconds": 50,
+      "homeScore": 58,
+      "awayScore": 51,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "3146557",
+        "4593125"
+      ]
+    },
+    {
+      "order": 253,
+      "period": 2,
+      "clockSeconds": 50,
+      "homeScore": 58,
+      "awayScore": 51,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4433076",
+        "4431941"
+      ]
+    },
+    {
+      "order": 254,
+      "period": 2,
+      "clockSeconds": 50,
+      "homeScore": 58,
+      "awayScore": 52,
+      "kind": "score",
+      "teamId": "11",
+      "playerIds": [
+        "4683634"
+      ],
+      "points": 1
+    },
+    {
+      "order": 255,
+      "period": 2,
+      "clockSeconds": 33,
+      "homeScore": 60,
+      "awayScore": 52,
+      "kind": "score",
+      "teamId": "29",
+      "playerIds": [
+        "4279888"
+      ],
+      "points": 2
+    },
+    {
+      "order": 256,
+      "period": 2,
+      "clockSeconds": 33,
+      "homeScore": 60,
+      "awayScore": 52,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": []
+    },
+    {
+      "order": 257,
+      "period": 2,
+      "clockSeconds": 20,
+      "homeScore": 60,
+      "awayScore": 52,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4278355"
+      ]
+    },
+    {
+      "order": 258,
+      "period": 2,
+      "clockSeconds": 20,
+      "homeScore": 60,
+      "awayScore": 52,
+      "kind": "turnover",
+      "teamId": "11",
+      "playerIds": [
+        "4278355"
+      ]
+    },
+    {
+      "order": 259,
+      "period": 2,
+      "clockSeconds": 20,
+      "homeScore": 60,
+      "awayScore": 52,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4433083",
+        "3146557"
+      ]
+    },
+    {
+      "order": 260,
+      "period": 2,
+      "clockSeconds": 20,
+      "homeScore": 60,
+      "awayScore": 52,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "5106060",
+        "4278355"
+      ]
+    },
+    {
+      "order": 261,
+      "period": 2,
+      "clockSeconds": 1,
+      "homeScore": 60,
+      "awayScore": 52,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4279888"
+      ]
+    },
+    {
+      "order": 262,
+      "period": 2,
+      "clockSeconds": 1,
+      "homeScore": 60,
+      "awayScore": 52,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4433076"
+      ]
+    },
+    {
+      "order": 263,
+      "period": 3,
+      "clockSeconds": 720,
+      "homeScore": 60,
+      "awayScore": 52,
+      "kind": "period",
+      "playerIds": []
+    },
+    {
+      "order": 264,
+      "period": 3,
+      "clockSeconds": 720,
+      "homeScore": 60,
+      "awayScore": 52,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "3146557",
+        "4433083"
+      ]
+    },
+    {
+      "order": 265,
+      "period": 3,
+      "clockSeconds": 720,
+      "homeScore": 60,
+      "awayScore": 52,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "3149673",
+        "5106060"
+      ]
+    },
+    {
+      "order": 266,
+      "period": 3,
+      "clockSeconds": 699,
+      "homeScore": 62,
+      "awayScore": 52,
+      "kind": "score",
+      "teamId": "29",
+      "playerIds": [
+        "4277961"
+      ],
+      "points": 2
+    },
+    {
+      "order": 267,
+      "period": 3,
+      "clockSeconds": 676,
+      "homeScore": 62,
+      "awayScore": 52,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "3146557"
+      ]
+    },
+    {
+      "order": 268,
+      "period": 3,
+      "clockSeconds": 676,
+      "homeScore": 62,
+      "awayScore": 53,
+      "kind": "score",
+      "teamId": "11",
+      "playerIds": [
+        "4683634"
+      ],
+      "points": 1
+    },
+    {
+      "order": 269,
+      "period": 3,
+      "clockSeconds": 676,
+      "homeScore": 62,
+      "awayScore": 54,
+      "kind": "score",
+      "teamId": "11",
+      "playerIds": [
+        "4683634"
+      ],
+      "points": 1
+    },
+    {
+      "order": 270,
+      "period": 3,
+      "clockSeconds": 661,
+      "homeScore": 65,
+      "awayScore": 54,
+      "kind": "score",
+      "teamId": "29",
+      "playerIds": [
+        "3146557"
+      ],
+      "points": 3
+    },
+    {
+      "order": 271,
+      "period": 3,
+      "clockSeconds": 647,
+      "homeScore": 65,
+      "awayScore": 57,
+      "kind": "score",
+      "teamId": "11",
+      "playerIds": [
+        "4683634"
+      ],
+      "points": 3
+    },
+    {
+      "order": 272,
+      "period": 3,
+      "clockSeconds": 639,
+      "homeScore": 65,
+      "awayScore": 57,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4433076"
+      ]
+    },
+    {
+      "order": 273,
+      "period": 3,
+      "clockSeconds": 639,
+      "homeScore": 66,
+      "awayScore": 57,
+      "kind": "score",
+      "teamId": "29",
+      "playerIds": [
+        "4279888"
+      ],
+      "points": 1
+    },
+    {
+      "order": 274,
+      "period": 3,
+      "clockSeconds": 639,
+      "homeScore": 67,
+      "awayScore": 57,
+      "kind": "score",
+      "teamId": "29",
+      "playerIds": [
+        "4279888"
+      ],
+      "points": 1
+    },
+    {
+      "order": 275,
+      "period": 3,
+      "clockSeconds": 639,
+      "homeScore": 68,
+      "awayScore": 57,
+      "kind": "score",
+      "teamId": "29",
+      "playerIds": [
+        "4279888"
+      ],
+      "points": 1
+    },
+    {
+      "order": 276,
+      "period": 3,
+      "clockSeconds": 622,
+      "homeScore": 68,
+      "awayScore": 59,
+      "kind": "score",
+      "teamId": "11",
+      "playerIds": [
+        "4683634"
+      ],
+      "points": 2
+    },
+    {
+      "order": 277,
+      "period": 3,
+      "clockSeconds": 605,
+      "homeScore": 68,
+      "awayScore": 59,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "5112087"
+      ]
+    },
+    {
+      "order": 278,
+      "period": 3,
+      "clockSeconds": 601,
+      "homeScore": 68,
+      "awayScore": 59,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4432170"
+      ]
+    },
+    {
+      "order": 279,
+      "period": 3,
+      "clockSeconds": 580,
+      "homeScore": 68,
+      "awayScore": 62,
+      "kind": "score",
+      "teamId": "11",
+      "playerIds": [
+        "4683634"
+      ],
+      "points": 3
+    },
+    {
+      "order": 280,
+      "period": 3,
+      "clockSeconds": 564,
+      "homeScore": 68,
+      "awayScore": 62,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "2581018"
+      ]
+    },
+    {
+      "order": 281,
+      "period": 3,
+      "clockSeconds": 562,
+      "homeScore": 68,
+      "awayScore": 62,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4683634"
+      ]
+    },
+    {
+      "order": 282,
+      "period": 3,
+      "clockSeconds": 554,
+      "homeScore": 68,
+      "awayScore": 65,
+      "kind": "score",
+      "teamId": "11",
+      "playerIds": [
+        "4433076"
+      ],
+      "points": 3
+    },
+    {
+      "order": 283,
+      "period": 3,
+      "clockSeconds": 552,
+      "homeScore": 68,
+      "awayScore": 65,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": []
+    },
+    {
+      "order": 284,
+      "period": 3,
+      "clockSeconds": 552,
+      "homeScore": 68,
+      "awayScore": 65,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "3134932",
+        "2581018"
+      ]
+    },
+    {
+      "order": 285,
+      "period": 3,
+      "clockSeconds": 552,
+      "homeScore": 68,
+      "awayScore": 65,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4903027",
+        "4277961"
+      ]
+    },
+    {
+      "order": 286,
+      "period": 3,
+      "clockSeconds": 539,
+      "homeScore": 70,
+      "awayScore": 65,
+      "kind": "score",
+      "teamId": "29",
+      "playerIds": [
+        "4279888"
+      ],
+      "points": 2
+    },
+    {
+      "order": 287,
+      "period": 3,
+      "clockSeconds": 528,
+      "homeScore": 70,
+      "awayScore": 65,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4433076"
+      ]
+    },
+    {
+      "order": 288,
+      "period": 3,
+      "clockSeconds": 525,
+      "homeScore": 70,
+      "awayScore": 65,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "5112087"
+      ]
+    },
+    {
+      "order": 289,
+      "period": 3,
+      "clockSeconds": 513,
+      "homeScore": 70,
+      "awayScore": 65,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4279888"
+      ]
+    },
+    {
+      "order": 290,
+      "period": 3,
+      "clockSeconds": 509,
+      "homeScore": 70,
+      "awayScore": 65,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "3146557"
+      ]
+    },
+    {
+      "order": 291,
+      "period": 3,
+      "clockSeconds": 509,
+      "homeScore": 72,
+      "awayScore": 65,
+      "kind": "score",
+      "teamId": "29",
+      "playerIds": [
+        "3146557"
+      ],
+      "points": 2
+    },
+    {
+      "order": 292,
+      "period": 3,
+      "clockSeconds": 496,
+      "homeScore": 72,
+      "awayScore": 65,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4683634"
+      ]
+    },
+    {
+      "order": 293,
+      "period": 3,
+      "clockSeconds": 496,
+      "homeScore": 72,
+      "awayScore": 65,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": []
+    },
+    {
+      "order": 294,
+      "period": 3,
+      "clockSeconds": 484,
+      "homeScore": 75,
+      "awayScore": 65,
+      "kind": "score",
+      "teamId": "29",
+      "playerIds": [
+        "4903027"
+      ],
+      "points": 3
+    },
+    {
+      "order": 295,
+      "period": 3,
+      "clockSeconds": 455,
+      "homeScore": 75,
+      "awayScore": 65,
+      "kind": "block",
+      "teamId": "29",
+      "playerIds": [
+        "3134932"
+      ]
+    },
+    {
+      "order": 296,
+      "period": 3,
+      "clockSeconds": 450,
+      "homeScore": 75,
+      "awayScore": 65,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4903027"
+      ]
+    },
+    {
+      "order": 297,
+      "period": 3,
+      "clockSeconds": 449,
+      "homeScore": 75,
+      "awayScore": 65,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4903027"
+      ]
+    },
+    {
+      "order": 298,
+      "period": 3,
+      "clockSeconds": 445,
+      "homeScore": 75,
+      "awayScore": 65,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4433076"
+      ]
+    },
+    {
+      "order": 299,
+      "period": 3,
+      "clockSeconds": 442,
+      "homeScore": 75,
+      "awayScore": 65,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4432170"
+      ]
+    },
+    {
+      "order": 300,
+      "period": 3,
+      "clockSeconds": 438,
+      "homeScore": 75,
+      "awayScore": 65,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4432170"
+      ]
+    },
+    {
+      "order": 301,
+      "period": 3,
+      "clockSeconds": 438,
+      "homeScore": 75,
+      "awayScore": 65,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4432170"
+      ]
+    },
+    {
+      "order": 302,
+      "period": 3,
+      "clockSeconds": 437,
+      "homeScore": 75,
+      "awayScore": 65,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4432170"
+      ]
+    },
+    {
+      "order": 303,
+      "period": 3,
+      "clockSeconds": 433,
+      "homeScore": 75,
+      "awayScore": 65,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4396909"
+      ]
+    },
+    {
+      "order": 304,
+      "period": 3,
+      "clockSeconds": 431,
+      "homeScore": 75,
+      "awayScore": 65,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "3146557"
+      ]
+    },
+    {
+      "order": 305,
+      "period": 3,
+      "clockSeconds": 428,
+      "homeScore": 75,
+      "awayScore": 65,
+      "kind": "block",
+      "teamId": "11",
+      "playerIds": [
+        "4396909"
+      ]
+    },
+    {
+      "order": 306,
+      "period": 3,
+      "clockSeconds": 428,
+      "homeScore": 75,
+      "awayScore": 65,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": []
+    },
+    {
+      "order": 307,
+      "period": 3,
+      "clockSeconds": 428,
+      "homeScore": 75,
+      "awayScore": 65,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4593125",
+        "5112087"
+      ]
+    },
+    {
+      "order": 308,
+      "period": 3,
+      "clockSeconds": 428,
+      "homeScore": 75,
+      "awayScore": 65,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4277961",
+        "4279888"
+      ]
+    },
+    {
+      "order": 309,
+      "period": 3,
+      "clockSeconds": 428,
+      "homeScore": 75,
+      "awayScore": 65,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4781746",
+        "3146557"
+      ]
+    },
+    {
+      "order": 310,
+      "period": 3,
+      "clockSeconds": 428,
+      "homeScore": 75,
+      "awayScore": 65,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4278355",
+        "4432170"
+      ]
+    },
+    {
+      "order": 311,
+      "period": 3,
+      "clockSeconds": 428,
+      "homeScore": 75,
+      "awayScore": 65,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4431941",
+        "4433076"
+      ]
+    },
+    {
+      "order": 312,
+      "period": 3,
+      "clockSeconds": 424,
+      "homeScore": 77,
+      "awayScore": 65,
+      "kind": "score",
+      "teamId": "29",
+      "playerIds": [
+        "4903027"
+      ],
+      "points": 2
+    },
+    {
+      "order": 313,
+      "period": 3,
+      "clockSeconds": 423,
+      "homeScore": 77,
+      "awayScore": 65,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": []
+    },
+    {
+      "order": 314,
+      "period": 3,
+      "clockSeconds": 423,
+      "homeScore": 77,
+      "awayScore": 65,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "5106060",
+        "4396909"
+      ]
+    },
+    {
+      "order": 315,
+      "period": 3,
+      "clockSeconds": 401,
+      "homeScore": 77,
+      "awayScore": 65,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "5106060"
+      ]
+    },
+    {
+      "order": 316,
+      "period": 3,
+      "clockSeconds": 399,
+      "homeScore": 77,
+      "awayScore": 65,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4781746"
+      ]
+    },
+    {
+      "order": 317,
+      "period": 3,
+      "clockSeconds": 389,
+      "homeScore": 80,
+      "awayScore": 65,
+      "kind": "score",
+      "teamId": "29",
+      "playerIds": [
+        "4277961"
+      ],
+      "points": 3
+    },
+    {
+      "order": 318,
+      "period": 3,
+      "clockSeconds": 367,
+      "homeScore": 80,
+      "awayScore": 65,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "3149673"
+      ]
+    },
+    {
+      "order": 319,
+      "period": 3,
+      "clockSeconds": 367,
+      "homeScore": 80,
+      "awayScore": 65,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": []
+    },
+    {
+      "order": 320,
+      "period": 3,
+      "clockSeconds": 367,
+      "homeScore": 80,
+      "awayScore": 65,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4065673",
+        "3149673"
+      ]
+    },
+    {
+      "order": 321,
+      "period": 3,
+      "clockSeconds": 346,
+      "homeScore": 80,
+      "awayScore": 65,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4277961"
+      ]
+    },
+    {
+      "order": 322,
+      "period": 3,
+      "clockSeconds": 344,
+      "homeScore": 80,
+      "awayScore": 65,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4278355"
+      ]
+    },
+    {
+      "order": 323,
+      "period": 3,
+      "clockSeconds": 338,
+      "homeScore": 80,
+      "awayScore": 68,
+      "kind": "score",
+      "teamId": "11",
+      "playerIds": [
+        "5106060"
+      ],
+      "points": 3
+    },
+    {
+      "order": 324,
+      "period": 3,
+      "clockSeconds": 326,
+      "homeScore": 83,
+      "awayScore": 68,
+      "kind": "score",
+      "teamId": "29",
+      "playerIds": [
+        "4903027"
+      ],
+      "points": 3
+    },
+    {
+      "order": 325,
+      "period": 3,
+      "clockSeconds": 314,
+      "homeScore": 83,
+      "awayScore": 68,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4278355"
+      ]
+    },
+    {
+      "order": 326,
+      "period": 3,
+      "clockSeconds": 312,
+      "homeScore": 83,
+      "awayScore": 68,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4277961"
+      ]
+    },
+    {
+      "order": 327,
+      "period": 3,
+      "clockSeconds": 301,
+      "homeScore": 86,
+      "awayScore": 68,
+      "kind": "score",
+      "teamId": "29",
+      "playerIds": [
+        "4593125"
+      ],
+      "points": 3
+    },
+    {
+      "order": 328,
+      "period": 3,
+      "clockSeconds": 298,
+      "homeScore": 86,
+      "awayScore": 68,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": []
+    },
+    {
+      "order": 329,
+      "period": 3,
+      "clockSeconds": 283,
+      "homeScore": 86,
+      "awayScore": 68,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "5106060"
+      ]
+    },
+    {
+      "order": 330,
+      "period": 3,
+      "clockSeconds": 281,
+      "homeScore": 86,
+      "awayScore": 68,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "5106060"
+      ]
+    },
+    {
+      "order": 331,
+      "period": 3,
+      "clockSeconds": 275,
+      "homeScore": 86,
+      "awayScore": 68,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "3134932"
+      ]
+    },
+    {
+      "order": 332,
+      "period": 3,
+      "clockSeconds": 267,
+      "homeScore": 86,
+      "awayScore": 68,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4431941"
+      ]
+    },
+    {
+      "order": 333,
+      "period": 3,
+      "clockSeconds": 264,
+      "homeScore": 86,
+      "awayScore": 68,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "3134932"
+      ]
+    },
+    {
+      "order": 334,
+      "period": 3,
+      "clockSeconds": 253,
+      "homeScore": 89,
+      "awayScore": 68,
+      "kind": "score",
+      "teamId": "29",
+      "playerIds": [
+        "4903027"
+      ],
+      "points": 3
+    },
+    {
+      "order": 335,
+      "period": 3,
+      "clockSeconds": 242,
+      "homeScore": 89,
+      "awayScore": 68,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "5106060"
+      ]
+    },
+    {
+      "order": 336,
+      "period": 3,
+      "clockSeconds": 239,
+      "homeScore": 89,
+      "awayScore": 68,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4593125"
+      ]
+    },
+    {
+      "order": 337,
+      "period": 3,
+      "clockSeconds": 233,
+      "homeScore": 89,
+      "awayScore": 68,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4277961"
+      ]
+    },
+    {
+      "order": 338,
+      "period": 3,
+      "clockSeconds": 232,
+      "homeScore": 89,
+      "awayScore": 68,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4278355"
+      ]
+    },
+    {
+      "order": 339,
+      "period": 3,
+      "clockSeconds": 222,
+      "homeScore": 89,
+      "awayScore": 68,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4593125"
+      ]
+    },
+    {
+      "order": 340,
+      "period": 3,
+      "clockSeconds": 222,
+      "homeScore": 89,
+      "awayScore": 69,
+      "kind": "score",
+      "teamId": "11",
+      "playerIds": [
+        "4683634"
+      ],
+      "points": 1
+    },
+    {
+      "order": 341,
+      "period": 3,
+      "clockSeconds": 222,
+      "homeScore": 89,
+      "awayScore": 69,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "2581018",
+        "3134932"
+      ]
+    },
+    {
+      "order": 342,
+      "period": 3,
+      "clockSeconds": 222,
+      "homeScore": 89,
+      "awayScore": 70,
+      "kind": "score",
+      "teamId": "11",
+      "playerIds": [
+        "4683634"
+      ],
+      "points": 1
+    },
+    {
+      "order": 343,
+      "period": 3,
+      "clockSeconds": 210,
+      "homeScore": 89,
+      "awayScore": 70,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4065673"
+      ]
+    },
+    {
+      "order": 344,
+      "period": 3,
+      "clockSeconds": 210,
+      "homeScore": 90,
+      "awayScore": 70,
+      "kind": "score",
+      "teamId": "29",
+      "playerIds": [
+        "4903027"
+      ],
+      "points": 1
+    },
+    {
+      "order": 345,
+      "period": 3,
+      "clockSeconds": 210,
+      "homeScore": 90,
+      "awayScore": 70,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4396909",
+        "4683634"
+      ]
+    },
+    {
+      "order": 346,
+      "period": 3,
+      "clockSeconds": 210,
+      "homeScore": 90,
+      "awayScore": 70,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "3149673",
+        "4065673"
+      ]
+    },
+    {
+      "order": 347,
+      "period": 3,
+      "clockSeconds": 210,
+      "homeScore": 91,
+      "awayScore": 70,
+      "kind": "score",
+      "teamId": "29",
+      "playerIds": [
+        "4903027"
+      ],
+      "points": 1
+    },
+    {
+      "order": 348,
+      "period": 3,
+      "clockSeconds": 202,
+      "homeScore": 91,
+      "awayScore": 72,
+      "kind": "score",
+      "teamId": "11",
+      "playerIds": [
+        "3149673"
+      ],
+      "points": 2
+    },
+    {
+      "order": 349,
+      "period": 3,
+      "clockSeconds": 193,
+      "homeScore": 93,
+      "awayScore": 72,
+      "kind": "score",
+      "teamId": "29",
+      "playerIds": [
+        "4903027"
+      ],
+      "points": 2
+    },
+    {
+      "order": 350,
+      "period": 3,
+      "clockSeconds": 184,
+      "homeScore": 93,
+      "awayScore": 75,
+      "kind": "score",
+      "teamId": "11",
+      "playerIds": [
+        "3149673"
+      ],
+      "points": 3
+    },
+    {
+      "order": 351,
+      "period": 3,
+      "clockSeconds": 177,
+      "homeScore": 93,
+      "awayScore": 75,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4277961"
+      ]
+    },
+    {
+      "order": 352,
+      "period": 3,
+      "clockSeconds": 177,
+      "homeScore": 93,
+      "awayScore": 75,
+      "kind": "turnover",
+      "teamId": "29",
+      "playerIds": [
+        "4277961"
+      ]
+    },
+    {
+      "order": 353,
+      "period": 3,
+      "clockSeconds": 177,
+      "homeScore": 93,
+      "awayScore": 75,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "5112087",
+        "4277961"
+      ]
+    },
+    {
+      "order": 354,
+      "period": 3,
+      "clockSeconds": 177,
+      "homeScore": 93,
+      "awayScore": 75,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "3146557",
+        "4781746"
+      ]
+    },
+    {
+      "order": 355,
+      "period": 3,
+      "clockSeconds": 177,
+      "homeScore": 93,
+      "awayScore": 75,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4279888",
+        "4903027"
+      ]
+    },
+    {
+      "order": 356,
+      "period": 3,
+      "clockSeconds": 158,
+      "homeScore": 93,
+      "awayScore": 75,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4431941"
+      ]
+    },
+    {
+      "order": 357,
+      "period": 3,
+      "clockSeconds": 152,
+      "homeScore": 93,
+      "awayScore": 75,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "2581018"
+      ]
+    },
+    {
+      "order": 358,
+      "period": 3,
+      "clockSeconds": 136,
+      "homeScore": 95,
+      "awayScore": 75,
+      "kind": "score",
+      "teamId": "29",
+      "playerIds": [
+        "4593125"
+      ],
+      "points": 2
+    },
+    {
+      "order": 359,
+      "period": 3,
+      "clockSeconds": 122,
+      "homeScore": 95,
+      "awayScore": 77,
+      "kind": "score",
+      "teamId": "11",
+      "playerIds": [
+        "3149673"
+      ],
+      "points": 2
+    },
+    {
+      "order": 360,
+      "period": 3,
+      "clockSeconds": 107,
+      "homeScore": 95,
+      "awayScore": 77,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4431941"
+      ]
+    },
+    {
+      "order": 361,
+      "period": 3,
+      "clockSeconds": 107,
+      "homeScore": 95,
+      "awayScore": 77,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4431941",
+        "4279888"
+      ]
+    },
+    {
+      "order": 362,
+      "period": 3,
+      "clockSeconds": 107,
+      "homeScore": 96,
+      "awayScore": 77,
+      "kind": "score",
+      "teamId": "29",
+      "playerIds": [
+        "4279888"
+      ],
+      "points": 1
+    },
+    {
+      "order": 363,
+      "period": 3,
+      "clockSeconds": 107,
+      "homeScore": 96,
+      "awayScore": 77,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "3134932",
+        "4593125"
+      ]
+    },
+    {
+      "order": 364,
+      "period": 3,
+      "clockSeconds": 107,
+      "homeScore": 97,
+      "awayScore": 77,
+      "kind": "score",
+      "teamId": "29",
+      "playerIds": [
+        "4279888"
+      ],
+      "points": 1
+    },
+    {
+      "order": 365,
+      "period": 3,
+      "clockSeconds": 101,
+      "homeScore": 97,
+      "awayScore": 79,
+      "kind": "score",
+      "teamId": "11",
+      "playerIds": [
+        "4278355"
+      ],
+      "points": 2
+    },
+    {
+      "order": 366,
+      "period": 3,
+      "clockSeconds": 101,
+      "homeScore": 97,
+      "awayScore": 79,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "3146557"
+      ]
+    },
+    {
+      "order": 367,
+      "period": 3,
+      "clockSeconds": 101,
+      "homeScore": 97,
+      "awayScore": 80,
+      "kind": "score",
+      "teamId": "11",
+      "playerIds": [
+        "4278355"
+      ],
+      "points": 1
+    },
+    {
+      "order": 368,
+      "period": 3,
+      "clockSeconds": 93,
+      "homeScore": 97,
+      "awayScore": 80,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4279888"
+      ]
+    },
+    {
+      "order": 369,
+      "period": 3,
+      "clockSeconds": 92,
+      "homeScore": 97,
+      "awayScore": 80,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": []
+    },
+    {
+      "order": 370,
+      "period": 3,
+      "clockSeconds": 92,
+      "homeScore": 97,
+      "awayScore": 80,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4433076",
+        "4431941"
+      ]
+    },
+    {
+      "order": 371,
+      "period": 3,
+      "clockSeconds": 79,
+      "homeScore": 99,
+      "awayScore": 80,
+      "kind": "score",
+      "teamId": "29",
+      "playerIds": [
+        "5112087"
+      ],
+      "points": 2
+    },
+    {
+      "order": 372,
+      "period": 3,
+      "clockSeconds": 68,
+      "homeScore": 99,
+      "awayScore": 80,
+      "kind": "turnover",
+      "teamId": "11",
+      "playerIds": [
+        "3149673"
+      ]
+    },
+    {
+      "order": 373,
+      "period": 3,
+      "clockSeconds": 68,
+      "homeScore": 99,
+      "awayScore": 80,
+      "kind": "steal",
+      "teamId": "29",
+      "playerIds": [
+        "4279888"
+      ]
+    },
+    {
+      "order": 374,
+      "period": 3,
+      "clockSeconds": 64,
+      "homeScore": 99,
+      "awayScore": 80,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4279888"
+      ]
+    },
+    {
+      "order": 375,
+      "period": 3,
+      "clockSeconds": 61,
+      "homeScore": 99,
+      "awayScore": 80,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "3134932"
+      ]
+    },
+    {
+      "order": 376,
+      "period": 3,
+      "clockSeconds": 60,
+      "homeScore": 101,
+      "awayScore": 80,
+      "kind": "score",
+      "teamId": "29",
+      "playerIds": [
+        "3134932"
+      ],
+      "points": 2
+    },
+    {
+      "order": 377,
+      "period": 3,
+      "clockSeconds": 60,
+      "homeScore": 101,
+      "awayScore": 80,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": []
+    },
+    {
+      "order": 378,
+      "period": 3,
+      "clockSeconds": 43,
+      "homeScore": 101,
+      "awayScore": 80,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "2581018"
+      ]
+    },
+    {
+      "order": 379,
+      "period": 3,
+      "clockSeconds": 43,
+      "homeScore": 101,
+      "awayScore": 80,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4396909"
+      ]
+    },
+    {
+      "order": 380,
+      "period": 3,
+      "clockSeconds": 43,
+      "homeScore": 101,
+      "awayScore": 80,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": []
+    },
+    {
+      "order": 381,
+      "period": 3,
+      "clockSeconds": 43,
+      "homeScore": 101,
+      "awayScore": 81,
+      "kind": "score",
+      "teamId": "11",
+      "playerIds": [
+        "4396909"
+      ],
+      "points": 1
+    },
+    {
+      "order": 382,
+      "period": 3,
+      "clockSeconds": 28,
+      "homeScore": 101,
+      "awayScore": 81,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "5112087"
+      ]
+    },
+    {
+      "order": 383,
+      "period": 3,
+      "clockSeconds": 26,
+      "homeScore": 101,
+      "awayScore": 81,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "5106060"
+      ]
+    },
+    {
+      "order": 384,
+      "period": 3,
+      "clockSeconds": 20,
+      "homeScore": 101,
+      "awayScore": 84,
+      "kind": "score",
+      "teamId": "11",
+      "playerIds": [
+        "4396909"
+      ],
+      "points": 3
+    },
+    {
+      "order": 385,
+      "period": 3,
+      "clockSeconds": 8,
+      "homeScore": 101,
+      "awayScore": 84,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4433076"
+      ]
+    },
+    {
+      "order": 386,
+      "period": 3,
+      "clockSeconds": 5,
+      "homeScore": 101,
+      "awayScore": 84,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4278355"
+      ]
+    },
+    {
+      "order": 387,
+      "period": 3,
+      "clockSeconds": 5,
+      "homeScore": 102,
+      "awayScore": 84,
+      "kind": "score",
+      "teamId": "29",
+      "playerIds": [
+        "2581018"
+      ],
+      "points": 1
+    },
+    {
+      "order": 388,
+      "period": 3,
+      "clockSeconds": 5,
+      "homeScore": 102,
+      "awayScore": 84,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4903027",
+        "3146557"
+      ]
+    },
+    {
+      "order": 389,
+      "period": 3,
+      "clockSeconds": 5,
+      "homeScore": 103,
+      "awayScore": 84,
+      "kind": "score",
+      "teamId": "29",
+      "playerIds": [
+        "2581018"
+      ],
+      "points": 1
+    },
+    {
+      "order": 390,
+      "period": 3,
+      "clockSeconds": 0,
+      "homeScore": 103,
+      "awayScore": 84,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4278355"
+      ]
+    },
+    {
+      "order": 391,
+      "period": 3,
+      "clockSeconds": 0,
+      "homeScore": 103,
+      "awayScore": 84,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": []
+    },
+    {
+      "order": 392,
+      "period": 4,
+      "clockSeconds": 720,
+      "homeScore": 103,
+      "awayScore": 84,
+      "kind": "period",
+      "playerIds": []
+    },
+    {
+      "order": 393,
+      "period": 4,
+      "clockSeconds": 720,
+      "homeScore": 103,
+      "awayScore": 84,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4433083",
+        "2581018"
+      ]
+    },
+    {
+      "order": 394,
+      "period": 4,
+      "clockSeconds": 720,
+      "homeScore": 103,
+      "awayScore": 84,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "3146557",
+        "4903027"
+      ]
+    },
+    {
+      "order": 395,
+      "period": 4,
+      "clockSeconds": 720,
+      "homeScore": 103,
+      "awayScore": 84,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4432808",
+        "3149673"
+      ]
+    },
+    {
+      "order": 396,
+      "period": 4,
+      "clockSeconds": 703,
+      "homeScore": 103,
+      "awayScore": 84,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4396909"
+      ]
+    },
+    {
+      "order": 397,
+      "period": 4,
+      "clockSeconds": 700,
+      "homeScore": 103,
+      "awayScore": 84,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4433083"
+      ]
+    },
+    {
+      "order": 398,
+      "period": 4,
+      "clockSeconds": 687,
+      "homeScore": 103,
+      "awayScore": 84,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4279888"
+      ]
+    },
+    {
+      "order": 399,
+      "period": 4,
+      "clockSeconds": 687,
+      "homeScore": 103,
+      "awayScore": 84,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": []
+    },
+    {
+      "order": 400,
+      "period": 4,
+      "clockSeconds": 685,
+      "homeScore": 103,
+      "awayScore": 84,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4433083"
+      ]
+    },
+    {
+      "order": 401,
+      "period": 4,
+      "clockSeconds": 682,
+      "homeScore": 103,
+      "awayScore": 84,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4433076"
+      ]
+    },
+    {
+      "order": 402,
+      "period": 4,
+      "clockSeconds": 682,
+      "homeScore": 103,
+      "awayScore": 84,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4279888"
+      ]
+    },
+    {
+      "order": 403,
+      "period": 4,
+      "clockSeconds": 661,
+      "homeScore": 103,
+      "awayScore": 84,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "5106060"
+      ]
+    },
+    {
+      "order": 404,
+      "period": 4,
+      "clockSeconds": 660,
+      "homeScore": 103,
+      "awayScore": 84,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": []
+    },
+    {
+      "order": 405,
+      "period": 4,
+      "clockSeconds": 653,
+      "homeScore": 103,
+      "awayScore": 84,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "5106060"
+      ]
+    },
+    {
+      "order": 406,
+      "period": 4,
+      "clockSeconds": 651,
+      "homeScore": 103,
+      "awayScore": 84,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "3146557"
+      ]
+    },
+    {
+      "order": 407,
+      "period": 4,
+      "clockSeconds": 648,
+      "homeScore": 105,
+      "awayScore": 84,
+      "kind": "score",
+      "teamId": "29",
+      "playerIds": [
+        "4279888"
+      ],
+      "points": 2
+    },
+    {
+      "order": 408,
+      "period": 4,
+      "clockSeconds": 635,
+      "homeScore": 105,
+      "awayScore": 86,
+      "kind": "score",
+      "teamId": "11",
+      "playerIds": [
+        "4432808"
+      ],
+      "points": 2
+    },
+    {
+      "order": 409,
+      "period": 4,
+      "clockSeconds": 614,
+      "homeScore": 105,
+      "awayScore": 86,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "5112087"
+      ]
+    },
+    {
+      "order": 410,
+      "period": 4,
+      "clockSeconds": 608,
+      "homeScore": 105,
+      "awayScore": 86,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4433076"
+      ]
+    },
+    {
+      "order": 411,
+      "period": 4,
+      "clockSeconds": 607,
+      "homeScore": 105,
+      "awayScore": 86,
+      "kind": "turnover",
+      "teamId": "11",
+      "playerIds": [
+        "4278355"
+      ]
+    },
+    {
+      "order": 412,
+      "period": 4,
+      "clockSeconds": 588,
+      "homeScore": 105,
+      "awayScore": 86,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4433083"
+      ]
+    },
+    {
+      "order": 413,
+      "period": 4,
+      "clockSeconds": 584,
+      "homeScore": 105,
+      "awayScore": 86,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4278355"
+      ]
+    },
+    {
+      "order": 414,
+      "period": 4,
+      "clockSeconds": 574,
+      "homeScore": 105,
+      "awayScore": 88,
+      "kind": "score",
+      "teamId": "11",
+      "playerIds": [
+        "4278355"
+      ],
+      "points": 2
+    },
+    {
+      "order": 415,
+      "period": 4,
+      "clockSeconds": 553,
+      "homeScore": 105,
+      "awayScore": 88,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4279888"
+      ]
+    },
+    {
+      "order": 416,
+      "period": 4,
+      "clockSeconds": 551,
+      "homeScore": 105,
+      "awayScore": 88,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4433076"
+      ]
+    },
+    {
+      "order": 417,
+      "period": 4,
+      "clockSeconds": 546,
+      "homeScore": 105,
+      "awayScore": 91,
+      "kind": "score",
+      "teamId": "11",
+      "playerIds": [
+        "5106060"
+      ],
+      "points": 3
+    },
+    {
+      "order": 418,
+      "period": 4,
+      "clockSeconds": 544,
+      "homeScore": 105,
+      "awayScore": 91,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": []
+    },
+    {
+      "order": 419,
+      "period": 4,
+      "clockSeconds": 544,
+      "homeScore": 105,
+      "awayScore": 91,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4593125",
+        "5112087"
+      ]
+    },
+    {
+      "order": 420,
+      "period": 4,
+      "clockSeconds": 544,
+      "homeScore": 105,
+      "awayScore": 91,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4781746",
+        "4279888"
+      ]
+    },
+    {
+      "order": 421,
+      "period": 4,
+      "clockSeconds": 544,
+      "homeScore": 105,
+      "awayScore": 91,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4277961",
+        "3134932"
+      ]
+    },
+    {
+      "order": 422,
+      "period": 4,
+      "clockSeconds": 544,
+      "homeScore": 105,
+      "awayScore": 91,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4903027",
+        "3146557"
+      ]
+    },
+    {
+      "order": 423,
+      "period": 4,
+      "clockSeconds": 519,
+      "homeScore": 105,
+      "awayScore": 91,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4433083"
+      ]
+    },
+    {
+      "order": 424,
+      "period": 4,
+      "clockSeconds": 517,
+      "homeScore": 105,
+      "awayScore": 91,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4903027"
+      ]
+    },
+    {
+      "order": 425,
+      "period": 4,
+      "clockSeconds": 511,
+      "homeScore": 105,
+      "awayScore": 91,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4277961"
+      ]
+    },
+    {
+      "order": 426,
+      "period": 4,
+      "clockSeconds": 509,
+      "homeScore": 105,
+      "awayScore": 91,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "5106060"
+      ]
+    },
+    {
+      "order": 427,
+      "period": 4,
+      "clockSeconds": 506,
+      "homeScore": 105,
+      "awayScore": 94,
+      "kind": "score",
+      "teamId": "11",
+      "playerIds": [
+        "4278355"
+      ],
+      "points": 3
+    },
+    {
+      "order": 428,
+      "period": 4,
+      "clockSeconds": 494,
+      "homeScore": 108,
+      "awayScore": 94,
+      "kind": "score",
+      "teamId": "29",
+      "playerIds": [
+        "4903027"
+      ],
+      "points": 3
+    },
+    {
+      "order": 429,
+      "period": 4,
+      "clockSeconds": 475,
+      "homeScore": 108,
+      "awayScore": 94,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4278355"
+      ]
+    },
+    {
+      "order": 430,
+      "period": 4,
+      "clockSeconds": 471,
+      "homeScore": 108,
+      "awayScore": 94,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4593125"
+      ]
+    },
+    {
+      "order": 431,
+      "period": 4,
+      "clockSeconds": 463,
+      "homeScore": 108,
+      "awayScore": 94,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4277961"
+      ]
+    },
+    {
+      "order": 432,
+      "period": 4,
+      "clockSeconds": 461,
+      "homeScore": 108,
+      "awayScore": 94,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4278355"
+      ]
+    },
+    {
+      "order": 433,
+      "period": 4,
+      "clockSeconds": 449,
+      "homeScore": 108,
+      "awayScore": 94,
+      "kind": "block",
+      "teamId": "29",
+      "playerIds": [
+        "4593125"
+      ]
+    },
+    {
+      "order": 434,
+      "period": 4,
+      "clockSeconds": 446,
+      "homeScore": 108,
+      "awayScore": 94,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4433083"
+      ]
+    },
+    {
+      "order": 435,
+      "period": 4,
+      "clockSeconds": 445,
+      "homeScore": 108,
+      "awayScore": 94,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4433076"
+      ]
+    },
+    {
+      "order": 436,
+      "period": 4,
+      "clockSeconds": 445,
+      "homeScore": 108,
+      "awayScore": 94,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4903027"
+      ]
+    },
+    {
+      "order": 437,
+      "period": 4,
+      "clockSeconds": 445,
+      "homeScore": 108,
+      "awayScore": 94,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": []
+    },
+    {
+      "order": 438,
+      "period": 4,
+      "clockSeconds": 445,
+      "homeScore": 108,
+      "awayScore": 94,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4431941",
+        "4278355"
+      ]
+    },
+    {
+      "order": 439,
+      "period": 4,
+      "clockSeconds": 445,
+      "homeScore": 109,
+      "awayScore": 94,
+      "kind": "score",
+      "teamId": "29",
+      "playerIds": [
+        "4903027"
+      ],
+      "points": 1
+    },
+    {
+      "order": 440,
+      "period": 4,
+      "clockSeconds": 431,
+      "homeScore": 109,
+      "awayScore": 94,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "5106060"
+      ]
+    },
+    {
+      "order": 441,
+      "period": 4,
+      "clockSeconds": 428,
+      "homeScore": 109,
+      "awayScore": 94,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4277961"
+      ]
+    },
+    {
+      "order": 442,
+      "period": 4,
+      "clockSeconds": 407,
+      "homeScore": 109,
+      "awayScore": 94,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4593125"
+      ]
+    },
+    {
+      "order": 443,
+      "period": 4,
+      "clockSeconds": 404,
+      "homeScore": 109,
+      "awayScore": 94,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4903027"
+      ]
+    },
+    {
+      "order": 444,
+      "period": 4,
+      "clockSeconds": 398,
+      "homeScore": 111,
+      "awayScore": 94,
+      "kind": "score",
+      "teamId": "29",
+      "playerIds": [
+        "4593125"
+      ],
+      "points": 2
+    },
+    {
+      "order": 445,
+      "period": 4,
+      "clockSeconds": 384,
+      "homeScore": 111,
+      "awayScore": 94,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4433076"
+      ]
+    },
+    {
+      "order": 446,
+      "period": 4,
+      "clockSeconds": 382,
+      "homeScore": 111,
+      "awayScore": 94,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4433083"
+      ]
+    },
+    {
+      "order": 447,
+      "period": 4,
+      "clockSeconds": 378,
+      "homeScore": 111,
+      "awayScore": 94,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4432808"
+      ]
+    },
+    {
+      "order": 448,
+      "period": 4,
+      "clockSeconds": 378,
+      "homeScore": 111,
+      "awayScore": 94,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "2581018",
+        "4593125"
+      ]
+    },
+    {
+      "order": 449,
+      "period": 4,
+      "clockSeconds": 378,
+      "homeScore": 111,
+      "awayScore": 94,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "3146557",
+        "4277961"
+      ]
+    },
+    {
+      "order": 450,
+      "period": 4,
+      "clockSeconds": 378,
+      "homeScore": 111,
+      "awayScore": 94,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "3134932",
+        "4433083"
+      ]
+    },
+    {
+      "order": 451,
+      "period": 4,
+      "clockSeconds": 378,
+      "homeScore": 111,
+      "awayScore": 94,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4065731",
+        "4432808"
+      ]
+    },
+    {
+      "order": 452,
+      "period": 4,
+      "clockSeconds": 369,
+      "homeScore": 114,
+      "awayScore": 94,
+      "kind": "score",
+      "teamId": "29",
+      "playerIds": [
+        "4903027"
+      ],
+      "points": 3
+    },
+    {
+      "order": 453,
+      "period": 4,
+      "clockSeconds": 358,
+      "homeScore": 114,
+      "awayScore": 94,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": []
+    },
+    {
+      "order": 454,
+      "period": 4,
+      "clockSeconds": 358,
+      "homeScore": 114,
+      "awayScore": 94,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4432808",
+        "4396909"
+      ]
+    },
+    {
+      "order": 455,
+      "period": 4,
+      "clockSeconds": 358,
+      "homeScore": 114,
+      "awayScore": 94,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4432170",
+        "4433076"
+      ]
+    },
+    {
+      "order": 456,
+      "period": 4,
+      "clockSeconds": 351,
+      "homeScore": 114,
+      "awayScore": 94,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "5106060"
+      ]
+    },
+    {
+      "order": 457,
+      "period": 4,
+      "clockSeconds": 348,
+      "homeScore": 114,
+      "awayScore": 94,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "2581018"
+      ]
+    },
+    {
+      "order": 458,
+      "period": 4,
+      "clockSeconds": 337,
+      "homeScore": 114,
+      "awayScore": 94,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "2581018"
+      ]
+    },
+    {
+      "order": 459,
+      "period": 4,
+      "clockSeconds": 335,
+      "homeScore": 114,
+      "awayScore": 94,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": []
+    },
+    {
+      "order": 460,
+      "period": 4,
+      "clockSeconds": 323,
+      "homeScore": 114,
+      "awayScore": 94,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "3146557"
+      ]
+    },
+    {
+      "order": 461,
+      "period": 4,
+      "clockSeconds": 320,
+      "homeScore": 114,
+      "awayScore": 94,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "5106060"
+      ]
+    },
+    {
+      "order": 462,
+      "period": 4,
+      "clockSeconds": 305,
+      "homeScore": 114,
+      "awayScore": 94,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4431941"
+      ]
+    },
+    {
+      "order": 463,
+      "period": 4,
+      "clockSeconds": 302,
+      "homeScore": 114,
+      "awayScore": 94,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "3146557"
+      ]
+    },
+    {
+      "order": 464,
+      "period": 4,
+      "clockSeconds": 300,
+      "homeScore": 116,
+      "awayScore": 94,
+      "kind": "score",
+      "teamId": "29",
+      "playerIds": [
+        "2581018"
+      ],
+      "points": 2
+    },
+    {
+      "order": 465,
+      "period": 4,
+      "clockSeconds": 290,
+      "homeScore": 116,
+      "awayScore": 94,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4781746"
+      ]
+    },
+    {
+      "order": 466,
+      "period": 4,
+      "clockSeconds": 282,
+      "homeScore": 116,
+      "awayScore": 94,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4065731"
+      ]
+    },
+    {
+      "order": 467,
+      "period": 4,
+      "clockSeconds": 280,
+      "homeScore": 116,
+      "awayScore": 94,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4903027"
+      ]
+    },
+    {
+      "order": 468,
+      "period": 4,
+      "clockSeconds": 272,
+      "homeScore": 116,
+      "awayScore": 94,
+      "kind": "block",
+      "teamId": "11",
+      "playerIds": [
+        "4432808"
+      ]
+    },
+    {
+      "order": 469,
+      "period": 4,
+      "clockSeconds": 268,
+      "homeScore": 116,
+      "awayScore": 94,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "3146557"
+      ]
+    },
+    {
+      "order": 470,
+      "period": 4,
+      "clockSeconds": 265,
+      "homeScore": 116,
+      "awayScore": 94,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4432170"
+      ]
+    },
+    {
+      "order": 471,
+      "period": 4,
+      "clockSeconds": 265,
+      "homeScore": 116,
+      "awayScore": 94,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "2581018"
+      ]
+    },
+    {
+      "order": 472,
+      "period": 4,
+      "clockSeconds": 265,
+      "homeScore": 116,
+      "awayScore": 94,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": []
+    },
+    {
+      "order": 473,
+      "period": 4,
+      "clockSeconds": 265,
+      "homeScore": 116,
+      "awayScore": 94,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4065673",
+        "4432170"
+      ]
+    },
+    {
+      "order": 474,
+      "period": 4,
+      "clockSeconds": 265,
+      "homeScore": 117,
+      "awayScore": 94,
+      "kind": "score",
+      "teamId": "29",
+      "playerIds": [
+        "2581018"
+      ],
+      "points": 1
+    },
+    {
+      "order": 475,
+      "period": 4,
+      "clockSeconds": 253,
+      "homeScore": 117,
+      "awayScore": 94,
+      "kind": "turnover",
+      "teamId": "11",
+      "playerIds": [
+        "4432808"
+      ]
+    },
+    {
+      "order": 476,
+      "period": 4,
+      "clockSeconds": 253,
+      "homeScore": 117,
+      "awayScore": 94,
+      "kind": "steal",
+      "teamId": "29",
+      "playerIds": [
+        "3134932"
+      ]
+    },
+    {
+      "order": 477,
+      "period": 4,
+      "clockSeconds": 250,
+      "homeScore": 117,
+      "awayScore": 94,
+      "kind": "turnover",
+      "teamId": "29",
+      "playerIds": [
+        "2581018"
+      ]
+    },
+    {
+      "order": 478,
+      "period": 4,
+      "clockSeconds": 236,
+      "homeScore": 117,
+      "awayScore": 94,
+      "kind": "turnover",
+      "teamId": "11",
+      "playerIds": [
+        "4431941"
+      ]
+    },
+    {
+      "order": 479,
+      "period": 4,
+      "clockSeconds": 236,
+      "homeScore": 117,
+      "awayScore": 94,
+      "kind": "steal",
+      "teamId": "29",
+      "playerIds": [
+        "4903027"
+      ]
+    },
+    {
+      "order": 480,
+      "period": 4,
+      "clockSeconds": 227,
+      "homeScore": 117,
+      "awayScore": 94,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "2581018"
+      ]
+    },
+    {
+      "order": 481,
+      "period": 4,
+      "clockSeconds": 225,
+      "homeScore": 117,
+      "awayScore": 94,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4065731"
+      ]
+    },
+    {
+      "order": 482,
+      "period": 4,
+      "clockSeconds": 216,
+      "homeScore": 117,
+      "awayScore": 96,
+      "kind": "score",
+      "teamId": "11",
+      "playerIds": [
+        "4065673"
+      ],
+      "points": 2
+    },
+    {
+      "order": 483,
+      "period": 4,
+      "clockSeconds": 200,
+      "homeScore": 117,
+      "awayScore": 96,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4431941"
+      ]
+    },
+    {
+      "order": 484,
+      "period": 4,
+      "clockSeconds": 200,
+      "homeScore": 117,
+      "awayScore": 96,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4781746"
+      ]
+    },
+    {
+      "order": 485,
+      "period": 4,
+      "clockSeconds": 200,
+      "homeScore": 117,
+      "awayScore": 96,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": []
+    },
+    {
+      "order": 486,
+      "period": 4,
+      "clockSeconds": 200,
+      "homeScore": 118,
+      "awayScore": 96,
+      "kind": "score",
+      "teamId": "29",
+      "playerIds": [
+        "4781746"
+      ],
+      "points": 1
+    },
+    {
+      "order": 487,
+      "period": 4,
+      "clockSeconds": 200,
+      "homeScore": 119,
+      "awayScore": 96,
+      "kind": "score",
+      "teamId": "29",
+      "playerIds": [
+        "4781746"
+      ],
+      "points": 1
+    },
+    {
+      "order": 488,
+      "period": 4,
+      "clockSeconds": 188,
+      "homeScore": 119,
+      "awayScore": 96,
+      "kind": "turnover",
+      "teamId": "11",
+      "playerIds": [
+        "5106060"
+      ]
+    },
+    {
+      "order": 489,
+      "period": 4,
+      "clockSeconds": 188,
+      "homeScore": 119,
+      "awayScore": 96,
+      "kind": "steal",
+      "teamId": "29",
+      "playerIds": [
+        "3134932"
+      ]
+    },
+    {
+      "order": 490,
+      "period": 4,
+      "clockSeconds": 185,
+      "homeScore": 121,
+      "awayScore": 96,
+      "kind": "score",
+      "teamId": "29",
+      "playerIds": [
+        "4781746"
+      ],
+      "points": 2
+    },
+    {
+      "order": 491,
+      "period": 4,
+      "clockSeconds": 185,
+      "homeScore": 121,
+      "awayScore": 96,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4431941"
+      ]
+    },
+    {
+      "order": 492,
+      "period": 4,
+      "clockSeconds": 185,
+      "homeScore": 121,
+      "awayScore": 96,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4433083",
+        "2581018"
+      ]
+    },
+    {
+      "order": 493,
+      "period": 4,
+      "clockSeconds": 185,
+      "homeScore": 122,
+      "awayScore": 96,
+      "kind": "score",
+      "teamId": "29",
+      "playerIds": [
+        "4781746"
+      ],
+      "points": 1
+    },
+    {
+      "order": 494,
+      "period": 4,
+      "clockSeconds": 170,
+      "homeScore": 122,
+      "awayScore": 96,
+      "kind": "turnover",
+      "teamId": "11",
+      "playerIds": [
+        "4065673"
+      ]
+    },
+    {
+      "order": 495,
+      "period": 4,
+      "clockSeconds": 154,
+      "homeScore": 125,
+      "awayScore": 96,
+      "kind": "score",
+      "teamId": "29",
+      "playerIds": [
+        "4781746"
+      ],
+      "points": 3
+    },
+    {
+      "order": 496,
+      "period": 4,
+      "clockSeconds": 142,
+      "homeScore": 125,
+      "awayScore": 96,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4431941"
+      ]
+    },
+    {
+      "order": 497,
+      "period": 4,
+      "clockSeconds": 140,
+      "homeScore": 125,
+      "awayScore": 96,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4432808"
+      ]
+    },
+    {
+      "order": 498,
+      "period": 4,
+      "clockSeconds": 138,
+      "homeScore": 125,
+      "awayScore": 98,
+      "kind": "score",
+      "teamId": "11",
+      "playerIds": [
+        "4432808"
+      ],
+      "points": 2
+    },
+    {
+      "order": 499,
+      "period": 4,
+      "clockSeconds": 120,
+      "homeScore": 128,
+      "awayScore": 98,
+      "kind": "score",
+      "teamId": "29",
+      "playerIds": [
+        "4433083"
+      ],
+      "points": 3
+    },
+    {
+      "order": 500,
+      "period": 4,
+      "clockSeconds": 116,
+      "homeScore": 128,
+      "awayScore": 98,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4433083"
+      ]
+    },
+    {
+      "order": 501,
+      "period": 4,
+      "clockSeconds": 116,
+      "homeScore": 128,
+      "awayScore": 98,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4701225",
+        "4903027"
+      ]
+    },
+    {
+      "order": 502,
+      "period": 4,
+      "clockSeconds": 116,
+      "homeScore": 128,
+      "awayScore": 98,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4595400",
+        "3146557"
+      ]
+    },
+    {
+      "order": 503,
+      "period": 4,
+      "clockSeconds": 116,
+      "homeScore": 128,
+      "awayScore": 98,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "5105550",
+        "3134932"
+      ]
+    },
+    {
+      "order": 504,
+      "period": 4,
+      "clockSeconds": 111,
+      "homeScore": 128,
+      "awayScore": 98,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4781746"
+      ]
+    },
+    {
+      "order": 505,
+      "period": 4,
+      "clockSeconds": 111,
+      "homeScore": 128,
+      "awayScore": 99,
+      "kind": "score",
+      "teamId": "11",
+      "playerIds": [
+        "4431941"
+      ],
+      "points": 1
+    },
+    {
+      "order": 506,
+      "period": 4,
+      "clockSeconds": 111,
+      "homeScore": 128,
+      "awayScore": 100,
+      "kind": "score",
+      "teamId": "11",
+      "playerIds": [
+        "4431941"
+      ],
+      "points": 1
+    },
+    {
+      "order": 507,
+      "period": 4,
+      "clockSeconds": 97,
+      "homeScore": 128,
+      "awayScore": 100,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4433083"
+      ]
+    },
+    {
+      "order": 508,
+      "period": 4,
+      "clockSeconds": 94,
+      "homeScore": 128,
+      "awayScore": 100,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "5106060"
+      ]
+    },
+    {
+      "order": 509,
+      "period": 4,
+      "clockSeconds": 90,
+      "homeScore": 128,
+      "awayScore": 100,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "5105550"
+      ]
+    },
+    {
+      "order": 510,
+      "period": 4,
+      "clockSeconds": 90,
+      "homeScore": 128,
+      "awayScore": 100,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4065673"
+      ]
+    },
+    {
+      "order": 511,
+      "period": 4,
+      "clockSeconds": 90,
+      "homeScore": 128,
+      "awayScore": 100,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": []
+    },
+    {
+      "order": 512,
+      "period": 4,
+      "clockSeconds": 90,
+      "homeScore": 128,
+      "awayScore": 100,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4065673"
+      ]
+    },
+    {
+      "order": 513,
+      "period": 4,
+      "clockSeconds": 88,
+      "homeScore": 128,
+      "awayScore": 100,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4595400"
+      ]
+    },
+    {
+      "order": 514,
+      "period": 4,
+      "clockSeconds": 77,
+      "homeScore": 128,
+      "awayScore": 100,
+      "kind": "turnover",
+      "teamId": "29",
+      "playerIds": [
+        "4701225"
+      ]
+    },
+    {
+      "order": 515,
+      "period": 4,
+      "clockSeconds": 77,
+      "homeScore": 128,
+      "awayScore": 100,
+      "kind": "steal",
+      "teamId": "11",
+      "playerIds": [
+        "4065673"
+      ]
+    },
+    {
+      "order": 516,
+      "period": 4,
+      "clockSeconds": 77,
+      "homeScore": 128,
+      "awayScore": 100,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4781746"
+      ]
+    },
+    {
+      "order": 517,
+      "period": 4,
+      "clockSeconds": 77,
+      "homeScore": 128,
+      "awayScore": 101,
+      "kind": "score",
+      "teamId": "11",
+      "playerIds": [
+        "4065673"
+      ],
+      "points": 1
+    },
+    {
+      "order": 518,
+      "period": 4,
+      "clockSeconds": 77,
+      "homeScore": 128,
+      "awayScore": 101,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4065673"
+      ]
+    },
+    {
+      "order": 519,
+      "period": 4,
+      "clockSeconds": 72,
+      "homeScore": 128,
+      "awayScore": 101,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4065731"
+      ]
+    },
+    {
+      "order": 520,
+      "period": 4,
+      "clockSeconds": 71,
+      "homeScore": 128,
+      "awayScore": 101,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "5106060"
+      ]
+    },
+    {
+      "order": 521,
+      "period": 4,
+      "clockSeconds": 68,
+      "homeScore": 128,
+      "awayScore": 101,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4432808"
+      ]
+    },
+    {
+      "order": 522,
+      "period": 4,
+      "clockSeconds": 61,
+      "homeScore": 128,
+      "awayScore": 101,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4065673"
+      ]
+    },
+    {
+      "order": 523,
+      "period": 4,
+      "clockSeconds": 59,
+      "homeScore": 128,
+      "awayScore": 101,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4432808"
+      ]
+    },
+    {
+      "order": 524,
+      "period": 4,
+      "clockSeconds": 54,
+      "homeScore": 128,
+      "awayScore": 101,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4431941"
+      ]
+    },
+    {
+      "order": 525,
+      "period": 4,
+      "clockSeconds": 52,
+      "homeScore": 128,
+      "awayScore": 101,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4595400"
+      ]
+    },
+    {
+      "order": 526,
+      "period": 4,
+      "clockSeconds": 34,
+      "homeScore": 128,
+      "awayScore": 101,
+      "kind": "other",
+      "teamId": "29",
+      "playerIds": [
+        "4595400"
+      ]
+    },
+    {
+      "order": 527,
+      "period": 4,
+      "clockSeconds": 30,
+      "homeScore": 128,
+      "awayScore": 101,
+      "kind": "other",
+      "teamId": "11",
+      "playerIds": [
+        "4431941"
+      ]
+    },
+    {
+      "order": 528,
+      "period": 4,
+      "clockSeconds": 27,
+      "homeScore": 128,
+      "awayScore": 103,
+      "kind": "score",
+      "teamId": "11",
+      "playerIds": [
+        "4065673"
+      ],
+      "points": 2
+    },
+    {
+      "order": 529,
+      "period": 4,
+      "clockSeconds": 3,
+      "homeScore": 128,
+      "awayScore": 103,
+      "kind": "turnover",
+      "teamId": "29",
+      "playerIds": []
+    },
+    {
+      "order": 530,
+      "period": 5,
+      "clockSeconds": 300,
+      "homeScore": 128,
+      "awayScore": 103,
+      "kind": "period",
+      "playerIds": []
+    },
+    {
+      "order": 531,
+      "period": 4,
+      "clockSeconds": 0,
+      "homeScore": 128,
+      "awayScore": 103,
+      "kind": "final",
+      "playerIds": []
+    }
+  ]
+}
