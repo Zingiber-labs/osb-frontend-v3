@@ -5,12 +5,12 @@ import type { ScenarioRenderer } from "@/features/gameplay/renderer/ScenarioRend
 type Props = { onReady: (renderer: RendererPort) => void };
 
 export function ScenarioCanvas({ onReady }: Props) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const hostRef = useRef<HTMLDivElement>(null);
   const [fallback, setFallback] = useState(false);
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
+    const host = hostRef.current;
+    if (!host) return;
     let renderer: ScenarioRenderer | null = null;
     let cancelled = false;
     let mounted = false;
@@ -19,7 +19,7 @@ export function ScenarioCanvas({ onReady }: Props) {
       .then(async ({ ScenarioRenderer: Renderer }) => {
         const r = new Renderer();
         renderer = r;
-        await r.mount(canvas);
+        await r.mount(host);
         mounted = true;
         if (cancelled) {
           r.destroy();
@@ -43,7 +43,7 @@ export function ScenarioCanvas({ onReady }: Props) {
 
   return (
     <div className="relative min-h-[360px] flex-1">
-      <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" />
+      <div ref={hostRef} className="absolute inset-0" />
       {fallback ? (
         <p className="absolute inset-x-0 bottom-4 text-center text-slate-400">HUD-only mode: the scene could not start in this browser.</p>
       ) : null}

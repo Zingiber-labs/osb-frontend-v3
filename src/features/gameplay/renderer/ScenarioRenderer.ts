@@ -13,19 +13,28 @@ export class ScenarioRenderer implements RendererPort {
   // Guards against destroy() running while mount() is still awaiting app.init.
   private mountId = 0;
 
-  async mount(canvas: HTMLCanvasElement): Promise<void> {
+  /**
+   * The renderer owns its canvas: Pixi creates it, mount() appends it to the
+   * host and destroy() removes it. The host div belongs to React, so strict-mode
+   * remounts never share a WebGL context between two Applications.
+   */
+  async mount(host: HTMLElement): Promise<void> {
     const id = ++this.mountId;
     const app = new Application();
-    await app.init({
-      canvas,
-      resizeTo: canvas.parentElement ?? undefined,
-      background: 0x05060f,
-      antialias: true,
-    });
+    await app.init({ resizeTo: host, background: 0x05060f, antialias: true });
     if (id !== this.mountId) {
-      app.destroy({ removeView: false }, { children: true });
+      // Stale mount: nothing was appended to the host yet.
+      app.destroy({ removeView: true }, { children: true });
       return;
     }
+    const canvas = app.canvas;
+    canvas.style.position = "absolute";
+    canvas.style.inset = "0";
+    canvas.style.width = "100%";
+    canvas.style.height = "100%";
+    host.appendChild(canvas);
+    // Measure the host after layout so the world is built at the real size.
+    app.resize();
     const world = buildWorld(app);
     this.app = app;
     this.world = world;
@@ -42,7 +51,7 @@ export class ScenarioRenderer implements RendererPort {
     this.world = null;
     if (this.app) {
       this.app.ticker.remove(this.idle);
-      this.app.destroy({ removeView: false }, { children: true });
+      this.app.destroy({ removeView: true }, { children: true });
       this.app = null;
     }
   }
