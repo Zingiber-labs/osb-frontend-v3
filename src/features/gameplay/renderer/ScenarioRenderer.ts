@@ -10,8 +10,11 @@ export class ScenarioRenderer implements RendererPort {
   private app: Application | null = null;
   private world: World | null = null;
   private queue: ActionQueue | null = null;
+  // Guards against destroy() running while mount() is still awaiting app.init.
+  private mountId = 0;
 
   async mount(canvas: HTMLCanvasElement): Promise<void> {
+    const id = ++this.mountId;
     const app = new Application();
     await app.init({
       canvas,
@@ -19,6 +22,10 @@ export class ScenarioRenderer implements RendererPort {
       background: 0x05060f,
       antialias: true,
     });
+    if (id !== this.mountId) {
+      app.destroy({ removeView: false }, { children: true });
+      return;
+    }
     const world = buildWorld(app);
     this.app = app;
     this.world = world;
@@ -27,6 +34,9 @@ export class ScenarioRenderer implements RendererPort {
   }
 
   destroy(): void {
+    this.mountId++;
+    // An in-flight animation's tween promise stays pending after destroy by
+    // design: the queue is dropped along with it.
     this.queue?.clear();
     this.queue = null;
     this.world = null;
