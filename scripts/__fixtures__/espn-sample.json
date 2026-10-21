@@ -24,6 +24,7 @@
     { "id": "4", "sequenceNumber": "4", "type": { "text": "Bad Pass\nTurnover" }, "text": "Laker One bad pass (Warrior One steals)", "homeScore": 2, "awayScore": 0, "period": { "number": 1 }, "clock": { "displayValue": "10:58" }, "scoringPlay": false, "team": { "id": "13" }, "participants": [ { "athlete": { "id": "p1" } }, { "athlete": { "id": "w1" } } ] },
     { "id": "5", "sequenceNumber": "5", "type": { "text": "Free Throw - 1 of 2" }, "text": "Warrior One makes free throw 1 of 2", "homeScore": 2, "awayScore": 1, "period": { "number": 1 }, "clock": { "displayValue": "10:40" }, "scoringPlay": true, "scoreValue": 1, "team": { "id": "9" }, "participants": [ { "athlete": { "id": "w1" } } ] },
     { "id": "6", "sequenceNumber": "6", "type": { "text": "End Period" }, "text": "End of the 1st Quarter", "homeScore": 2, "awayScore": 1, "period": { "number": 1 }, "clock": { "displayValue": "0.0" }, "scoringPlay": false, "participants": [] },
-    { "id": "7", "sequenceNumber": "7", "type": { "text": "End Game" }, "text": "End of Game", "homeScore": 2, "awayScore": 1, "period": { "number": 4 }, "clock": { "displayValue": "0.0" }, "scoringPlay": false, "participants": [] }
+    { "id": "6b", "sequenceNumber": "7", "type": { "text": "End Period" }, "text": "End of the 4th Quarter", "homeScore": 2, "awayScore": 1, "period": { "number": 4 }, "clock": { "displayValue": "0.0" }, "scoringPlay": false, "participants": [] },
+    { "id": "7", "sequenceNumber": "8", "type": { "text": "End Game" }, "text": "End of Game", "homeScore": 2, "awayScore": 1, "period": { "number": 4 }, "clock": { "displayValue": "0.0" }, "scoringPlay": false, "participants": [] }
   ]
 }

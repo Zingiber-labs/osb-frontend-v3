@@ -6592,15 +6592,6 @@
     },
     {
       "order": 530,
-      "period": 5,
-      "clockSeconds": 300,
-      "homeScore": 128,
-      "awayScore": 103,
-      "kind": "period",
-      "playerIds": []
-    },
-    {
-      "order": 531,
       "period": 4,
       "clockSeconds": 0,
       "homeScore": 128,

@@ -79,7 +79,7 @@ export function espnToRecordedGame(summary: EspnSummary): RecordedGame {
     });
   };
 
-  for (const p of summary.plays) {
+  for (const [i, p] of summary.plays.entries()) {
     const typeText = p.type.text.toLowerCase();
     const text = p.text.toLowerCase();
     const participants = (p.participants ?? []).map((x) => x.athlete.id);
@@ -89,6 +89,8 @@ export function espnToRecordedGame(summary: EspnSummary): RecordedGame {
       continue;
     }
     if (typeText === "end period") {
+      // ESPN emits an End Period at the end of regulation even when the game ends there; skip it so no phantom overtime appears.
+      if (summary.plays[i + 1]?.type.text.toLowerCase() === "end game") continue;
       const nextPeriod = p.period.number + 1;
       push(p, "period", { period: nextPeriod, clockSeconds: periodLength(nextPeriod), playerIds: [], teamId: undefined });
       continue;

@@ -47,4 +47,9 @@ describe("espnToRecordedGame", () => {
     expect(game.plays[6].teamId).toBeUndefined();
     expect(game.plays[7]).toMatchObject({ kind: "final", period: 4, clockSeconds: 0 });
   });
+
+  it("skips the End Period that immediately precedes End Game (no phantom overtime)", () => {
+    expect(game.plays.some((p) => p.kind === "period" && p.period === 5)).toBe(false);
+    expect(game.plays.filter((p) => p.kind === "period").map((p) => p.period)).toEqual([2]);
+  });
 });
