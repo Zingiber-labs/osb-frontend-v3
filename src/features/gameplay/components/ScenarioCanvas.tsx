@@ -2,6 +2,10 @@ import { useEffect, useRef, useState } from "react";
 import { NULL_RENDERER, type RendererPort } from "@/features/gameplay/renderer/RendererPort";
 import type { ScenarioRenderer } from "@/features/gameplay/renderer/ScenarioRenderer";
 
+// One shared import promise: strict mode mounts twice and concurrent dynamic imports of the same module are redundant.
+let rendererModule: Promise<typeof import("@/features/gameplay/renderer/ScenarioRenderer")> | null = null;
+const loadRenderer = () => (rendererModule ??= import("@/features/gameplay/renderer/ScenarioRenderer"));
+
 type Props = { onReady: (renderer: RendererPort) => void };
 
 export function ScenarioCanvas({ onReady }: Props) {
@@ -15,7 +19,7 @@ export function ScenarioCanvas({ onReady }: Props) {
     let cancelled = false;
     let mounted = false;
 
-    import("@/features/gameplay/renderer/ScenarioRenderer")
+    loadRenderer()
       .then(async ({ ScenarioRenderer: Renderer }) => {
         const r = new Renderer();
         renderer = r;

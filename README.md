@@ -9,7 +9,7 @@ npm install
 npm run dev          # http://localhost:5173/game-play
 npm test             # vitest
 npm run build        # tsc -b && vite build
-npm run record-game -- <espnEventId>   # add another recorded game to src/fixtures/games
+npm run record-game -- <espnEventId>   # add another recorded game to src/fixtures/games (new fixtures are picked up automatically)
 ```
 
 ## Layout

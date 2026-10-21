@@ -12,6 +12,7 @@ import { ScenarioCanvas } from "./ScenarioCanvas";
 import { SetupPanel } from "./SetupPanel";
 import type { StartConfig } from "./types";
 
+const RESULT_DELAY_MS = 2500;
 const DEFAULT_MISSION: MissionConfig = { stat: "pts", target: 20 };
 
 export function GamePlayPage() {
@@ -30,15 +31,24 @@ export function GamePlayPage() {
   );
   const mission = config?.mission ?? DEFAULT_MISSION;
   const state = useScenario(feed, mission, renderer);
+  const [showResult, setShowResult] = useState(false);
+  const finished = state.status === "won" || state.status === "lost";
+  useEffect(() => {
+    if (!finished) return;
+    const t = setTimeout(() => setShowResult(true), RESULT_DELAY_MS);
+    return () => clearTimeout(t);
+  }, [finished]);
   const handleReady = useCallback((r: RendererPort) => setRenderer(r), []);
 
   useEffect(() => {
     if (!feed || !renderer) return;
     feed.start();
-    return () => feed.stop();
+    return () => feed.pause();
   }, [feed, renderer]);
 
   const reset = () => {
+    feed?.stop();
+    setShowResult(false);
     setConfig(null);
     setRenderer(null);
   };
@@ -53,7 +63,6 @@ export function GamePlayPage() {
   }
 
   const myTeamId = findTeamId(game, config.playerId);
-  const finished = state.status === "won" || state.status === "lost";
 
   return (
     <section className="relative flex flex-1 flex-col">
@@ -61,7 +70,7 @@ export function GamePlayPage() {
       <Hud state={state} game={game} myTeamId={myTeamId} />
       <ScenarioCanvas onReady={handleReady} />
       {import.meta.env.DEV ? <DebugPanel feed={feed} renderer={renderer} /> : null}
-      {finished ? <ResultOverlay state={state} onReplay={reset} /> : null}
+      {showResult ? <ResultOverlay state={state} onReplay={reset} /> : null}
     </section>
   );
 }

@@ -1,5 +1,5 @@
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { fireEvent, render, screen } from "@testing-library/react";
+import { describe, expect, it, vi } from "vitest";
 import { testGame } from "@/features/gameplay/feeds/testGame";
 import type { RecordedGame } from "@/features/gameplay/feeds/types";
 import { SetupPanel } from "./SetupPanel";
@@ -13,8 +13,6 @@ const secondGame: RecordedGame = {
 const games = [testGame, secondGame];
 
 describe("SetupPanel", () => {
-  afterEach(cleanup);
-
   it("submits the first roster player of a newly selected game", () => {
     const onStart = vi.fn();
     render(<SetupPanel games={games} onStart={onStart} />);

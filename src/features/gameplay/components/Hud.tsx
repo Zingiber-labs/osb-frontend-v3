@@ -23,7 +23,7 @@ export function Hud({ state, game, myTeamId }: Props) {
           <div className="h-full bg-emerald-400" style={{ width: `${(state.hull / HULL_MAX) * 100}%` }} />
         </div>
       </div>
-      <div className="flex items-center gap-1" aria-label={`shield ${state.shield} of ${SHIELD_MAX}`}>
+      <div role="img" className="flex items-center gap-1" aria-label={`shield ${state.shield} of ${SHIELD_MAX}`}>
         <span>SHIELD</span>
         {Array.from({ length: SHIELD_MAX }, (_, i) => (
           <span key={i} className={`inline-block h-3 w-3 rounded-full ${i < state.shield ? "bg-cyan-300" : "bg-slate-700"}`} />

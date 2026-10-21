@@ -168,7 +168,7 @@ Mapping at capture time: a scoring play with `scoreValue` 1/2/3 → `score`; pla
 
 `src/features/gameplay/renderer/ScenarioRenderer.ts`, a class owning the Pixi `Application`.
 
-- `mount(canvas: HTMLCanvasElement): Promise<void>`, `destroy(): void`
+- `mount(host: HTMLElement): Promise<void>`, `destroy(): void`
 - `enqueue(actions: ShipAction[]): void`
 - `syncState(state: ScenarioState): void` for sprites that mirror state (shield glow, damage smoke)
 - Layers: parallax starfield, background meteorites, enemy lane, ship, effects.

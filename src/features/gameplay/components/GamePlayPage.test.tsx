@@ -1,4 +1,5 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
+import { StrictMode } from "react";
 import { MemoryRouter } from "react-router";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { games } from "@/fixtures/games";
@@ -25,9 +26,11 @@ describe("GamePlayPage", () => {
     const player = game.home.players[0];
 
     render(
-      <MemoryRouter initialEntries={["/game-play"]}>
-        <GamePlayPage />
-      </MemoryRouter>,
+      <StrictMode>
+        <MemoryRouter initialEntries={["/game-play"]}>
+          <GamePlayPage />
+        </MemoryRouter>
+      </StrictMode>,
     );
 
     expect(screen.getByRole("heading", { name: /game play/i })).toBeInTheDocument();
@@ -46,6 +49,10 @@ describe("GamePlayPage", () => {
       await vi.advanceTimersByTimeAsync(60_000);
     });
 
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(3000);
+    });
+
     expect(screen.getByText(/mission (success|failed)/i)).toBeInTheDocument();
     expect(syncState).toHaveBeenCalled();
     const last = game.plays[game.plays.length - 1];
@@ -56,9 +63,11 @@ describe("GamePlayPage", () => {
 
   it("shows an error when the URL points at a game that is not recorded", () => {
     render(
-      <MemoryRouter initialEntries={["/game-play?gameId=nope&playerId=x"]}>
-        <GamePlayPage />
-      </MemoryRouter>,
+      <StrictMode>
+        <MemoryRouter initialEntries={["/game-play?gameId=nope&playerId=x"]}>
+          <GamePlayPage />
+        </MemoryRouter>
+      </StrictMode>,
     );
     expect(screen.getByText(/no recorded game with id "nope"/i)).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /start/i })).toBeInTheDocument();

@@ -21,8 +21,8 @@ export function SetupPanel({ games, initialGameId, initialPlayerId, error, onSta
   const roster = game ? [...game.home.players.map((p) => ({ ...p, team: game.home.abbreviation })), ...game.away.players.map((p) => ({ ...p, team: game.away.abbreviation }))] : [];
   const [playerId, setPlayerId] = useState(roster.some((p) => p.id === initialPlayerId) ? initialPlayerId! : roster[0]?.id ?? "");
   const [stat, setStat] = useState<MissionStat>("pts");
-  const [target, setTarget] = useState(20);
-  const [speed, setSpeed] = useState(16);
+  const [targetText, setTarget] = useState("20");
+  const [speedText, setSpeed] = useState("16");
 
   const effectivePlayerId = playerId || roster[0]?.id || "";
 
@@ -36,6 +36,8 @@ export function SetupPanel({ games, initialGameId, initialPlayerId, error, onSta
       onSubmit={(e) => {
         e.preventDefault();
         if (!effectivePlayerId) return;
+        const target = Math.max(1, Math.round(Number(targetText) || 1));
+        const speed = Math.max(1, Math.round(Number(speedText) || 1));
         onStart({ gameId: game.id, playerId: effectivePlayerId, mission: { stat, target }, speed });
       }}
     >
@@ -66,11 +68,11 @@ export function SetupPanel({ games, initialGameId, initialPlayerId, error, onSta
       </label>
       <label className="flex flex-col gap-1 text-sm">
         Target
-        <input className={selectClass} type="number" min={1} value={target} onChange={(e) => setTarget(Math.max(1, Number(e.target.value) || 1))} />
+        <input className={selectClass} type="number" min={1} value={targetText} onChange={(e) => setTarget(e.target.value)} />
       </label>
       <label className="flex flex-col gap-1 text-sm">
         Speed
-        <input className={selectClass} type="number" min={1} value={speed} onChange={(e) => setSpeed(Math.max(1, Number(e.target.value) || 1))} />
+        <input className={selectClass} type="number" min={1} value={speedText} onChange={(e) => setSpeed(e.target.value)} />
       </label>
       <Button type="submit">Start</Button>
     </form>
