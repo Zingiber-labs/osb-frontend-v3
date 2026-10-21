@@ -14,6 +14,7 @@ vi.mock("@/features/gameplay/renderer/ScenarioRenderer", () => ({
     destroy = vi.fn();
     enqueue = enqueue;
     syncState = syncState;
+    whenIdle = () => Promise.resolve();
   },
 }));
 

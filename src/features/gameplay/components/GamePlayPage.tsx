@@ -12,7 +12,8 @@ import { ScenarioCanvas } from "./ScenarioCanvas";
 import { SetupPanel } from "./SetupPanel";
 import type { StartConfig } from "./types";
 
-const RESULT_DELAY_MS = 2500;
+// Upper bound on waiting for the animation queue, so a stuck animation can never hide the result forever.
+const RESULT_MAX_WAIT_MS = 8000;
 const DEFAULT_MISSION: MissionConfig = { stat: "pts", target: 20 };
 
 export function GamePlayPage() {
@@ -35,9 +36,18 @@ export function GamePlayPage() {
   const finished = state.status === "won" || state.status === "lost";
   useEffect(() => {
     if (!finished) return;
-    const t = setTimeout(() => setShowResult(true), RESULT_DELAY_MS);
-    return () => clearTimeout(t);
-  }, [finished]);
+    let cancelled = false;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const cap = new Promise<void>((resolve) => { timer = setTimeout(resolve, RESULT_MAX_WAIT_MS); });
+    const idle = renderer ? renderer.whenIdle() : cap;
+    void Promise.race([idle, cap]).then(() => {
+      if (!cancelled) setShowResult(true);
+    });
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
+  }, [finished, renderer]);
   const handleReady = useCallback((r: RendererPort) => setRenderer(r), []);
 
   useEffect(() => {

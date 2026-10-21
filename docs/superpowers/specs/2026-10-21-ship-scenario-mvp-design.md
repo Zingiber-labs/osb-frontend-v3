@@ -203,7 +203,7 @@ scripts/record-game.ts
 - `useScenario(feed, mission)` holds `ScenarioState`, subscribes to the feed, calls `reduce`, forwards actions to the renderer. It is the only bridge between the three layers.
 - `SetupPanel`: pick fixture game, pick my player from both rosters, pick mission stat and target, pick speed. Start.
 - `ScenarioCanvas`: the canvas plus `Hud` (hull bar, shield pips, combo, score, clock, mission progress). HUD is React, positioned over the canvas.
-- `ResultOverlay`: on won or lost, final stats and a replay button.
+- `ResultOverlay`: on won or lost, final stats and a replay button. It appears once the renderer's action queue has drained (so the ending animation is seen), capped at 8 s.
 - `DebugPanel` (dev only): one button per `ShipAction` type, pause and step controls for the feed.
 
 Error handling: unknown or malformed events are dropped with a console warning. Renderer init failure shows HUD-only mode. Missing or unparsable fixture shows an error in the setup panel.

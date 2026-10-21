@@ -6,7 +6,7 @@ import type { RendererPort } from "@/features/gameplay/renderer/RendererPort";
 import { useScenario } from "./useScenario";
 
 function mockRenderer(): RendererPort & { enqueue: Mock<RendererPort["enqueue"]>; syncState: Mock<RendererPort["syncState"]> } {
-  return { enqueue: vi.fn<RendererPort["enqueue"]>(), syncState: vi.fn<RendererPort["syncState"]>() };
+  return { enqueue: vi.fn<RendererPort["enqueue"]>(), syncState: vi.fn<RendererPort["syncState"]>(), whenIdle: () => Promise.resolve() };
 }
 
 const mission = { stat: "pts" as const, target: 5 };

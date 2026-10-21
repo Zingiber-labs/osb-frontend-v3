@@ -83,4 +83,28 @@ describe("ActionQueue", () => {
     await new Promise((r) => setTimeout(r, 0));
     expect(seen).toEqual(["fire"]);
   });
+
+  it("whenIdle resolves immediately when nothing is queued", async () => {
+    const q = new ActionQueue(async () => {}, 0, async () => {});
+    await expect(q.whenIdle()).resolves.toBeUndefined();
+  });
+
+  it("whenIdle resolves only after the last action and its gap complete", async () => {
+    const running = deferred();
+    const gap = deferred();
+    const q = new ActionQueue(() => running.promise, 150, () => gap.promise);
+    q.enqueue([fire]);
+    let idle = false;
+    void q.whenIdle().then(() => { idle = true; });
+    await Promise.resolve();
+    expect(idle).toBe(false);
+
+    running.resolve();
+    await new Promise((r) => setTimeout(r, 0));
+    expect(idle).toBe(false);
+
+    gap.resolve();
+    await new Promise((r) => setTimeout(r, 0));
+    expect(idle).toBe(true);
+  });
 });

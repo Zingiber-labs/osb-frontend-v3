@@ -8,6 +8,7 @@ const defaultWait: Waiter = (ms) => new Promise((resolve) => setTimeout(resolve,
 export class ActionQueue {
   private queue: ShipAction[] = [];
   private draining = false;
+  private idleResolvers: Array<() => void> = [];
   private readonly run: ActionRunner;
   private readonly gapMs: number;
   private readonly wait: Waiter;
@@ -31,6 +32,12 @@ export class ActionQueue {
     void this.drain();
   }
 
+  /** Resolves once nothing is running or pending (after the last gap). */
+  whenIdle(): Promise<void> {
+    if (!this.draining && this.queue.length === 0) return Promise.resolve();
+    return new Promise<void>((resolve) => { this.idleResolvers.push(resolve); });
+  }
+
   clear(): void {
     this.queue = [];
   }
@@ -50,6 +57,9 @@ export class ActionQueue {
       }
     } finally {
       this.draining = false;
+      const resolvers = this.idleResolvers;
+      this.idleResolvers = [];
+      for (const resolve of resolvers) resolve();
     }
   }
 }

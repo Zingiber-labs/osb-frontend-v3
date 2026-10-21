@@ -60,6 +60,10 @@ export class ScenarioRenderer implements RendererPort {
     this.queue?.enqueue(actions);
   }
 
+  whenIdle(): Promise<void> {
+    return this.queue ? this.queue.whenIdle() : Promise.resolve();
+  }
+
   syncState(state: ScenarioState): void {
     if (!this.world) return;
     this.world.shieldRing.alpha = state.shield / SHIELD_MAX;
