@@ -14,6 +14,11 @@ export function createInitialState(mission: MissionConfig): ScenarioState {
   };
 }
 
+/** Adds the event's label as a caption without introducing an undefined key. */
+function captioned<A extends ShipAction>(action: A, label: string | undefined): A {
+  return label ? { ...action, caption: label } : action;
+}
+
 export function reduce(state: ScenarioState, event: GameEvent): ReduceResult {
   if (state.status === "won" || state.status === "lost") {
     return { state, actions: [] };
@@ -37,15 +42,15 @@ export function reduce(state: ScenarioState, event: GameEvent): ReduceResult {
           next.combo += 1;
           next.myPlayerStats = { ...next.myPlayerStats, pts: next.myPlayerStats.pts + event.points };
         }
-        actions.push({ type: "fire", size: ENEMY_BY_POINTS[event.points], charged: event.byMyPlayer });
+        actions.push(captioned({ type: "fire", size: ENEMY_BY_POINTS[event.points], charged: event.byMyPlayer }, event.label));
       } else {
         next.combo = 0;
         if (next.shield > 0) {
           next.shield -= 1;
-          actions.push({ type: "hit", points: event.points, absorbed: true });
+          actions.push(captioned({ type: "hit", points: event.points, absorbed: true }, event.label));
         } else {
           next.hull = Math.max(HULL_MIN, next.hull - HULL_DAMAGE_BY_POINTS[event.points]);
-          actions.push({ type: "hit", points: event.points, absorbed: false });
+          actions.push(captioned({ type: "hit", points: event.points, absorbed: false }, event.label));
         }
       }
       break;
@@ -60,9 +65,9 @@ export function reduce(state: ScenarioState, event: GameEvent): ReduceResult {
           else stats.stl += 1;
           next.myPlayerStats = stats;
         }
-        actions.push({ type: "shieldUp" });
+        actions.push(captioned({ type: "shieldUp" }, event.label));
       } else {
-        actions.push({ type: "fizzle" });
+        actions.push(captioned({ type: "fizzle" }, event.label));
       }
       break;
     }
@@ -72,9 +77,9 @@ export function reduce(state: ScenarioState, event: GameEvent): ReduceResult {
           next.combo = 0;
           next.myPlayerStats = { ...next.myPlayerStats, tov: next.myPlayerStats.tov + 1 };
         }
-        actions.push({ type: "stall" });
+        actions.push(captioned({ type: "stall" }, event.label));
       } else {
-        actions.push({ type: "enemyMalfunction" });
+        actions.push(captioned({ type: "enemyMalfunction" }, event.label));
       }
       break;
     }

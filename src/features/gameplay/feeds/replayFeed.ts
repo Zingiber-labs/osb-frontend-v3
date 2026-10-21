@@ -13,17 +13,47 @@ function toClock(play: RecordedPlay): Clock {
   return { period: play.period, secondsLeft: play.clockSeconds, home: play.homeScore, away: play.awayScore };
 }
 
-function toEvent(play: RecordedPlay, myTeamId: string, myPlayerId: string): GameEvent | null {
+const SUFFIXES = new Set(["jr", "jr.", "sr", "sr.", "ii", "iii", "iv"]);
+
+export function formatLabel(name: string | undefined, teamAbbr: string, what: string): string {
+  if (!name) return `${teamAbbr} ${what}`;
+  const parts = name.trim().split(/\s+/);
+  let last = parts[parts.length - 1] ?? "";
+  if (SUFFIXES.has(last.toLowerCase()) && parts.length > 1) last = parts[parts.length - 2];
+  return `${last.toUpperCase()} ${what}`;
+}
+
+type Lookup = { names: Map<string, string>; abbr: Map<string, string> };
+
+function buildLookup(game: RecordedGame): Lookup {
+  const names = new Map<string, string>();
+  const abbr = new Map<string, string>();
+  for (const team of [game.home, game.away]) {
+    abbr.set(team.id, team.abbreviation);
+    for (const p of team.players) names.set(p.id, p.name);
+  }
+  return { names, abbr };
+}
+
+function labelFor(play: RecordedPlay, lookup: Lookup): string | undefined {
+  const what = play.kind === "score" ? (play.points ? `+${play.points}` : undefined) : play.kind === "block" ? "BLOCK" : play.kind === "steal" ? "STEAL" : play.kind === "turnover" ? "TURNOVER" : undefined;
+  if (!what) return undefined;
+  const name = play.playerIds.map((id) => lookup.names.get(id)).find((n): n is string => Boolean(n));
+  const teamAbbr = (play.teamId && lookup.abbr.get(play.teamId)) || "TEAM";
+  return formatLabel(name, teamAbbr, what);
+}
+
+function toEvent(play: RecordedPlay, myTeamId: string, myPlayerId: string, lookup: Lookup): GameEvent | null {
   const at = toClock(play);
   const side: Side = play.teamId === myTeamId ? "mine" : "theirs";
   const byMyPlayer = play.playerIds.includes(myPlayerId);
   switch (play.kind) {
     case "score":
-      return play.points ? { kind: "score", side, points: play.points, byMyPlayer, at } : null;
+      return play.points ? { kind: "score", side, points: play.points, byMyPlayer, label: labelFor(play, lookup), at } : null;
     case "block":
     case "steal":
     case "turnover":
-      return { kind: play.kind, side, byMyPlayer, at };
+      return { kind: play.kind, side, byMyPlayer, label: labelFor(play, lookup), at };
     case "period":
       return { kind: "period", period: play.period, at };
     case "final":
@@ -40,6 +70,7 @@ function gapSeconds(prev: RecordedPlay | undefined, cur: RecordedPlay): number {
 
 export function buildTimeline(game: RecordedGame, myPlayerId: string, speed: number): TimelineItem[] {
   const myTeamId = findTeamId(game, myPlayerId);
+  const lookup = buildLookup(game);
   const plays = [...game.plays].sort((a, b) => a.order - b.order);
   const first = plays[0];
   const tipoffAt: Clock = first ? toClock(first) : { period: 1, secondsLeft: 720, home: 0, away: 0 };
@@ -50,7 +81,7 @@ export function buildTimeline(game: RecordedGame, myPlayerId: string, speed: num
   for (const play of plays) {
     pendingMs += (gapSeconds(prev, play) * 1000) / speed;
     prev = play;
-    const event = toEvent(play, myTeamId, myPlayerId);
+    const event = toEvent(play, myTeamId, myPlayerId, lookup);
     if (!event) continue;
     items.push({ event, delayMs: Math.round(pendingMs) });
     pendingMs = 0;

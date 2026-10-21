@@ -11,10 +11,10 @@ export type Clock = {
 
 export type GameEvent =
   | { kind: "tipoff"; at: Clock }
-  | { kind: "score"; side: Side; points: Points; byMyPlayer: boolean; at: Clock }
-  | { kind: "block"; side: Side; byMyPlayer: boolean; at: Clock }
-  | { kind: "steal"; side: Side; byMyPlayer: boolean; at: Clock }
-  | { kind: "turnover"; side: Side; byMyPlayer: boolean; at: Clock }
+  | { kind: "score"; side: Side; points: Points; byMyPlayer: boolean; label?: string; at: Clock }
+  | { kind: "block"; side: Side; byMyPlayer: boolean; label?: string; at: Clock }
+  | { kind: "steal"; side: Side; byMyPlayer: boolean; label?: string; at: Clock }
+  | { kind: "turnover"; side: Side; byMyPlayer: boolean; label?: string; at: Clock }
   | { kind: "period"; period: number; at: Clock }
   | { kind: "final"; at: Clock };
 
@@ -40,12 +40,12 @@ export type ScenarioState = {
 export type EnemySize = "scout" | "fighter" | "cruiser";
 
 export type ShipAction =
-  | { type: "fire"; size: EnemySize; charged: boolean }
-  | { type: "hit"; points: Points; absorbed: boolean }
-  | { type: "shieldUp" }
-  | { type: "fizzle" }
-  | { type: "stall" }
-  | { type: "enemyMalfunction" }
+  | { type: "fire"; size: EnemySize; charged: boolean; caption?: string }
+  | { type: "hit"; points: Points; absorbed: boolean; caption?: string }
+  | { type: "shieldUp"; caption?: string }
+  | { type: "fizzle"; caption?: string }
+  | { type: "stall"; caption?: string }
+  | { type: "enemyMalfunction"; caption?: string }
   | { type: "objectiveComplete" }
   | { type: "warpOut" }
   | { type: "explode" };

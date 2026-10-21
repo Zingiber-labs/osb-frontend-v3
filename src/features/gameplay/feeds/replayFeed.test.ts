@@ -1,7 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { GameEvent } from "@/features/gameplay/engine/types";
-import { buildTimeline, createReplayFeed, findTeamId } from "./replayFeed";
+import { buildTimeline, createReplayFeed, findTeamId, formatLabel } from "./replayFeed";
 import { testGame } from "./testGame";
+import type { RecordedGame } from "./types";
 
 describe("findTeamId", () => {
   it("finds the team of a home or away player", () => {
@@ -130,5 +131,35 @@ describe("createReplayFeed", () => {
     vi.advanceTimersByTime(2000);
     vi.advanceTimersByTime(3000);
     expect(kinds).toEqual(["tipoff", "score", "block", "score"]);
+  });
+});
+
+describe("labels", () => {
+  it("formats last name and play, ignoring suffixes, or the team when there is no player", () => {
+    expect(formatLabel("Ja Morant", "MEM", "+3")).toBe("MORANT +3");
+    expect(formatLabel("Jaren Jackson Jr.", "MEM", "BLOCK")).toBe("JACKSON BLOCK");
+    expect(formatLabel("Robert Williams III", "MEM", "STEAL")).toBe("WILLIAMS STEAL");
+    expect(formatLabel(undefined, "IND", "TURNOVER")).toBe("IND TURNOVER");
+  });
+
+  it("labels score, block, steal and turnover events from the rosters", () => {
+    const [, score, block, , turnover] = buildTimeline(testGame, "h1", 1).map((i) => i.event);
+    expect(score).toMatchObject({ kind: "score", label: "ONE +2" });
+    expect(block).toMatchObject({ kind: "block", label: "TWO BLOCK" });
+    expect(turnover).toMatchObject({ kind: "turnover", label: "TWO TURNOVER" });
+  });
+
+  it("falls back to the team abbreviation for a team turnover", () => {
+    const game: RecordedGame = {
+      ...testGame,
+      plays: [{ order: 0, period: 1, clockSeconds: 700, homeScore: 0, awayScore: 0, kind: "turnover", teamId: "A", playerIds: [] }],
+    };
+    const [, turnover] = buildTimeline(game, "h1", 1).map((i) => i.event);
+    expect(turnover).toMatchObject({ kind: "turnover", side: "theirs", label: "AWY TURNOVER" });
+  });
+
+  it("leaves period and final without labels", () => {
+    const events = buildTimeline(testGame, "h1", 1).map((i) => i.event);
+    for (const e of events) if (e.kind === "period" || e.kind === "final" || e.kind === "tipoff") expect("label" in e).toBe(false);
   });
 });
