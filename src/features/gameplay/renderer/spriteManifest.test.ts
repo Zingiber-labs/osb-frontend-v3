@@ -14,7 +14,7 @@ describe("sprite manifest", () => {
 
   it("has the roles the renderer needs", () => {
     const keys = Object.keys(SPRITE_FILES);
-    for (const k of ["ship", "shipDamage1", "shipDamage2", "shipDamage3", "flame", "shield", "enemyScout", "enemyFighter", "enemyCruiser", "laserMine", "laserCharged", "laserTheirs", "meteorBig1", "meteorMed1"]) {
+    for (const k of ["ship", "shipDamage1", "shipDamage2", "shipDamage3", "flame", "shield", "enemyScout", "enemyFighter", "enemyCruiser", "laserMine", "laserCharged", "laserTheirs", "meteorBig1", "meteorMed1", "explosion"]) {
       expect(keys).toContain(k);
     }
   });

@@ -28,4 +28,4 @@ Design: `docs/superpowers/specs/2026-10-21-ship-scenario-mvp-design.md`
 
 ## Credits
 
-Sprite art is Kenney's Space Shooter Redux (CC0); see `public/sprites/CREDITS.md`.
+Sprite art was generated for this project (ship, enemies, lasers, shield, meteors, explosion, flame). See `public/sprites/CREDITS.md`.

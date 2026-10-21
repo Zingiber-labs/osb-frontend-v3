@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { TrailBuffer, shakeOffset } from "./fxMath";
+import { TrailBuffer, frameAt, shakeOffset, stripFrames } from "./fxMath";
 
 describe("TrailBuffer", () => {
   it("keeps the last N samples oldest first", () => {
@@ -11,6 +11,24 @@ describe("TrailBuffer", () => {
     const b = new TrailBuffer(3);
     b.push(1, 1);
     expect(b.samples()).toEqual([{ x: 1, y: 1 }]);
+  });
+});
+
+describe("stripFrames", () => {
+  it("splits a strip into equal left-to-right frames", () => {
+    expect(stripFrames(896, 112, 8)).toHaveLength(8);
+    expect(stripFrames(896, 112, 8)[0]).toEqual({ x: 0, y: 0, width: 112, height: 112 });
+    expect(stripFrames(896, 112, 8)[7]).toEqual({ x: 784, y: 0, width: 112, height: 112 });
+  });
+});
+
+describe("frameAt", () => {
+  it("maps progress to a frame and holds the last frame at t = 1", () => {
+    expect(frameAt(0, 8)).toBe(0);
+    expect(frameAt(0.5, 8)).toBe(4);
+    expect(frameAt(0.999, 8)).toBe(7);
+    expect(frameAt(1, 8)).toBe(7);
+    expect(frameAt(-0.1, 8)).toBe(0);
   });
 });
 

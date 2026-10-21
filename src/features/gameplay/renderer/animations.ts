@@ -1,7 +1,8 @@
-import { Graphics } from "pixi.js";
+import { Graphics, Sprite } from "pixi.js";
 import type { EnemySize, ShipAction } from "@/features/gameplay/engine/types";
 import { shake, trail, whiteFlash } from "./fx";
 import { callout, CALLOUT_COLORS } from "./callout";
+import { frameAt } from "./fxMath";
 import { COLORS, dot, laser, SHIP_SCALE, type World } from "./world";
 import { easeOut, tween } from "./tween";
 
@@ -21,23 +22,35 @@ const BURST_SCALE: Record<EnemySize, number> = { scout: 1, fighter: 1.4, cruiser
 
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
-/** Procedural explosion: white flash, ember ring, radial particles. Runs for `ms`. */
+/** Explosion frame strip on screen = 112 px at scale 1; the fireball reads best a little under that. */
+const EXPLOSION_SCALE = 0.85;
+
+/** Explosion: frame strip plus a white flash, ember ring and radial particles. Runs for `ms`. */
 async function burst(world: World, x: number, y: number, scale: number, ms: number) {
-  const flash = dot(world, 18 * scale, COLORS.flash);
+  const frames = world.explosionFrames;
+  const fire = new Sprite(frames[0]);
+  fire.anchor.set(0.5);
+  fire.scale.set(EXPLOSION_SCALE * scale);
+  fire.rotation = Math.random() * Math.PI * 2;
+  // Normal blending: additive plus bloom washed the fireball out to a white disc.
+  fire.position.set(x, y);
+  world.effects.addChild(fire);
+  const flash = dot(world, 6 * scale, COLORS.flash);
   flash.position.set(x, y);
   const ring = new Graphics().circle(0, 0, 10 * scale).stroke({ width: 3, color: COLORS.ember });
   ring.blendMode = "add";
   ring.position.set(x, y);
   world.effects.addChild(ring);
   const parts = Array.from({ length: 12 }, (_, i) => {
-    const p = dot(world, 3 * scale, i % 2 ? COLORS.ember : COLORS.gold);
+    const p = dot(world, 2 * scale, i % 2 ? COLORS.ember : COLORS.gold);
     p.position.set(x, y);
     const a = (i / 12) * Math.PI * 2;
     return { p, dx: Math.cos(a) * 60 * scale, dy: Math.sin(a) * 60 * scale };
   });
   await tween(world.app.ticker, ms, (t) => {
+    fire.texture = frames[frameAt(t, frames.length)];
     flash.scale.set(1 + t * 2.5);
-    flash.alpha = 1 - t;
+    flash.alpha = Math.max(0, 1 - t * 3);
     ring.scale.set(1 + t * 5);
     ring.alpha = 1 - t;
     for (const { p, dx, dy } of parts) {
@@ -46,6 +59,7 @@ async function burst(world: World, x: number, y: number, scale: number, ms: numb
       p.alpha = 1 - t;
     }
   });
+  fire.destroy();
   flash.destroy();
   ring.destroy();
   for (const { p } of parts) p.destroy();

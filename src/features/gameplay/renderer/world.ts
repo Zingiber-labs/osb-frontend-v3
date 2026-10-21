@@ -1,9 +1,10 @@
-import { Application, Container, FillGradient, Graphics, type Sprite } from "pixi.js";
+import { Application, Container, FillGradient, Graphics, Rectangle, Texture, type Sprite } from "pixi.js";
 import type { SpriteTextures } from "./assets";
 import { buildBackdrop, type Backdrop } from "./backdrop";
 import { makeBloom, makeGlow } from "./fx";
 import type { Quality } from "./quality";
-import type { SpriteKey } from "./spriteManifest";
+import { stripFrames } from "./fxMath";
+import { EXPLOSION_FRAMES, type SpriteKey } from "./spriteManifest";
 import { FACE_RIGHT, SHIP_SCALE, sprite } from "./spriteUtils";
 import { SquadronModel } from "./squadron";
 import { SquadronView } from "./squadronView";
@@ -15,6 +16,8 @@ export type World = {
   width: number;
   height: number;
   tex: SpriteTextures;
+  /** Explosion strip cut into frames, flash first. */
+  explosionFrames: Texture[];
   quality: Quality;
   backdrop: Backdrop;
   farStars: Container;
@@ -111,6 +114,11 @@ export function buildWorld(app: Application, tex: SpriteTextures, quality: Quali
   const overlay = new Container();
   app.stage.addChild(backdropLayer, farStars, farRocks, nearStars, nearRocks, enemyLane, shipLayer, effects, overlay);
 
+  const strip = tex.explosion;
+  const explosionFrames = stripFrames(strip.width, strip.height, EXPLOSION_FRAMES).map(
+    (f) => new Texture({ source: strip.source, frame: new Rectangle(f.x, f.y, f.width, f.height) }),
+  );
+
   const backdrop = buildBackdrop(tex.bgGalaxy, width, height);
   backdropLayer.addChild(backdrop.sprite);
 
@@ -166,7 +174,7 @@ export function buildWorld(app: Application, tex: SpriteTextures, quality: Quali
   vignette.alpha = 0;
   overlay.addChild(vignette);
 
-  return { app, width, height, tex, quality, backdrop, farStars, farRocks, nearStars, nearRocks, enemyLane, shipLayer, effects, overlay, flame, vignette, vignetteTarget: 0, ship, shipBase, shipBody: body, damage, shieldRing, shieldAlpha: 0, stars, rocks, squadron, squadronView };
+  return { app, width, height, tex, explosionFrames, quality, backdrop, farStars, farRocks, nearStars, nearRocks, enemyLane, shipLayer, effects, overlay, flame, vignette, vignetteTarget: 0, ship, shipBase, shipBody: body, damage, shieldRing, shieldAlpha: 0, stars, rocks, squadron, squadronView };
 }
 
 export type LaserKind = "mine" | "charged" | "theirs";
