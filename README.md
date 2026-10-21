@@ -22,6 +22,8 @@ npm run record-game -- <espnEventId>   # add another recorded game to src/fixtur
 - `src/fixtures/games/` recorded games
 - `scripts/` ESPN capture script
 
+Quality: effects (bloom, glow, trails, shake) are chosen automatically. Add `?quality=low` to the URL (e.g. `/game-play?quality=low`) to force the lighter mode on phones or slow machines, or `?quality=high` to force full effects.
+
 Design: `docs/superpowers/specs/2026-10-21-ship-scenario-mvp-design.md`
 
 ## Credits
