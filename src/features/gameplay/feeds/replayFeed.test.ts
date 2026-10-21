@@ -86,17 +86,49 @@ describe("createReplayFeed", () => {
     expect(events.map((e) => e.kind)).toEqual(["tipoff", "score", "block"]);
   });
 
-  it("stops delivering after stop and supports unsubscribe", () => {
+  it("unsubscribe stops that listener", () => {
     const feed = createReplayFeed(testGame, { myPlayerId: "h1", speed: 10 });
-    const seen: string[] = [];
-    const off = feed.onEvent((e) => seen.push(e.kind));
+    const a: string[] = [];
+    const b: string[] = [];
+    const offA = feed.onEvent((e) => a.push(e.kind));
+    feed.onEvent((e) => b.push(e.kind));
     feed.start();
     vi.advanceTimersByTime(0);
-    off();
-    vi.advanceTimersByTime(5000);
-    expect(seen).toEqual(["tipoff"]);
+    offA();
+    vi.advanceTimersByTime(2000);
+    expect(a).toEqual(["tipoff"]);
+    expect(b).toEqual(["tipoff", "score"]);
+  });
+
+  it("stop ends delivery permanently", () => {
+    const feed = createReplayFeed(testGame, { myPlayerId: "h1", speed: 10 });
+    const seen: string[] = [];
+    feed.onEvent((e) => seen.push(e.kind));
+    feed.start();
+    vi.advanceTimersByTime(0);
     feed.stop();
     vi.advanceTimersByTime(60_000);
     expect(seen).toEqual(["tipoff"]);
+    feed.start();
+    vi.advanceTimersByTime(60_000);
+    expect(seen).toEqual(["tipoff"]);
+  });
+
+  it("a listener that calls step during delivery does not double-advance", () => {
+    const feed = createReplayFeed(testGame, { myPlayerId: "h1", speed: 10 });
+    const kinds: string[] = [];
+    let stepped = false;
+    feed.onEvent((e) => {
+      kinds.push(e.kind);
+      if (e.kind === "score" && !stepped) {
+        stepped = true;
+        feed.step();
+      }
+    });
+    feed.start();
+    vi.advanceTimersByTime(0);
+    vi.advanceTimersByTime(2000);
+    vi.advanceTimersByTime(3000);
+    expect(kinds).toEqual(["tipoff", "score", "block", "score"]);
   });
 });

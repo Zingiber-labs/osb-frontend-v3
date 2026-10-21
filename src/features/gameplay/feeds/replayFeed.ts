@@ -83,6 +83,7 @@ export function createReplayFeed(game: RecordedGame, opts: { myPlayerId: string;
   };
 
   const schedule = () => {
+    clearTimer();
     if (!running || index >= timeline.length) {
       running = false;
       return;
