@@ -96,6 +96,7 @@ export class ScenarioRenderer implements RendererPort {
     if (!world) return;
     const dt = ticker.deltaTime;
     world.backdrop.pan(dt);
+    world.shieldRing.visible = world.shieldRing.alpha > 0.01;
     for (const star of world.stars) {
       star.g.x -= star.speed * dt;
       if (star.g.x < -2) {

@@ -61,7 +61,9 @@ export function shake(world: World, amplitude: number, ms: number): void {
 export function whiteFlash(world: World, source: Sprite, ms = 120): void {
   const ghost = new Sprite(source.texture);
   ghost.anchor.copyFrom(source.anchor);
-  ghost.scale.copyFrom(source.scale);
+  const sx = source.scale.x;
+  const sy = source.scale.y;
+  ghost.scale.set(sx, sy);
   ghost.rotation = source.rotation;
   ghost.position.copyFrom(source.position);
   ghost.tint = 0xffffff;
@@ -69,6 +71,6 @@ export function whiteFlash(world: World, source: Sprite, ms = 120): void {
   world.effects.addChild(ghost);
   void tween(world.app.ticker, ms, (t) => {
     ghost.alpha = 1 - t;
-    ghost.scale.set(source.scale.x * (1 + t * 0.3));
+    ghost.scale.set(sx * (1 + t * 0.3), sy * (1 + t * 0.3));
   }).then(() => ghost.destroy());
 }

@@ -15,7 +15,7 @@ export function buildBackdrop(texture: Texture, width: number, height: number): 
   sprite.tint = 0xa8b4cc;
   const cx = width / 2;
   const cy = height / 2;
-  const range = (sprite.width - width) / 2;
+  const range = Math.max(0, (sprite.width - width) / 2 - 10);
   let offset = 0;
   let dir = -1;
   sprite.position.set(cx, cy);

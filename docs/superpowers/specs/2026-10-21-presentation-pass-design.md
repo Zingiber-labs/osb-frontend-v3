@@ -28,9 +28,9 @@ Layer order, back to front: `backdrop`, `farStars`, `farRocks`, `nearStars`, `ne
 ## 4. Impact
 
 - **Screen shake.** `shake(world, amplitude, ms)` jitters the stage position with decaying random offsets and restores it; never awaited. Unabsorbed hit: amplitude = points × 3 for 250 ms. Enemy explosion: 2 (cruiser 3) for 150 ms. Ship explosion: 8 for 600 ms.
-- **Enemy white flash.** An additive ghost of the enemy sprite at full white pops for 120 ms at the moment the shot lands, before the burst.
+- **Enemy white flash.** An additive ghost of the enemy sprite as an additive bright copy pops for 120 ms at the moment the shot lands, before the burst.
 - **Hit flash on the ship** also tints the active damage overlay, not only the body.
-- **Low-hull vignette.** A full-screen red radial vignette in the `overlay` layer. `syncState` sets its target alpha: 0.35 when hull < 25, 0.18 when hull < 50, else 0. The idle loop pulses it ±20 percent at 1 Hz.
+- **Low-hull vignette.** Four red linear-gradient edge bands, each 28 percent of the frame deep, inside one container in the `overlay` layer (a radial `FillGradient` rendered as a solid fill in Pixi 8.22, so edge bands shipped instead). `syncState` sets the container target alpha: 0.28 when hull < 25, 0.12 when hull < 50, else 0. The idle loop pulses it ±20 percent at 1 Hz.
 
 ## 5. Quality switch
 
