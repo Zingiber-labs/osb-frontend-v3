@@ -61,6 +61,7 @@ export class ScenarioRenderer implements RendererPort {
     // design: the queue is dropped along with it.
     this.queue?.clear();
     this.queue = null;
+    this.world?.squadronView.destroy();
     this.world = null;
     if (this.app) {
       this.app.ticker.remove(this.idle);
@@ -106,5 +107,7 @@ export class ScenarioRenderer implements RendererPort {
         rock.g.y = Math.random() * world.height;
       }
     }
+    world.squadron.update(ticker.deltaMS);
+    world.squadronView.sync();
   };
 }

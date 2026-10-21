@@ -1,6 +1,6 @@
 import { Graphics } from "pixi.js";
-import type { ShipAction } from "@/features/gameplay/engine/types";
-import { COLORS, dot, laser, spawnEnemy, type World } from "./world";
+import type { EnemySize, ShipAction } from "@/features/gameplay/engine/types";
+import { COLORS, dot, laser, type World } from "./world";
 import { easeOut, tween } from "./tween";
 
 const DURATION = {
@@ -15,80 +15,119 @@ const DURATION = {
   explode: 2000,
 } as const;
 
+const BURST_SCALE: Record<EnemySize, number> = { scout: 1, fighter: 1.4, cruiser: 1.9 };
+
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
-async function fire(world: World, size: "scout" | "fighter" | "cruiser", charged: boolean) {
-  const { app, ship } = world;
-  const enemy = spawnEnemy(world, size);
+/** Procedural explosion: white flash, ember ring, radial particles. Runs for `ms`. */
+async function burst(world: World, x: number, y: number, scale: number, ms: number) {
+  const flash = dot(world, 14 * scale, COLORS.flash);
+  flash.position.set(x, y);
+  const ring = new Graphics().circle(0, 0, 10 * scale).stroke({ width: 3, color: COLORS.ember });
+  ring.position.set(x, y);
+  world.effects.addChild(ring);
+  const parts = Array.from({ length: 8 }, (_, i) => {
+    const p = dot(world, 3 * scale, i % 2 ? COLORS.ember : COLORS.gold);
+    p.position.set(x, y);
+    const a = (i / 8) * Math.PI * 2;
+    return { p, dx: Math.cos(a) * 60 * scale, dy: Math.sin(a) * 60 * scale };
+  });
+  await tween(world.app.ticker, ms, (t) => {
+    flash.scale.set(1 + t * 2.5);
+    flash.alpha = 1 - t;
+    ring.scale.set(1 + t * 5);
+    ring.alpha = 1 - t;
+    for (const { p, dx, dy } of parts) {
+      p.x = x + dx * easeOut(t);
+      p.y = y + dy * easeOut(t);
+      p.alpha = 1 - t;
+    }
+  });
+  flash.destroy();
+  ring.destroy();
+  for (const { p } of parts) p.destroy();
+}
+
+async function fire(world: World, size: EnemySize, charged: boolean) {
+  const { app, ship, squadron, squadronView } = world;
+  let member = squadron.takeNearest(ship.x, ship.y);
+  if (!member) {
+    squadron.spawn(squadron.freeSlot(), { fast: true });
+    squadronView.sync();
+    member = squadron.takeNearest(ship.x, ship.y)!;
+  }
+  const enemy = squadronView.detach(member.id)!;
+  const dest = squadron.anchor(member.slot);
+  const fromX = enemy.x;
+  const fromY = enemy.y;
   const shot = laser(world, charged ? "charged" : "mine");
   const travel = DURATION.fire * 0.6;
   await tween(app.ticker, travel, (t) => {
-    shot.x = lerp(ship.x + 26, enemy.x, t);
+    // A freshly spawned target is still flying in; bring it to its anchor during the shot's flight.
+    enemy.x = lerp(fromX, dest.x, t);
+    enemy.y = lerp(fromY, dest.y, t);
+    shot.x = lerp(ship.x + 40, enemy.x, t);
     shot.y = lerp(ship.y, enemy.y, t);
   });
   shot.destroy();
-  const ring = charged ? new Graphics().circle(0, 0, 10).stroke({ width: 3, color: COLORS.gold }) : null;
-  if (ring) {
-    ring.position.set(enemy.x, enemy.y);
-    world.effects.addChild(ring);
-  }
   const base = enemy.scale.x;
-  await tween(app.ticker, DURATION.fire - travel, (t) => {
-    enemy.scale.set(base * (1 + t * (charged ? 1.4 : 0.8)));
+  const burstDone = burst(world, enemy.x, enemy.y, BURST_SCALE[size] * (charged ? 1.3 : 1), DURATION.fire - travel);
+  await tween(app.ticker, (DURATION.fire - travel) * 0.5, (t) => {
+    enemy.scale.set(base * (1 + t * 0.6));
     enemy.alpha = 1 - t;
-    if (ring) {
-      ring.scale.set(1 + t * 6);
-      ring.alpha = 1 - t;
-    }
   });
-  ring?.destroy();
   enemy.destroy();
+  await burstDone;
 }
 
 async function hit(world: World, points: 1 | 2 | 3, absorbed: boolean) {
-  const { app, ship, shieldRing, shipBase } = world;
+  const { app, ship, shipBody, shieldRing, shipBase, squadron, squadronView } = world;
+  const source = squadron.pick();
+  const from = (source && squadronView.positionOf(source.id)) ?? { x: world.width * 0.85, y: ship.y + (Math.random() - 0.5) * 80 };
   const shot = laser(world, "theirs");
   shot.scale.set(0.6 + points * 0.15);
-  const startX = world.width * 0.85;
-  const startY = ship.y + (Math.random() - 0.5) * 80;
   const travel = DURATION.hit * 0.6;
   await tween(app.ticker, travel, (t) => {
-    shot.x = lerp(startX, ship.x, t);
-    shot.y = lerp(startY, ship.y, t);
+    shot.x = lerp(from.x - 30, ship.x + 20, t);
+    shot.y = lerp(from.y, ship.y, t);
   });
   shot.destroy();
   if (absorbed) {
     const before = shieldRing.alpha;
     await tween(app.ticker, DURATION.hit - travel, (t) => {
       shieldRing.alpha = lerp(1, before, t);
-      shieldRing.scale.set(1 + (1 - t) * 0.2);
+      shieldRing.scale.set(0.6 * (1 + (1 - t) * 0.2));
     });
-    shieldRing.scale.set(1);
+    shieldRing.scale.set(0.6);
     return;
   }
   const amplitude = points * 3;
   await tween(app.ticker, DURATION.hit - travel, (t) => {
     ship.x = shipBase.x + Math.sin(t * 40) * amplitude * (1 - t);
-    world.shipBody.tint = t < 0.5 ? 0xff6b6b : 0xffffff;
+    shipBody.tint = t < 0.5 ? 0xff6b6b : 0xffffff;
   });
   ship.x = shipBase.x;
-  world.shipBody.tint = 0xffffff;
+  shipBody.tint = 0xffffff;
 }
 
 async function shieldUp(world: World) {
   const { app, shieldRing } = world;
+  const before = shieldRing.alpha;
   await tween(app.ticker, DURATION.shieldUp, (t) => {
     const pulse = t < 0.5 ? lerp(1, 1.3, t * 2) : lerp(1.3, 1, (t - 0.5) * 2);
-    shieldRing.scale.set(pulse);
+    shieldRing.scale.set(0.6 * pulse);
+    // Make the pulse visible even before syncState raises the alpha.
+    shieldRing.alpha = Math.max(before, t < 0.5 ? t * 2 : 2 - t * 2);
   });
-  shieldRing.scale.set(1);
+  shieldRing.scale.set(0.6);
+  shieldRing.alpha = before;
 }
 
 async function fizzle(world: World) {
   const { app, ship } = world;
   const shot = laser(world, "mine");
   await tween(app.ticker, DURATION.fizzle, (t) => {
-    shot.x = ship.x + 26 + t * world.width * 0.25;
+    shot.x = ship.x + 40 + t * world.width * 0.25;
     shot.y = ship.y + Math.sin(t * 12) * 6;
     shot.alpha = 1 - easeOut(t);
   });
@@ -106,11 +145,19 @@ async function stall(world: World) {
 }
 
 async function enemyMalfunction(world: World) {
-  const enemy = spawnEnemy(world, "fighter");
+  const { squadron, squadronView } = world;
+  let member = squadron.takeAny();
+  if (!member) {
+    squadron.spawn(squadron.freeSlot(), { fast: true });
+    squadronView.sync();
+    member = squadron.takeAny()!;
+  }
+  const enemy = squadronView.detach(member.id)!;
   const startY = enemy.y;
+  const startRot = enemy.rotation;
   await tween(world.app.ticker, DURATION.enemyMalfunction, (t) => {
     enemy.y = startY - t * 220;
-    enemy.rotation = t * 6;
+    enemy.rotation = startRot + t * 6;
     enemy.alpha = 1 - t;
   });
   enemy.destroy();
@@ -138,22 +185,12 @@ async function warpOut(world: World) {
 
 async function explode(world: World) {
   const { app, ship } = world;
-  const parts = Array.from({ length: 12 }, (_, i) => {
-    const p = dot(world, 4, i % 2 ? COLORS.ship : COLORS.ember);
-    p.position.set(ship.x, ship.y);
-    const a = (i / 12) * Math.PI * 2;
-    return { p, dx: Math.cos(a) * 160, dy: Math.sin(a) * 160 };
-  });
+  const big = burst(world, ship.x, ship.y, 3, DURATION.explode * 0.6);
   await tween(app.ticker, DURATION.explode, (t) => {
     ship.alpha = 1 - t;
     ship.scale.set(1 + t);
-    for (const { p, dx, dy } of parts) {
-      p.x = ship.x + dx * easeOut(t);
-      p.y = ship.y + dy * easeOut(t);
-      p.alpha = 1 - t;
-    }
   });
-  for (const { p } of parts) p.destroy();
+  await big;
 }
 
 export function runAnimation(world: World, action: ShipAction): Promise<void> {

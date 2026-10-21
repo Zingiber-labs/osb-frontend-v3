@@ -1,10 +1,11 @@
-import { Application, Container, Graphics, Sprite, type Texture } from "pixi.js";
-import type { EnemySize } from "@/features/gameplay/engine/types";
+import { Application, Container, Graphics, type Sprite } from "pixi.js";
 import type { SpriteTextures } from "./assets";
 import type { SpriteKey } from "./spriteManifest";
+import { FACE_RIGHT, SHIP_SCALE, sprite } from "./spriteUtils";
+import { SquadronModel } from "./squadron";
+import { SquadronView } from "./squadronView";
 
-/** Kenney sprites face up (player) or down (enemies); a clockwise quarter turn makes them face along x. */
-export const FACE_RIGHT = Math.PI / 2;
+export { ENEMY_SCALE, ENEMY_TEXTURE, FACE_RIGHT, SHIP_SCALE, sprite } from "./spriteUtils";
 
 export type World = {
   app: Application;
@@ -23,6 +24,8 @@ export type World = {
   shieldRing: Sprite;
   stars: { g: Graphics; speed: number }[];
   rocks: { g: Sprite; speed: number; spin: number }[];
+  squadron: SquadronModel;
+  squadronView: SquadronView;
 };
 
 export const COLORS = {
@@ -30,20 +33,10 @@ export const COLORS = {
   ember: 0xf97316,
   gold: 0xfbbf24,
   ship: 0x38bdf8,
+  flash: 0xffffff,
 };
 
-export const SHIP_SCALE = 0.6;
-export const ENEMY_SCALE: Record<EnemySize, number> = { scout: 0.45, fighter: 0.6, cruiser: 0.8 };
-export const ENEMY_TEXTURE: Record<EnemySize, SpriteKey> = { scout: "enemyScout", fighter: "enemyFighter", cruiser: "enemyCruiser" };
 const METEOR_KEYS: SpriteKey[] = ["meteorBig1", "meteorBig2", "meteorBig3", "meteorBig4", "meteorMed1", "meteorMed2"];
-
-export function sprite(tex: Texture, scale = 1, rotation = FACE_RIGHT): Sprite {
-  const s = new Sprite(tex);
-  s.anchor.set(0.5);
-  s.scale.set(scale);
-  s.rotation = rotation;
-  return s;
-}
 
 function makeShip(tex: SpriteTextures) {
   const ship = new Container();
@@ -96,16 +89,11 @@ export function buildWorld(app: Application, tex: SpriteTextures): World {
   ship.position.set(shipBase.x, shipBase.y);
   shipLayer.addChild(ship);
 
-  return { app, width, height, tex, starfield, meteorites, enemyLane, shipLayer, effects, ship, shipBase, shipBody: body, damage, shieldRing, stars, rocks };
-}
+  const squadron = new SquadronModel({ width, height });
+  const squadronView = new SquadronView(squadron, enemyLane, tex);
+  squadronView.sync();
 
-/** Interim spawner (Task 3 replaces it with the squadron). */
-export function spawnEnemy(world: World, size: EnemySize): Sprite {
-  const enemy = sprite(world.tex[ENEMY_TEXTURE[size]], ENEMY_SCALE[size]);
-  enemy.x = world.width * 0.8;
-  enemy.y = world.height / 2 + (Math.random() - 0.5) * world.height * 0.4;
-  world.enemyLane.addChild(enemy);
-  return enemy;
+  return { app, width, height, tex, starfield, meteorites, enemyLane, shipLayer, effects, ship, shipBase, shipBody: body, damage, shieldRing, stars, rocks, squadron, squadronView };
 }
 
 export type LaserKind = "mine" | "charged" | "theirs";
