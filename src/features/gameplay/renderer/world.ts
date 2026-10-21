@@ -62,7 +62,7 @@ function makeShip(tex: SpriteTextures) {
   const ship = new Container();
   // The flame trails behind the ship (to the left). If it visibly points the wrong way, flip the sign of its rotation.
   const flame = sprite(tex.flame, FLAME_SCALE, -FACE_RIGHT);
-  flame.x = -36;
+  flame.x = -44;
   flame.blendMode = "add";
   const body = sprite(tex.ship, SHIP_SCALE);
   const damage = ([1, 2, 3] as const).map((i) => {

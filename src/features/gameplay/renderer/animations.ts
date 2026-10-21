@@ -85,7 +85,7 @@ async function fire(world: World, size: EnemySize, charged: boolean, caption?: s
     // A freshly spawned target is still flying in; bring it to its anchor during the shot's flight.
     enemy.x = lerp(fromX, dest.x, t);
     enemy.y = lerp(fromY, dest.y, t);
-    shot.x = lerp(ship.x + 40, enemy.x, t);
+    shot.x = lerp(ship.x + 48, enemy.x, t);
     shot.y = lerp(ship.y, enemy.y, t);
     tr.update(shot.x, shot.y);
   });
@@ -161,7 +161,7 @@ async function fizzle(world: World, caption?: string) {
   if (caption) callout(world, ship.x + 40 + world.width * 0.12, ship.y - 20, caption, CALLOUT_COLORS.theirs);
   const shot = laser(world, "mine");
   await tween(app.ticker, DURATION.fizzle, (t) => {
-    shot.x = ship.x + 40 + t * world.width * 0.25;
+    shot.x = ship.x + 48 + t * world.width * 0.25;
     shot.y = ship.y + Math.sin(t * 12) * 6;
     shot.alpha = 1 - easeOut(t);
   });
