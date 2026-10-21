@@ -27,7 +27,6 @@ export type World = {
 
 export const COLORS = {
   star: 0xffffff,
-  flash: 0xffffff,
   ember: 0xf97316,
   gold: 0xfbbf24,
   ship: 0x38bdf8,

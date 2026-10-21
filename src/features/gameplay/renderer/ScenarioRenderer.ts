@@ -3,7 +3,7 @@ import { HULL_MAX, SHIELD_MAX } from "@/features/gameplay/engine/mapping";
 import type { ScenarioState, ShipAction } from "@/features/gameplay/engine/types";
 import { ActionQueue } from "./ActionQueue";
 import { runAnimation } from "./animations";
-import { loadSprites } from "./assets";
+import { loadSprites, type SpriteTextures } from "./assets";
 import type { RendererPort } from "./RendererPort";
 import { buildWorld, type World } from "./world";
 
@@ -36,7 +36,14 @@ export class ScenarioRenderer implements RendererPort {
     host.appendChild(canvas);
     // Measure the host after layout so the world is built at the real size.
     app.resize();
-    const tex = await loadSprites();
+    let tex: SpriteTextures;
+    try {
+      tex = await loadSprites();
+    } catch (err) {
+      // A failed load must remove the canvas it already appended.
+      app.destroy({ removeView: true }, { children: true });
+      throw err;
+    }
     if (id !== this.mountId) {
       app.destroy({ removeView: true }, { children: true });
       return;
