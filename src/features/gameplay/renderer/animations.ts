@@ -1,6 +1,6 @@
 import { Graphics } from "pixi.js";
 import type { ShipAction } from "@/features/gameplay/engine/types";
-import { COLORS, bullet, spawnEnemy, type World } from "./world";
+import { COLORS, dot, laser, spawnEnemy, type World } from "./world";
 import { easeOut, tween } from "./tween";
 
 const DURATION = {
@@ -20,20 +20,21 @@ const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 async function fire(world: World, size: "scout" | "fighter" | "cruiser", charged: boolean) {
   const { app, ship } = world;
   const enemy = spawnEnemy(world, size);
-  const shot = bullet(world, charged ? 7 : 3);
+  const shot = laser(world, charged ? "charged" : "mine");
   const travel = DURATION.fire * 0.6;
   await tween(app.ticker, travel, (t) => {
     shot.x = lerp(ship.x + 26, enemy.x, t);
     shot.y = lerp(ship.y, enemy.y, t);
   });
   shot.destroy();
-  const ring = charged ? new Graphics().circle(0, 0, 10).stroke({ width: 3, color: COLORS.bullet }) : null;
+  const ring = charged ? new Graphics().circle(0, 0, 10).stroke({ width: 3, color: COLORS.gold }) : null;
   if (ring) {
     ring.position.set(enemy.x, enemy.y);
     world.effects.addChild(ring);
   }
+  const base = enemy.scale.x;
   await tween(app.ticker, DURATION.fire - travel, (t) => {
-    enemy.scale.set(1 + t * (charged ? 1.4 : 0.8));
+    enemy.scale.set(base * (1 + t * (charged ? 1.4 : 0.8)));
     enemy.alpha = 1 - t;
     if (ring) {
       ring.scale.set(1 + t * 6);
@@ -46,7 +47,8 @@ async function fire(world: World, size: "scout" | "fighter" | "cruiser", charged
 
 async function hit(world: World, points: 1 | 2 | 3, absorbed: boolean) {
   const { app, ship, shieldRing, shipBase } = world;
-  const shot = bullet(world, 2 + points, COLORS.enemyBullet);
+  const shot = laser(world, "theirs");
+  shot.scale.set(0.6 + points * 0.15);
   const startX = world.width * 0.85;
   const startY = ship.y + (Math.random() - 0.5) * 80;
   const travel = DURATION.hit * 0.6;
@@ -67,10 +69,10 @@ async function hit(world: World, points: 1 | 2 | 3, absorbed: boolean) {
   const amplitude = points * 3;
   await tween(app.ticker, DURATION.hit - travel, (t) => {
     ship.x = shipBase.x + Math.sin(t * 40) * amplitude * (1 - t);
-    ship.tint = t < 0.5 ? 0xff6b6b : 0xffffff;
+    world.shipBody.tint = t < 0.5 ? 0xff6b6b : 0xffffff;
   });
   ship.x = shipBase.x;
-  ship.tint = 0xffffff;
+  world.shipBody.tint = 0xffffff;
 }
 
 async function shieldUp(world: World) {
@@ -84,7 +86,7 @@ async function shieldUp(world: World) {
 
 async function fizzle(world: World) {
   const { app, ship } = world;
-  const shot = bullet(world, 3);
+  const shot = laser(world, "mine");
   await tween(app.ticker, DURATION.fizzle, (t) => {
     shot.x = ship.x + 26 + t * world.width * 0.25;
     shot.y = ship.y + Math.sin(t * 12) * 6;
@@ -137,7 +139,7 @@ async function warpOut(world: World) {
 async function explode(world: World) {
   const { app, ship } = world;
   const parts = Array.from({ length: 12 }, (_, i) => {
-    const p = bullet(world, 4, i % 2 ? COLORS.ship : 0xf97316);
+    const p = dot(world, 4, i % 2 ? COLORS.ship : COLORS.ember);
     p.position.set(ship.x, ship.y);
     const a = (i / 12) * Math.PI * 2;
     return { p, dx: Math.cos(a) * 160, dy: Math.sin(a) * 160 };

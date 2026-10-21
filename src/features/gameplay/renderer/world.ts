@@ -1,10 +1,16 @@
-import { Application, Container, Graphics } from "pixi.js";
+import { Application, Container, Graphics, Sprite, type Texture } from "pixi.js";
 import type { EnemySize } from "@/features/gameplay/engine/types";
+import type { SpriteTextures } from "./assets";
+import type { SpriteKey } from "./spriteManifest";
+
+/** Kenney sprites face up (player) or down (enemies); a clockwise quarter turn makes them face along x. */
+export const FACE_RIGHT = Math.PI / 2;
 
 export type World = {
   app: Application;
   width: number;
   height: number;
+  tex: SpriteTextures;
   starfield: Container;
   meteorites: Container;
   enemyLane: Container;
@@ -12,34 +18,52 @@ export type World = {
   effects: Container;
   ship: Container;
   shipBase: { x: number; y: number };
-  shieldRing: Graphics;
-  smoke: Graphics;
+  shipBody: Sprite;
+  damage: [Sprite, Sprite, Sprite];
+  shieldRing: Sprite;
   stars: { g: Graphics; speed: number }[];
-  rocks: { g: Graphics; speed: number; spin: number }[];
+  rocks: { g: Sprite; speed: number; spin: number }[];
 };
 
-const COLORS = {
-  ship: 0x38bdf8,
-  shield: 0x22d3ee,
-  enemy: 0xf43f5e,
-  bullet: 0xfde047,
-  enemyBullet: 0xfb7185,
+export const COLORS = {
   star: 0xffffff,
-  rock: 0x64748b,
+  flash: 0xffffff,
+  ember: 0xf97316,
   gold: 0xfbbf24,
+  ship: 0x38bdf8,
 };
 
-export const ENEMY_RADIUS: Record<EnemySize, number> = { scout: 12, fighter: 20, cruiser: 32 };
+export const SHIP_SCALE = 0.6;
+export const ENEMY_SCALE: Record<EnemySize, number> = { scout: 0.45, fighter: 0.6, cruiser: 0.8 };
+export const ENEMY_TEXTURE: Record<EnemySize, SpriteKey> = { scout: "enemyScout", fighter: "enemyFighter", cruiser: "enemyCruiser" };
+const METEOR_KEYS: SpriteKey[] = ["meteorBig1", "meteorBig2", "meteorBig3", "meteorBig4", "meteorMed1", "meteorMed2"];
 
-function makeShip(): Container {
-  const ship = new Container();
-  const hull = new Graphics().poly([-22, -14, 26, 0, -22, 14, -12, 0]).fill(COLORS.ship);
-  const flame = new Graphics().poly([-22, -5, -36, 0, -22, 5]).fill(0xf97316);
-  ship.addChild(flame, hull);
-  return ship;
+export function sprite(tex: Texture, scale = 1, rotation = FACE_RIGHT): Sprite {
+  const s = new Sprite(tex);
+  s.anchor.set(0.5);
+  s.scale.set(scale);
+  s.rotation = rotation;
+  return s;
 }
 
-export function buildWorld(app: Application): World {
+function makeShip(tex: SpriteTextures) {
+  const ship = new Container();
+  // The flame trails behind the ship (to the left). If it visibly points the wrong way, flip the sign of its rotation.
+  const flame = sprite(tex.flame, 0.7, -FACE_RIGHT);
+  flame.x = -36;
+  const body = sprite(tex.ship, SHIP_SCALE);
+  const damage = ([1, 2, 3] as const).map((i) => {
+    const d = sprite(tex[`shipDamage${i}`], SHIP_SCALE);
+    d.alpha = 0;
+    return d;
+  }) as [Sprite, Sprite, Sprite];
+  const shieldRing = sprite(tex.shield, SHIP_SCALE);
+  shieldRing.alpha = 0;
+  ship.addChild(flame, body, ...damage, shieldRing);
+  return { ship, body, damage, shieldRing };
+}
+
+export function buildWorld(app: Application, tex: SpriteTextures): World {
   const width = app.screen.width;
   const height = app.screen.height;
 
@@ -59,50 +83,43 @@ export function buildWorld(app: Application): World {
   });
 
   const rocks = Array.from({ length: 6 }, () => {
-    const r = 8 + Math.random() * 14;
-    const pts: number[] = [];
-    for (let i = 0; i < 7; i += 1) {
-      const a = (i / 7) * Math.PI * 2;
-      const rr = r * (0.7 + Math.random() * 0.3);
-      pts.push(Math.cos(a) * rr, Math.sin(a) * rr);
-    }
-    const g = new Graphics().poly(pts).fill(COLORS.rock);
+    const key = METEOR_KEYS[Math.floor(Math.random() * METEOR_KEYS.length)];
+    const g = sprite(tex[key], 0.45 + Math.random() * 0.4, Math.random() * Math.PI * 2);
+    g.alpha = 0.85;
     g.x = Math.random() * width;
     g.y = Math.random() * height;
     meteorites.addChild(g);
     return { g, speed: 0.6 + Math.random() * 1.0, spin: (Math.random() - 0.5) * 0.02 };
   });
 
-  const ship = makeShip();
+  const { ship, body, damage, shieldRing } = makeShip(tex);
   const shipBase = { x: width * 0.2, y: height / 2 };
   ship.position.set(shipBase.x, shipBase.y);
-
-  const shieldRing = new Graphics().circle(0, 0, 40).stroke({ width: 3, color: COLORS.shield });
-  shieldRing.alpha = 0;
-  ship.addChild(shieldRing);
-
-  const smoke = new Graphics().circle(-10, 0, 14).fill({ color: 0x475569 });
-  smoke.alpha = 0;
-  ship.addChild(smoke);
-
   shipLayer.addChild(ship);
 
-  return { app, width, height, starfield, meteorites, enemyLane, shipLayer, effects, ship, shipBase, shieldRing, smoke, stars, rocks };
+  return { app, width, height, tex, starfield, meteorites, enemyLane, shipLayer, effects, ship, shipBase, shipBody: body, damage, shieldRing, stars, rocks };
 }
 
-export function spawnEnemy(world: World, size: EnemySize): Graphics {
-  const r = ENEMY_RADIUS[size];
-  const enemy = new Graphics().poly([r, 0, -r, -r * 0.8, -r * 0.5, 0, -r, r * 0.8]).fill(COLORS.enemy);
+/** Interim spawner (Task 3 replaces it with the squadron). */
+export function spawnEnemy(world: World, size: EnemySize): Sprite {
+  const enemy = sprite(world.tex[ENEMY_TEXTURE[size]], ENEMY_SCALE[size]);
   enemy.x = world.width * 0.8;
   enemy.y = world.height / 2 + (Math.random() - 0.5) * world.height * 0.4;
   world.enemyLane.addChild(enemy);
   return enemy;
 }
 
-export function bullet(world: World, radius: number, color = COLORS.bullet): Graphics {
-  const b = new Graphics().circle(0, 0, radius).fill(color);
-  world.effects.addChild(b);
-  return b;
+export type LaserKind = "mine" | "charged" | "theirs";
+
+export function laser(world: World, kind: LaserKind): Sprite {
+  const key: SpriteKey = kind === "mine" ? "laserMine" : kind === "charged" ? "laserCharged" : "laserTheirs";
+  const s = sprite(world.tex[key], kind === "charged" ? 1.1 : 0.8);
+  world.effects.addChild(s);
+  return s;
 }
 
-export { COLORS };
+export function dot(world: World, radius: number, color: number): Graphics {
+  const g = new Graphics().circle(0, 0, radius).fill(color);
+  world.effects.addChild(g);
+  return g;
+}

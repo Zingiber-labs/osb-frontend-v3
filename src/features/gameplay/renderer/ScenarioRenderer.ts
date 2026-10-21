@@ -3,6 +3,7 @@ import { HULL_MAX, SHIELD_MAX } from "@/features/gameplay/engine/mapping";
 import type { ScenarioState, ShipAction } from "@/features/gameplay/engine/types";
 import { ActionQueue } from "./ActionQueue";
 import { runAnimation } from "./animations";
+import { loadSprites } from "./assets";
 import type { RendererPort } from "./RendererPort";
 import { buildWorld, type World } from "./world";
 
@@ -35,7 +36,12 @@ export class ScenarioRenderer implements RendererPort {
     host.appendChild(canvas);
     // Measure the host after layout so the world is built at the real size.
     app.resize();
-    const world = buildWorld(app);
+    const tex = await loadSprites();
+    if (id !== this.mountId) {
+      app.destroy({ removeView: true }, { children: true });
+      return;
+    }
+    const world = buildWorld(app, tex);
     this.app = app;
     this.world = world;
     this.queue = new ActionQueue((action) => runAnimation(world, action));
@@ -67,7 +73,11 @@ export class ScenarioRenderer implements RendererPort {
   syncState(state: ScenarioState): void {
     if (!this.world) return;
     this.world.shieldRing.alpha = state.shield / SHIELD_MAX;
-    this.world.smoke.alpha = Math.min(0.9, 1 - state.hull / HULL_MAX);
+    const hullPct = (state.hull / HULL_MAX) * 100;
+    const level = hullPct < 25 ? 3 : hullPct < 50 ? 2 : hullPct < 75 ? 1 : 0;
+    this.world.damage.forEach((d, i) => {
+      d.alpha = i + 1 === level ? 1 : 0;
+    });
   }
 
   private idle = (ticker: Ticker): void => {
