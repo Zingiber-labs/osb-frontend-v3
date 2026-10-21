@@ -23,3 +23,7 @@ npm run record-game -- <espnEventId>   # add another recorded game to src/fixtur
 - `scripts/` ESPN capture script
 
 Design: `docs/superpowers/specs/2026-10-21-ship-scenario-mvp-design.md`
+
+## Credits
+
+Sprite art is Kenney's Space Shooter Redux (CC0); see `public/sprites/CREDITS.md`.

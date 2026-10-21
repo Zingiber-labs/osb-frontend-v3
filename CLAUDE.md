@@ -15,7 +15,7 @@ npm run record-game -- <espnEventId>
 
 - `features/gameplay/engine/` is pure TypeScript. No React, no pixi.js imports. `reduce(state, event)` is deterministic; mapping constants live in `mapping.ts`.
 - `features/gameplay/feeds/` produce `GameEvent`s. Any new data source (OSB socket diff, balldontlie play-by-play) is a new `createXxxFeed` here that implements `Feed`. No React, no pixi.js.
-- `features/gameplay/renderer/` owns Pixi. `ScenarioRenderer` implements `RendererPort`; animations drain through `ActionQueue` one at a time. The renderer owns its canvas (`mount(host)`), and `ScenarioCanvas` lazy-imports it so Pixi never loads on the setup route or in jsdom.
+- `features/gameplay/renderer/` owns Pixi. `ScenarioRenderer` implements `RendererPort`; animations drain through `ActionQueue` one at a time. The renderer owns its canvas (`mount(host)`), and `ScenarioCanvas` lazy-imports it so Pixi never loads on the setup route or in jsdom. Sprite art is Kenney's CC0 Space Shooter Redux under `public/sprites/` (manifest in `renderer/spriteManifest.ts`, loaded by `assets.ts`). Enemies live in a `SquadronModel` (pure, tested) rendered by `SquadronView`; animations take members from it rather than spawning.
 - `features/gameplay/hooks/useScenario.ts` is the only bridge between feed, engine and renderer.
 - Routes live in `src/app/router.tsx`. New OSB screens go under `src/features/<name>/` and get a sibling route.
 
