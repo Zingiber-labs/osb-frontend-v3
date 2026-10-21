@@ -23,6 +23,13 @@ export function reduce(state: ScenarioState, event: GameEvent): ReduceResult {
   const next: ScenarioState = { ...state, clock: event.at };
 
   switch (event.kind) {
+    case "tipoff": {
+      next.status = "live";
+      break;
+    }
+    case "period": {
+      break;
+    }
     case "score": {
       if (event.side === "mine") {
         next.enemiesDestroyed += 1;
@@ -71,8 +78,19 @@ export function reduce(state: ScenarioState, event: GameEvent): ReduceResult {
       }
       break;
     }
-    default:
+    case "final": {
       break;
+    }
+  }
+
+  if (!next.mission.met && next.myPlayerStats[next.mission.stat] >= next.mission.target) {
+    next.mission = { ...next.mission, met: true };
+    actions.push({ type: "objectiveComplete" });
+  }
+
+  if (event.kind === "final") {
+    next.status = next.mission.met ? "won" : "lost";
+    actions.push(next.mission.met ? { type: "warpOut" } : { type: "explode" });
   }
 
   return { state: next, actions };
