@@ -80,7 +80,8 @@ export class ScenarioRenderer implements RendererPort {
 
   syncState(state: ScenarioState): void {
     if (!this.world) return;
-    this.world.shieldRing.alpha = state.shield / SHIELD_MAX;
+    this.world.shieldAlpha = state.shield / SHIELD_MAX;
+    this.world.shieldRing.alpha = this.world.shieldAlpha;
     const hullPct = (state.hull / HULL_MAX) * 100;
     const level = hullPct < 25 ? 3 : hullPct < 50 ? 2 : hullPct < 75 ? 1 : 0;
     this.world.damage.forEach((d, i) => {

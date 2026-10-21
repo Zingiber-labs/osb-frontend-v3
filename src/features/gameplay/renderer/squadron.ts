@@ -60,6 +60,7 @@ export class SquadronModel {
     return { x: this.width * (0.76 + slot * 0.04), y: this.height * (0.3 + slot * 0.2) };
   }
 
+  /** Precondition: callers spawn only after a removal; spawning into an occupied slot is not guarded. */
   spawn(slot: number, opts: { fast?: boolean } = {}): Member {
     const a = this.anchor(slot);
     const member: Member = {
@@ -116,7 +117,7 @@ export class SquadronModel {
   }
 
   takeAny(): Member | null {
-    const m = this.members[0];
+    const m = this.members.find((x) => x.state === "holding") ?? this.members[0];
     if (!m) return null;
     this.remove(m);
     return m;
@@ -126,6 +127,7 @@ export class SquadronModel {
     return this.members.find((m) => m.state === "holding") ?? this.members[0] ?? null;
   }
 
+  /** First slot with no member; callers spawn only after a removal (falls back to 0 when all are full). */
   freeSlot(): number {
     for (let slot = 0; slot < this.slotCount; slot += 1) {
       if (!this.members.some((m) => m.slot === slot)) return slot;

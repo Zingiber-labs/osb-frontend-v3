@@ -36,6 +36,13 @@ describe("SquadronModel", () => {
       expect(Math.abs(m.x - a.x)).toBeLessThanOrEqual(6);
       expect(Math.abs(m.y - a.y)).toBeLessThanOrEqual(12);
     }
+    s.update(500);
+    for (const m of s.members) {
+      const a = s.anchor(m.slot);
+      expect(m.x !== a.x || m.y !== a.y).toBe(true);
+      expect(Math.abs(m.x - a.x)).toBeLessThanOrEqual(6);
+      expect(Math.abs(m.y - a.y)).toBeLessThanOrEqual(12);
+    }
   });
 
   it("takeNearest removes the closest member and respawns its slot after 600 ms", () => {
@@ -82,13 +89,38 @@ describe("SquadronModel", () => {
     expect(s.members.filter((m) => m.slot === 0)).toHaveLength(1);
   });
 
+  // Leaves members = [slot 0 entering, slot 1 holding]: the holding member is NOT first.
+  const entersFirstThenHolds = () => {
+    const s = make();
+    s.update(1200);
+    s.takeAny(); // slot 0
+    s.update(600); // slot 0 respawned, entering until clock 3000
+    s.takeNearest(800, 250); // slot 1
+    s.takeNearest(840, 350); // slot 2
+    s.spawn(1, { fast: true });
+    s.update(400); // slot 1 holds, slot 0 still entering
+    expect(s.members.map((m) => m.state)).toEqual(["entering", "holding"]);
+    return s;
+  };
+
   it("pick prefers a holding member and never removes it", () => {
+    const s = entersFirstThenHolds();
+    const p = s.pick();
+    expect(p?.state).toBe("holding");
+    expect(p?.slot).toBe(1);
+    expect(s.members).toHaveLength(2);
+  });
+
+  it("takeAny prefers a holding member", () => {
     const s = make();
     s.update(1200);
     s.takeAny();
     s.update(600); // slot 0 respawned, entering
-    const p = s.pick();
-    expect(p?.state).toBe("holding");
-    expect(s.members).toHaveLength(3);
+    expect(s.takeAny()?.slot).toBe(1);
+    const t = entersFirstThenHolds();
+    const taken = t.takeAny();
+    expect(taken?.state).toBe("holding");
+    expect(taken?.slot).toBe(1);
+    expect(t.members).toHaveLength(1);
   });
 });

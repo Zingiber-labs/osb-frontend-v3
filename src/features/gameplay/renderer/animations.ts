@@ -1,6 +1,6 @@
 import { Graphics } from "pixi.js";
 import type { EnemySize, ShipAction } from "@/features/gameplay/engine/types";
-import { COLORS, dot, laser, type World } from "./world";
+import { COLORS, dot, laser, SHIP_SCALE, type World } from "./world";
 import { easeOut, tween } from "./tween";
 
 const DURATION = {
@@ -56,6 +56,7 @@ async function fire(world: World, size: EnemySize, charged: boolean) {
     squadronView.sync();
     member = squadron.takeNearest(ship.x, ship.y)!;
   }
+  // Invariant: the model was just synced, so the member's sprite exists.
   const enemy = squadronView.detach(member.id)!;
   const dest = squadron.anchor(member.slot);
   const fromX = enemy.x;
@@ -93,12 +94,12 @@ async function hit(world: World, points: 1 | 2 | 3, absorbed: boolean) {
   });
   shot.destroy();
   if (absorbed) {
-    const before = shieldRing.alpha;
     await tween(app.ticker, DURATION.hit - travel, (t) => {
-      shieldRing.alpha = lerp(1, before, t);
-      shieldRing.scale.set(0.6 * (1 + (1 - t) * 0.2));
+      shieldRing.alpha = lerp(1, world.shieldAlpha, t);
+      shieldRing.scale.set(SHIP_SCALE * (1 + (1 - t) * 0.2));
     });
-    shieldRing.scale.set(0.6);
+    shieldRing.scale.set(SHIP_SCALE);
+    shieldRing.alpha = world.shieldAlpha;
     return;
   }
   const amplitude = points * 3;
@@ -112,15 +113,15 @@ async function hit(world: World, points: 1 | 2 | 3, absorbed: boolean) {
 
 async function shieldUp(world: World) {
   const { app, shieldRing } = world;
-  const before = shieldRing.alpha;
   await tween(app.ticker, DURATION.shieldUp, (t) => {
-    const pulse = t < 0.5 ? lerp(1, 1.3, t * 2) : lerp(1.3, 1, (t - 0.5) * 2);
-    shieldRing.scale.set(0.6 * pulse);
-    // Make the pulse visible even before syncState raises the alpha.
-    shieldRing.alpha = Math.max(before, t < 0.5 ? t * 2 : 2 - t * 2);
+    const grow = t < 0.5 ? lerp(1, 1.3, t * 2) : lerp(1.3, 1, (t - 0.5) * 2);
+    shieldRing.scale.set(SHIP_SCALE * grow);
+    // The pulse stays visible even when the state alpha is 0; the live alpha wins once it is higher.
+    const pulse = t < 0.5 ? t * 2 : 2 - t * 2;
+    shieldRing.alpha = Math.max(world.shieldAlpha, pulse);
   });
-  shieldRing.scale.set(0.6);
-  shieldRing.alpha = before;
+  shieldRing.scale.set(SHIP_SCALE);
+  shieldRing.alpha = world.shieldAlpha;
 }
 
 async function fizzle(world: World) {
@@ -152,6 +153,7 @@ async function enemyMalfunction(world: World) {
     squadronView.sync();
     member = squadron.takeAny()!;
   }
+  // Invariant: the model was just synced, so the member's sprite exists.
   const enemy = squadronView.detach(member.id)!;
   const startY = enemy.y;
   const startRot = enemy.rotation;

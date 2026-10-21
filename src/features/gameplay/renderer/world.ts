@@ -22,6 +22,8 @@ export type World = {
   shipBody: Sprite;
   damage: [Sprite, Sprite, Sprite];
   shieldRing: Sprite;
+  /** Live shield alpha (shield / SHIELD_MAX), set by syncState; animations read it instead of caching. */
+  shieldAlpha: number;
   stars: { g: Graphics; speed: number }[];
   rocks: { g: Sprite; speed: number; spin: number }[];
   squadron: SquadronModel;
@@ -93,7 +95,7 @@ export function buildWorld(app: Application, tex: SpriteTextures): World {
   const squadronView = new SquadronView(squadron, enemyLane, tex);
   squadronView.sync();
 
-  return { app, width, height, tex, starfield, meteorites, enemyLane, shipLayer, effects, ship, shipBase, shipBody: body, damage, shieldRing, stars, rocks, squadron, squadronView };
+  return { app, width, height, tex, starfield, meteorites, enemyLane, shipLayer, effects, ship, shipBase, shipBody: body, damage, shieldRing, shieldAlpha: 0, stars, rocks, squadron, squadronView };
 }
 
 export type LaserKind = "mine" | "charged" | "theirs";
