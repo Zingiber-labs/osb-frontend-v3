@@ -1,4 +1,4 @@
-import { ENEMY_BY_POINTS, HULL_DAMAGE_BY_POINTS, HULL_MAX, HULL_MIN } from "./mapping";
+import { ENEMY_BY_POINTS, HULL_DAMAGE_BY_POINTS, HULL_MAX, HULL_MIN, SHIELD_MAX } from "./mapping";
 import type { GameEvent, MissionConfig, ReduceResult, ScenarioState, ShipAction } from "./types";
 
 export function createInitialState(mission: MissionConfig): ScenarioState {
@@ -40,6 +40,34 @@ export function reduce(state: ScenarioState, event: GameEvent): ReduceResult {
           next.hull = Math.max(HULL_MIN, next.hull - HULL_DAMAGE_BY_POINTS[event.points]);
           actions.push({ type: "hit", points: event.points, absorbed: false });
         }
+      }
+      break;
+    }
+    case "block":
+    case "steal": {
+      if (event.side === "mine") {
+        next.shield = Math.min(SHIELD_MAX, next.shield + 1);
+        if (event.byMyPlayer) {
+          const stats = { ...next.myPlayerStats };
+          if (event.kind === "block") stats.blk += 1;
+          else stats.stl += 1;
+          next.myPlayerStats = stats;
+        }
+        actions.push({ type: "shieldUp" });
+      } else {
+        actions.push({ type: "fizzle" });
+      }
+      break;
+    }
+    case "turnover": {
+      if (event.side === "mine") {
+        if (event.byMyPlayer) {
+          next.combo = 0;
+          next.myPlayerStats = { ...next.myPlayerStats, tov: next.myPlayerStats.tov + 1 };
+        }
+        actions.push({ type: "stall" });
+      } else {
+        actions.push({ type: "enemyMalfunction" });
       }
       break;
     }
