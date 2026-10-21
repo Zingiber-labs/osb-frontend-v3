@@ -27,7 +27,7 @@ export type World = {
   overlay: Container;
   flame: Sprite;
   /** Full-screen red vignette; its alpha is driven toward vignetteTarget. */
-  vignette: Graphics;
+  vignette: Container;
   vignetteTarget: number;
   ship: Container;
   shipBase: { x: number; y: number };
@@ -136,22 +136,33 @@ export function buildWorld(app: Application, tex: SpriteTextures, quality: Quali
   const squadronView = new SquadronView(squadron, enemyLane, tex);
   squadronView.sync();
 
-  // Radial vignette: clear centre, red edges. Alpha is animated elsewhere; starts hidden.
-  const vignetteFill = new FillGradient({
-    type: "radial",
-    center: { x: 0.5, y: 0.5 },
-    innerRadius: 0,
-    outerCenter: { x: 0.5, y: 0.5 },
-    outerRadius: 0.7,
-    colorStops: [
-      { offset: 0, color: "rgba(255,45,45,0)" },
-      { offset: 0.55, color: "rgba(255,45,45,0)" },
-      { offset: 1, color: "rgba(255,45,45,1)" },
-    ],
-    textureSpace: "local",
-  });
-  const vignette = new Graphics();
-  vignette.rect(0, 0, width, height).fill(vignetteFill);
+  // Edge vignette: four linear-gradient bands (red at the frame edge, transparent inward) so
+  // the centre stays clear. Radial FillGradients rendered a solid wash here. Alpha is animated
+  // on the container elsewhere; starts hidden.
+  const vignette = new Container();
+  const band = (x: number, y: number, w: number, h: number, vertical: boolean, edgeFirst: boolean): Graphics => {
+    const edge = "rgba(255,45,45,1)";
+    const clear = "rgba(255,45,45,0)";
+    const fill = new FillGradient({
+      type: "linear",
+      start: { x: 0, y: 0 },
+      end: vertical ? { x: 0, y: 1 } : { x: 1, y: 0 },
+      colorStops: [
+        { offset: 0, color: edgeFirst ? edge : clear },
+        { offset: 1, color: edgeFirst ? clear : edge },
+      ],
+      textureSpace: "local",
+    });
+    return new Graphics().rect(x, y, w, h).fill(fill);
+  };
+  const bandH = height * 0.28;
+  const bandW = width * 0.28;
+  vignette.addChild(
+    band(0, 0, width, bandH, true, true),
+    band(0, height - bandH, width, bandH, true, false),
+    band(0, 0, bandW, height, false, true),
+    band(width - bandW, 0, bandW, height, false, false),
+  );
   vignette.alpha = 0;
   overlay.addChild(vignette);
 

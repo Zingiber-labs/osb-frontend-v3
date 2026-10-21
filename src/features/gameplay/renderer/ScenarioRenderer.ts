@@ -88,7 +88,7 @@ export class ScenarioRenderer implements RendererPort {
     this.world.damage.forEach((d, i) => {
       d.alpha = i + 1 === level ? 1 : 0;
     });
-    this.world.vignetteTarget = hullPct < 25 ? 0.35 : hullPct < 50 ? 0.18 : 0;
+    this.world.vignetteTarget = hullPct < 25 ? 0.28 : hullPct < 50 ? 0.12 : 0;
   }
 
   private idle = (ticker: Ticker): void => {
