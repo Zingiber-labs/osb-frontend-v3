@@ -88,6 +88,7 @@ export class ScenarioRenderer implements RendererPort {
     this.world.damage.forEach((d, i) => {
       d.alpha = i + 1 === level ? 1 : 0;
     });
+    this.world.vignetteTarget = hullPct < 25 ? 0.35 : hullPct < 50 ? 0.18 : 0;
   }
 
   private idle = (ticker: Ticker): void => {
@@ -113,6 +114,7 @@ export class ScenarioRenderer implements RendererPort {
     const f = world.flame;
     f.scale.set(FLAME_SCALE * (0.9 + Math.random() * 0.25), FLAME_SCALE * (0.85 + Math.random() * 0.3));
     f.alpha = 0.8 + Math.random() * 0.2;
+    world.vignette.alpha = world.vignetteTarget * (1 + 0.2 * Math.sin((performance.now() / 1000) * Math.PI * 2));
     world.squadron.update(ticker.deltaMS);
     world.squadronView.sync();
   };

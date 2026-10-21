@@ -1,6 +1,6 @@
 import { Graphics } from "pixi.js";
 import type { EnemySize, ShipAction } from "@/features/gameplay/engine/types";
-import { trail } from "./fx";
+import { shake, trail, whiteFlash } from "./fx";
 import { callout, CALLOUT_COLORS } from "./callout";
 import { COLORS, dot, laser, SHIP_SCALE, type World } from "./world";
 import { easeOut, tween } from "./tween";
@@ -77,6 +77,8 @@ async function fire(world: World, size: EnemySize, charged: boolean, caption?: s
   });
   shot.destroy();
   tr.destroy();
+  whiteFlash(world, enemy);
+  shake(world, size === "cruiser" ? 3 : 2, 150);
   if (caption) callout(world, enemy.x, enemy.y - 30, caption, charged ? CALLOUT_COLORS.charged : CALLOUT_COLORS.mine);
   const base = enemy.scale.x;
   const burstDone = burst(world, enemy.x, enemy.y, BURST_SCALE[size] * (charged ? 1.3 : 1), DURATION.fire - travel);
@@ -114,12 +116,16 @@ async function hit(world: World, points: 1 | 2 | 3, absorbed: boolean, caption?:
     return;
   }
   const amplitude = points * 3;
+  shake(world, amplitude, 250);
+  const overlay = world.damage.find((d) => d.alpha > 0);
   await tween(app.ticker, DURATION.hit - travel, (t) => {
     ship.x = shipBase.x + Math.sin(t * 40) * amplitude * (1 - t);
     shipBody.tint = t < 0.5 ? 0xff6b6b : 0xffffff;
+    if (overlay) overlay.tint = shipBody.tint;
   });
   ship.x = shipBase.x;
   shipBody.tint = 0xffffff;
+  if (overlay) overlay.tint = 0xffffff;
 }
 
 async function shieldUp(world: World, caption?: string) {
@@ -202,6 +208,7 @@ async function warpOut(world: World) {
 
 async function explode(world: World) {
   const { app, ship } = world;
+  shake(world, 8, 600);
   const big = burst(world, ship.x, ship.y, 3, DURATION.explode * 0.6);
   await tween(app.ticker, DURATION.explode, (t) => {
     ship.alpha = 1 - t;
