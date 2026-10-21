@@ -6,6 +6,7 @@ export const SPRITE_FILES = {
   shipDamage2: "playerShip1_damage2.png",
   shipDamage3: "playerShip1_damage3.png",
   flame: "fire08.png",
+  bgGalaxy: "bg/galaxy.jpg",
   shield: "shield1.png",
   enemyScout: "enemyRed1.png",
   enemyFighter: "enemyRed3.png",

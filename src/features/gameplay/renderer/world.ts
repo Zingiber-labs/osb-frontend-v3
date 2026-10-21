@@ -1,5 +1,7 @@
-import { Application, Container, Graphics, type Sprite } from "pixi.js";
+import { Application, Container, FillGradient, Graphics, type Sprite } from "pixi.js";
 import type { SpriteTextures } from "./assets";
+import { buildBackdrop, type Backdrop } from "./backdrop";
+import type { Quality } from "./quality";
 import type { SpriteKey } from "./spriteManifest";
 import { FACE_RIGHT, SHIP_SCALE, sprite } from "./spriteUtils";
 import { SquadronModel } from "./squadron";
@@ -12,11 +14,20 @@ export type World = {
   width: number;
   height: number;
   tex: SpriteTextures;
-  starfield: Container;
-  meteorites: Container;
+  quality: Quality;
+  backdrop: Backdrop;
+  farStars: Container;
+  farRocks: Container;
+  nearStars: Container;
+  nearRocks: Container;
   enemyLane: Container;
   shipLayer: Container;
   effects: Container;
+  overlay: Container;
+  flame: Sprite;
+  /** Full-screen red vignette; its alpha is driven toward vignetteTarget. */
+  vignette: Graphics;
+  vignetteTarget: number;
   ship: Container;
   shipBase: { x: number; y: number };
   shipBody: Sprite;
@@ -54,39 +65,59 @@ function makeShip(tex: SpriteTextures) {
   const shieldRing = sprite(tex.shield, SHIP_SCALE);
   shieldRing.alpha = 0;
   ship.addChild(flame, body, ...damage, shieldRing);
-  return { ship, body, damage, shieldRing };
+  return { ship, flame, body, damage, shieldRing };
 }
 
-export function buildWorld(app: Application, tex: SpriteTextures): World {
+function makeStars(layer: Container, width: number, height: number, count: number, rMin: number, rMax: number, aMin: number, aMax: number, sMin: number, sMax: number) {
+  return Array.from({ length: count }, () => {
+    const g = new Graphics().circle(0, 0, rMin + Math.random() * (rMax - rMin)).fill({ color: COLORS.star, alpha: aMin + Math.random() * (aMax - aMin) });
+    g.x = Math.random() * width;
+    g.y = Math.random() * height;
+    layer.addChild(g);
+    return { g, speed: sMin + Math.random() * (sMax - sMin) };
+  });
+}
+
+function makeRocks(layer: Container, tex: SpriteTextures, width: number, height: number, count: number, scaleMin: number, scaleMax: number, alpha: number, sMin: number, sMax: number, spinScale: number) {
+  return Array.from({ length: count }, () => {
+    const key = METEOR_KEYS[Math.floor(Math.random() * METEOR_KEYS.length)];
+    const g = sprite(tex[key], scaleMin + Math.random() * (scaleMax - scaleMin), Math.random() * Math.PI * 2);
+    g.alpha = alpha;
+    g.x = Math.random() * width;
+    g.y = Math.random() * height;
+    layer.addChild(g);
+    return { g, speed: sMin + Math.random() * (sMax - sMin), spin: (Math.random() - 0.5) * 0.02 * spinScale };
+  });
+}
+
+export function buildWorld(app: Application, tex: SpriteTextures, quality: Quality): World {
   const width = app.screen.width;
   const height = app.screen.height;
 
-  const starfield = new Container();
-  const meteorites = new Container();
+  const backdropLayer = new Container();
+  const farStars = new Container();
+  const farRocks = new Container();
+  const nearStars = new Container();
+  const nearRocks = new Container();
   const enemyLane = new Container();
   const shipLayer = new Container();
   const effects = new Container();
-  app.stage.addChild(starfield, meteorites, enemyLane, shipLayer, effects);
+  const overlay = new Container();
+  app.stage.addChild(backdropLayer, farStars, farRocks, nearStars, nearRocks, enemyLane, shipLayer, effects, overlay);
 
-  const stars = Array.from({ length: 80 }, () => {
-    const g = new Graphics().circle(0, 0, Math.random() * 1.5 + 0.5).fill({ color: COLORS.star, alpha: 0.4 + Math.random() * 0.6 });
-    g.x = Math.random() * width;
-    g.y = Math.random() * height;
-    starfield.addChild(g);
-    return { g, speed: 0.3 + Math.random() * 1.2 };
-  });
+  const backdrop = buildBackdrop(tex.bgGalaxy, width, height);
+  backdropLayer.addChild(backdrop.sprite);
 
-  const rocks = Array.from({ length: 6 }, () => {
-    const key = METEOR_KEYS[Math.floor(Math.random() * METEOR_KEYS.length)];
-    const g = sprite(tex[key], 0.45 + Math.random() * 0.4, Math.random() * Math.PI * 2);
-    g.alpha = 0.85;
-    g.x = Math.random() * width;
-    g.y = Math.random() * height;
-    meteorites.addChild(g);
-    return { g, speed: 0.6 + Math.random() * 1.0, spin: (Math.random() - 0.5) * 0.02 };
-  });
+  const stars = [
+    ...makeStars(farStars, width, height, 120, 0.4, 1.0, 0.25, 0.5, 0.08, 0.25),
+    ...makeStars(nearStars, width, height, 40, 0.8, 1.8, 0.6, 1.0, 0.5, 1.4),
+  ];
+  const rocks = [
+    ...makeRocks(farRocks, tex, width, height, 4, 0.2, 0.35, 0.45, 0.2, 0.4, 0.4),
+    ...makeRocks(nearRocks, tex, width, height, 6, 0.45, 0.85, 0.9, 0.6, 1.6, 1),
+  ];
 
-  const { ship, body, damage, shieldRing } = makeShip(tex);
+  const { ship, flame, body, damage, shieldRing } = makeShip(tex);
   const shipBase = { x: width * 0.2, y: height / 2 };
   ship.position.set(shipBase.x, shipBase.y);
   shipLayer.addChild(ship);
@@ -95,7 +126,26 @@ export function buildWorld(app: Application, tex: SpriteTextures): World {
   const squadronView = new SquadronView(squadron, enemyLane, tex);
   squadronView.sync();
 
-  return { app, width, height, tex, starfield, meteorites, enemyLane, shipLayer, effects, ship, shipBase, shipBody: body, damage, shieldRing, shieldAlpha: 0, stars, rocks, squadron, squadronView };
+  // Radial vignette: clear centre, red edges. Alpha is animated elsewhere; starts hidden.
+  const vignetteFill = new FillGradient({
+    type: "radial",
+    center: { x: 0.5, y: 0.5 },
+    innerRadius: 0,
+    outerCenter: { x: 0.5, y: 0.5 },
+    outerRadius: 0.7,
+    colorStops: [
+      { offset: 0, color: "rgba(255,45,45,0)" },
+      { offset: 0.55, color: "rgba(255,45,45,0)" },
+      { offset: 1, color: "rgba(255,45,45,1)" },
+    ],
+    textureSpace: "local",
+  });
+  const vignette = new Graphics();
+  vignette.rect(0, 0, width, height).fill(vignetteFill);
+  vignette.alpha = 0;
+  overlay.addChild(vignette);
+
+  return { app, width, height, tex, quality, backdrop, farStars, farRocks, nearStars, nearRocks, enemyLane, shipLayer, effects, overlay, flame, vignette, vignetteTarget: 0, ship, shipBase, shipBody: body, damage, shieldRing, shieldAlpha: 0, stars, rocks, squadron, squadronView };
 }
 
 export type LaserKind = "mine" | "charged" | "theirs";

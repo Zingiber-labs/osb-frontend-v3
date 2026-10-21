@@ -4,6 +4,7 @@ import type { ScenarioState, ShipAction } from "@/features/gameplay/engine/types
 import { ActionQueue } from "./ActionQueue";
 import { runAnimation } from "./animations";
 import { loadSprites, type SpriteTextures } from "./assets";
+import { detectQuality } from "./quality";
 import type { RendererPort } from "./RendererPort";
 import { buildWorld, type World } from "./world";
 
@@ -48,7 +49,7 @@ export class ScenarioRenderer implements RendererPort {
       app.destroy({ removeView: true }, { children: true });
       return;
     }
-    const world = buildWorld(app, tex);
+    const world = buildWorld(app, tex, detectQuality());
     this.app = app;
     this.world = world;
     this.queue = new ActionQueue((action) => runAnimation(world, action));
@@ -93,6 +94,7 @@ export class ScenarioRenderer implements RendererPort {
     const world = this.world;
     if (!world) return;
     const dt = ticker.deltaTime;
+    world.backdrop.pan(dt);
     for (const star of world.stars) {
       star.g.x -= star.speed * dt;
       if (star.g.x < -2) {
