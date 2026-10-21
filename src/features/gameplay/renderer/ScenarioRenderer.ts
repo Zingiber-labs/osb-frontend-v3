@@ -6,7 +6,7 @@ import { runAnimation } from "./animations";
 import { loadSprites, type SpriteTextures } from "./assets";
 import { detectQuality } from "./quality";
 import type { RendererPort } from "./RendererPort";
-import { buildWorld, type World } from "./world";
+import { buildWorld, FLAME_SCALE, type World } from "./world";
 
 export class ScenarioRenderer implements RendererPort {
   private app: Application | null = null;
@@ -110,6 +110,9 @@ export class ScenarioRenderer implements RendererPort {
         rock.g.y = Math.random() * world.height;
       }
     }
+    const f = world.flame;
+    f.scale.set(FLAME_SCALE * (0.9 + Math.random() * 0.25), FLAME_SCALE * (0.85 + Math.random() * 0.3));
+    f.alpha = 0.8 + Math.random() * 0.2;
     world.squadron.update(ticker.deltaMS);
     world.squadronView.sync();
   };

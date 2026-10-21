@@ -1,6 +1,7 @@
 import { Application, Container, FillGradient, Graphics, type Sprite } from "pixi.js";
 import type { SpriteTextures } from "./assets";
 import { buildBackdrop, type Backdrop } from "./backdrop";
+import { makeBloom, makeGlow } from "./fx";
 import type { Quality } from "./quality";
 import type { SpriteKey } from "./spriteManifest";
 import { FACE_RIGHT, SHIP_SCALE, sprite } from "./spriteUtils";
@@ -41,6 +42,9 @@ export type World = {
   squadronView: SquadronView;
 };
 
+/** Base scale of the engine flame; the idle flicker jitters around it. */
+export const FLAME_SCALE = 0.7;
+
 export const COLORS = {
   star: 0xffffff,
   ember: 0xf97316,
@@ -54,8 +58,9 @@ const METEOR_KEYS: SpriteKey[] = ["meteorBig1", "meteorBig2", "meteorBig3", "met
 function makeShip(tex: SpriteTextures) {
   const ship = new Container();
   // The flame trails behind the ship (to the left). If it visibly points the wrong way, flip the sign of its rotation.
-  const flame = sprite(tex.flame, 0.7, -FACE_RIGHT);
+  const flame = sprite(tex.flame, FLAME_SCALE, -FACE_RIGHT);
   flame.x = -36;
+  flame.blendMode = "add";
   const body = sprite(tex.ship, SHIP_SCALE);
   const damage = ([1, 2, 3] as const).map((i) => {
     const d = sprite(tex[`shipDamage${i}`], SHIP_SCALE);
@@ -64,6 +69,7 @@ function makeShip(tex: SpriteTextures) {
   }) as [Sprite, Sprite, Sprite];
   const shieldRing = sprite(tex.shield, SHIP_SCALE);
   shieldRing.alpha = 0;
+  shieldRing.blendMode = "add";
   ship.addChild(flame, body, ...damage, shieldRing);
   return { ship, flame, body, damage, shieldRing };
 }
@@ -118,6 +124,10 @@ export function buildWorld(app: Application, tex: SpriteTextures, quality: Quali
   ];
 
   const { ship, flame, body, damage, shieldRing } = makeShip(tex);
+  if (quality === "high") {
+    effects.filters = [makeBloom()];
+    shieldRing.filters = [makeGlow()];
+  }
   const shipBase = { x: width * 0.2, y: height / 2 };
   ship.position.set(shipBase.x, shipBase.y);
   shipLayer.addChild(ship);
@@ -153,12 +163,14 @@ export type LaserKind = "mine" | "charged" | "theirs";
 export function laser(world: World, kind: LaserKind): Sprite {
   const key: SpriteKey = kind === "mine" ? "laserMine" : kind === "charged" ? "laserCharged" : "laserTheirs";
   const s = sprite(world.tex[key], kind === "charged" ? 1.1 : 0.8);
+  s.blendMode = "add";
   world.effects.addChild(s);
   return s;
 }
 
 export function dot(world: World, radius: number, color: number): Graphics {
   const g = new Graphics().circle(0, 0, radius).fill(color);
+  g.blendMode = "add";
   world.effects.addChild(g);
   return g;
 }

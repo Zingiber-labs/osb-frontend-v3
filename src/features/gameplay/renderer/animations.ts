@@ -1,5 +1,6 @@
 import { Graphics } from "pixi.js";
 import type { EnemySize, ShipAction } from "@/features/gameplay/engine/types";
+import { trail } from "./fx";
 import { callout, CALLOUT_COLORS } from "./callout";
 import { COLORS, dot, laser, SHIP_SCALE, type World } from "./world";
 import { easeOut, tween } from "./tween";
@@ -22,15 +23,16 @@ const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
 /** Procedural explosion: white flash, ember ring, radial particles. Runs for `ms`. */
 async function burst(world: World, x: number, y: number, scale: number, ms: number) {
-  const flash = dot(world, 14 * scale, COLORS.flash);
+  const flash = dot(world, 18 * scale, COLORS.flash);
   flash.position.set(x, y);
   const ring = new Graphics().circle(0, 0, 10 * scale).stroke({ width: 3, color: COLORS.ember });
+  ring.blendMode = "add";
   ring.position.set(x, y);
   world.effects.addChild(ring);
-  const parts = Array.from({ length: 8 }, (_, i) => {
+  const parts = Array.from({ length: 12 }, (_, i) => {
     const p = dot(world, 3 * scale, i % 2 ? COLORS.ember : COLORS.gold);
     p.position.set(x, y);
-    const a = (i / 8) * Math.PI * 2;
+    const a = (i / 12) * Math.PI * 2;
     return { p, dx: Math.cos(a) * 60 * scale, dy: Math.sin(a) * 60 * scale };
   });
   await tween(world.app.ticker, ms, (t) => {
@@ -63,6 +65,7 @@ async function fire(world: World, size: EnemySize, charged: boolean, caption?: s
   const fromX = enemy.x;
   const fromY = enemy.y;
   const shot = laser(world, charged ? "charged" : "mine");
+  const tr = trail(world, charged ? "laserCharged" : "laserMine", charged ? 1.1 : 0.8);
   const travel = DURATION.fire * 0.6;
   await tween(app.ticker, travel, (t) => {
     // A freshly spawned target is still flying in; bring it to its anchor during the shot's flight.
@@ -70,8 +73,10 @@ async function fire(world: World, size: EnemySize, charged: boolean, caption?: s
     enemy.y = lerp(fromY, dest.y, t);
     shot.x = lerp(ship.x + 40, enemy.x, t);
     shot.y = lerp(ship.y, enemy.y, t);
+    tr.update(shot.x, shot.y);
   });
   shot.destroy();
+  tr.destroy();
   if (caption) callout(world, enemy.x, enemy.y - 30, caption, charged ? CALLOUT_COLORS.charged : CALLOUT_COLORS.mine);
   const base = enemy.scale.x;
   const burstDone = burst(world, enemy.x, enemy.y, BURST_SCALE[size] * (charged ? 1.3 : 1), DURATION.fire - travel);
@@ -89,12 +94,15 @@ async function hit(world: World, points: 1 | 2 | 3, absorbed: boolean, caption?:
   const from = (source && squadronView.positionOf(source.id)) ?? { x: world.width * 0.85, y: ship.y + (Math.random() - 0.5) * 80 };
   const shot = laser(world, "theirs");
   shot.scale.set(0.6 + points * 0.15);
+  const tr = trail(world, "laserTheirs", 0.6 + points * 0.15);
   const travel = DURATION.hit * 0.6;
   await tween(app.ticker, travel, (t) => {
     shot.x = lerp(from.x - 30, ship.x + 20, t);
     shot.y = lerp(from.y, ship.y, t);
+    tr.update(shot.x, shot.y);
   });
   shot.destroy();
+  tr.destroy();
   if (caption) callout(world, ship.x + 70, ship.y - 30, caption, CALLOUT_COLORS.theirs);
   if (absorbed) {
     await tween(app.ticker, DURATION.hit - travel, (t) => {
