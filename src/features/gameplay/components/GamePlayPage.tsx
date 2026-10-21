@@ -5,6 +5,7 @@ import { createReplayFeed, findTeamId } from "@/features/gameplay/feeds/replayFe
 import { useScenario } from "@/features/gameplay/hooks/useScenario";
 import type { RendererPort } from "@/features/gameplay/renderer/RendererPort";
 import { findGame, games } from "@/fixtures/games";
+import { DebugPanel } from "./DebugPanel";
 import { Hud } from "./Hud";
 import { ResultOverlay } from "./ResultOverlay";
 import { ScenarioCanvas } from "./ScenarioCanvas";
@@ -59,6 +60,7 @@ export function GamePlayPage() {
       <h1 className="sr-only">Game Play</h1>
       <Hud state={state} game={game} myTeamId={myTeamId} />
       <ScenarioCanvas onReady={handleReady} />
+      {import.meta.env.DEV ? <DebugPanel feed={feed} renderer={renderer} /> : null}
       {finished ? <ResultOverlay state={state} onReplay={reset} /> : null}
     </section>
   );

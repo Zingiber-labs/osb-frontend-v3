@@ -1,32 +1,25 @@
-# React + TypeScript + Vite
+# OSB Ship Scenario
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+MVP for the "watch the game" step of Outer Sports Ballers. A recorded NBA game is replayed fast and drives a spaceship battle: the chosen player's team scoring destroys enemies, opponent scores damage the hull, the chosen player's blocks and steals charge the shield, and the mission threshold decides win or loss at Final.
 
-Currently, two official plugins are available:
+## Run
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```bash
+npm install
+npm run dev          # http://localhost:5173/game-play
+npm test             # vitest
+npm run build        # tsc -b && vite build
+npm run record-game -- <espnEventId>   # add another recorded game to src/fixtures/games
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+## Layout
+
+- `src/app/` router and layout
+- `src/features/gameplay/engine/` pure scenario engine (`reduce`)
+- `src/features/gameplay/feeds/` `Feed` interface and the replay adapter
+- `src/features/gameplay/renderer/` PixiJS renderer and action queue
+- `src/features/gameplay/components/` page, setup, HUD, result, debug panel
+- `src/fixtures/games/` recorded games
+- `scripts/` ESPN capture script
+
+Design: `docs/superpowers/specs/2026-10-21-ship-scenario-mvp-design.md`
