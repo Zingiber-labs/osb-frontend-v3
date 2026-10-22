@@ -1,11 +1,7 @@
-import { Button } from "@/components/ui/button";
 import type { ShipAction } from "@/features/gameplay/engine/types";
-import type { Feed } from "@/features/gameplay/feeds/types";
-import type { RendererPort } from "@/features/gameplay/renderer/RendererPort";
 
-type Props = { feed: Feed | null; renderer: RendererPort | null };
-
-const SAMPLES: { label: string; action: ShipAction }[] = [
+/** One of each ship action with a realistic caption, for exercising the renderer without game data. */
+export const SAMPLE_ACTIONS: { label: string; action: ShipAction }[] = [
   { label: "fire scout", action: { type: "fire", size: "scout", charged: false, caption: "MORANT +1" } },
   { label: "fire fighter", action: { type: "fire", size: "fighter", charged: false, caption: "MORANT +2" } },
   { label: "fire cruiser charged", action: { type: "fire", size: "cruiser", charged: true, caption: "COWARD +3" } },
@@ -19,18 +15,3 @@ const SAMPLES: { label: string; action: ShipAction }[] = [
   { label: "warpOut", action: { type: "warpOut" } },
   { label: "explode", action: { type: "explode" } },
 ];
-
-export function DebugPanel({ feed, renderer }: Props) {
-  return (
-    <div className="absolute bottom-0 left-0 z-10 flex max-w-full flex-wrap gap-1 bg-slate-950/70 p-2 text-xs">
-      <Button size="sm" variant="secondary" onClick={() => feed?.pause()}>Pause</Button>
-      <Button size="sm" variant="secondary" onClick={() => feed?.start()}>Resume</Button>
-      <Button size="sm" variant="secondary" onClick={() => feed?.step()}>Step</Button>
-      {SAMPLES.map(({ label, action }) => (
-        <Button key={label} size="sm" variant="outline" onClick={() => renderer?.enqueue([action])}>
-          {label}
-        </Button>
-      ))}
-    </div>
-  );
-}

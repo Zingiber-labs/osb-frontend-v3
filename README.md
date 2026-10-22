@@ -18,7 +18,9 @@ npm run record-game -- <espnEventId>   # add another recorded game to src/fixtur
 - `src/features/gameplay/engine/` pure scenario engine (`reduce`)
 - `src/features/gameplay/feeds/` `Feed` interface and the replay adapter
 - `src/features/gameplay/renderer/` PixiJS renderer and action queue
-- `src/features/gameplay/components/` page, setup, HUD, result, debug panel
+- `src/features/gameplay/components/` page, setup, HUD, result
+- `src/features/sandbox/` `/sandbox`: the scene without game data, with a button per ship action and hull/shield inputs for checking the renderer
+- `src/features/rules/` `/reglas`: the scenario rules explained in Spanish
 - `src/fixtures/games/` recorded games
 - `scripts/` ESPN capture script
 

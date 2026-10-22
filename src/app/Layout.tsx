@@ -12,6 +12,12 @@ export function Layout() {
           >
             Game Play
           </NavLink>
+          <NavLink to="/sandbox" className={({ isActive }) => (isActive ? "text-cyan-300" : "text-slate-400")}>
+            Sandbox
+          </NavLink>
+          <NavLink to="/reglas" className={({ isActive }) => (isActive ? "text-cyan-300" : "text-slate-400")}>
+            Reglas
+          </NavLink>
         </nav>
       </header>
       <main className="flex flex-1 flex-col">

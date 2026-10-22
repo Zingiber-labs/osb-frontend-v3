@@ -45,6 +45,7 @@ describe("GamePlayPage", () => {
       await vi.advanceTimersByTimeAsync(0);
     });
     expect(screen.getByRole("progressbar", { name: /hull/i })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /fire scout|pause|step/i })).toBeNull();
 
     await act(async () => {
       await vi.advanceTimersByTimeAsync(60_000);
