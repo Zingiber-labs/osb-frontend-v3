@@ -1,63 +1,69 @@
 import type { EnemySize } from "@/features/gameplay/engine/types";
+import { DEFAULT_VIEW, project, type Vec3, type View } from "./projection";
 
 export type MemberState = "entering" | "holding";
 
-export type Member = {
+export type Member = Vec3 & {
   id: number;
   slot: number;
   size: EnemySize;
   state: MemberState;
-  x: number;
-  y: number;
   enterMs: number;
   elapsed: number;
   seed: number;
 };
 
 export type SquadronOptions = {
-  width: number;
-  height: number;
   slots?: number;
   respawnDelayMs?: number;
   enterMs?: number;
   fastEnterMs?: number;
+  view?: View;
   random?: () => number;
 };
 
 const SIZES: EnemySize[] = ["scout", "fighter", "cruiser"];
-const OFFSCREEN_PAD = 80;
+/** Depth a new member starts from: far enough to be a dot. */
+export const ENTER_Z = 3600;
+/** Slot anchors in world units: a loose V ahead of the ship at three depths. */
+const ANCHORS: Vec3[] = [
+  { x: -420, y: -60, z: 1000 },
+  { x: 0, y: -120, z: 1400 },
+  { x: 440, y: -40, z: 1100 },
+];
+const WOBBLE_X = 25;
+const WOBBLE_Y = 40;
 
 /**
- * Pure squadron state: which enemies exist, where they are, and when empty slots refill.
- * No Pixi here; SquadronView turns members into sprites.
+ * Pure squadron state: which enemies exist, where they are in world space, and when empty slots
+ * refill. No Pixi here; SquadronView projects members into sprites.
  */
 export class SquadronModel {
   readonly members: Member[] = [];
-  private readonly width: number;
-  private readonly height: number;
   private readonly slotCount: number;
   private readonly respawnDelayMs: number;
   private readonly enterMs: number;
   private readonly fastEnterMs: number;
+  private readonly view: View;
   private readonly random: () => number;
   private readonly respawnAt = new Map<number, number>();
   private nextId = 1;
   private sizeIndex = 0;
   private clock = 0;
 
-  constructor(opts: SquadronOptions) {
-    this.width = opts.width;
-    this.height = opts.height;
+  constructor(opts: SquadronOptions = {}) {
     this.slotCount = opts.slots ?? 3;
     this.respawnDelayMs = opts.respawnDelayMs ?? 600;
     this.enterMs = opts.enterMs ?? 1200;
     this.fastEnterMs = opts.fastEnterMs ?? 400;
+    this.view = opts.view ?? DEFAULT_VIEW;
     this.random = opts.random ?? Math.random;
     for (let slot = 0; slot < this.slotCount; slot += 1) this.spawn(slot);
   }
 
-  anchor(slot: number): { x: number; y: number } {
-    return { x: this.width * (0.76 + slot * 0.04), y: this.height * (0.3 + slot * 0.2) };
+  anchor(slot: number): Vec3 {
+    const a = ANCHORS[slot % ANCHORS.length];
+    return { x: a.x, y: a.y, z: a.z };
   }
 
   /** Precondition: callers spawn only after a removal; spawning into an occupied slot is not guarded. */
@@ -68,8 +74,9 @@ export class SquadronModel {
       slot,
       size: SIZES[this.sizeIndex++ % SIZES.length],
       state: "entering",
-      x: this.width + OFFSCREEN_PAD,
+      x: a.x,
       y: a.y,
+      z: ENTER_Z,
       enterMs: opts.fast ? this.fastEnterMs : this.enterMs,
       elapsed: 0,
       seed: this.random() * Math.PI * 2,
@@ -81,19 +88,20 @@ export class SquadronModel {
 
   update(dtMs: number): void {
     this.clock += dtMs;
-    const startX = this.width + OFFSCREEN_PAD;
     for (const m of this.members) {
       m.elapsed += dtMs;
       const a = this.anchor(m.slot);
       if (m.state === "entering") {
         const t = Math.min(1, m.elapsed / m.enterMs);
         const eased = 1 - (1 - t) * (1 - t);
-        m.x = startX + (a.x - startX) * eased;
+        m.x = a.x;
         m.y = a.y;
+        m.z = ENTER_Z + (a.z - ENTER_Z) * eased;
         if (t >= 1) m.state = "holding";
       } else {
-        m.x = a.x + Math.sin(this.clock / 1100 + m.seed) * 6;
-        m.y = a.y + Math.sin(this.clock / 700 + m.seed) * 12;
+        m.x = a.x + Math.sin(this.clock / 1100 + m.seed) * WOBBLE_X;
+        m.y = a.y + Math.sin(this.clock / 700 + m.seed) * WOBBLE_Y;
+        m.z = a.z;
       }
     }
     for (const [slot, at] of [...this.respawnAt]) {
@@ -101,12 +109,14 @@ export class SquadronModel {
     }
   }
 
-  takeNearest(x: number, y: number): Member | null {
+  /** Removes and returns the member whose projection is closest to a screen point. */
+  takeNearest(sx: number, sy: number): Member | null {
     if (this.members.length === 0) return null;
     let best = this.members[0];
     let bestD = Infinity;
     for (const m of this.members) {
-      const d = (m.x - x) ** 2 + (m.y - y) ** 2;
+      const p = project(m, this.view);
+      const d = (p.sx - sx) ** 2 + (p.sy - sy) ** 2;
       if (d < bestD) {
         bestD = d;
         best = m;
