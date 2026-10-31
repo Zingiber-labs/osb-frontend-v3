@@ -57,7 +57,7 @@ def main() -> None:
         raise SystemExit("nothing left after keying; lower --threshold or check the input")
     x0, x1 = max(0, xs.min() - args.pad), min(rgba.shape[1], xs.max() + 1 + args.pad)
     y0, y1 = max(0, ys.min() - args.pad), min(rgba.shape[0], ys.max() + 1 + args.pad)
-    out = Image.fromarray(rgba[y0:y1, x0:x1], "RGBA")
+    out = Image.fromarray(np.ascontiguousarray(rgba[y0:y1, x0:x1]))
     h = round(out.height * args.width / out.width)
     out = out.resize((args.width, h), Image.LANCZOS)
     out.save(args.dst, optimize=True)
