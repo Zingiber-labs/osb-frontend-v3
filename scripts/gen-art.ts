@@ -8,7 +8,7 @@ const DEFAULT_MODEL = "gemini-3.1-flash-image";
 function readUserEnv(name: string): string | undefined {
   if (process.platform !== "win32") return undefined;
   try {
-    const out = execFileSync("reg", ["query", "HKCU\Environment", "/v", name], { encoding: "utf8" });
+    const out = execFileSync("reg", ["query", "HKCU\\Environment", "/v", name], { encoding: "utf8" });
     const m = out.match(/REG_\w+\s+(.+)\s*$/m);
     return m?.[1]?.trim();
   } catch {
