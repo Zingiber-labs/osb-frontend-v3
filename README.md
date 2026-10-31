@@ -28,6 +28,18 @@ Quality: effects (bloom, glow, trails, shake) are chosen automatically. Add `?qu
 
 Design: `docs/superpowers/specs/2026-10-21-ship-scenario-mvp-design.md`
 
+## Art pipeline
+
+Sprites are stored as drawn (rear-view ship, head-on enemies). Prompts live in `scripts/geminiImage.ts`; `npm run gen-art` calls the Gemini API with them, and `scripts/key-art.py` removes the black background, trims and downscales (`--bbox-from` makes the four ship files share one crop).
+
+Note: Gemini's image models have no free-tier quota (every request returned 429 with limit 0), so `gen-art` only works with a billed `GEMINI_API_KEY`. The art that ships was generated in the Gemini web app from the same prompts and keyed with the script.
+
+```bash
+npm run gen-art -- ship --n 3                 # raw candidates in .superpowers/art/raw/
+npm run gen-art -- --all --model gemini-3-pro-image
+python scripts/key-art.py .superpowers/art/raw/ship-1.png public/sprites/ship.png --width 520
+```
+
 ## Credits
 
 Sprite art was generated for this project (ship, enemies, lasers, shield, meteors, explosion, flame). See `public/sprites/CREDITS.md`.
