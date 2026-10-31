@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
-    "record-game": "tsx scripts/record-game.ts"
+    "record-game": "tsx scripts/record-game.ts",
+    "gen-art": "tsx scripts/gen-art.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",
