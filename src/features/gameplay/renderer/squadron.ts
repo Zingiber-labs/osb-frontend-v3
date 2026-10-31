@@ -112,9 +112,12 @@ export class SquadronModel {
   /** Removes and returns the member whose projection is closest to a screen point. */
   takeNearest(sx: number, sy: number): Member | null {
     if (this.members.length === 0) return null;
-    let best = this.members[0];
+    // Prefer visible (holding) enemies; a just-respawned far dot is only a fallback.
+    const holding = this.members.filter((m) => m.state === "holding");
+    const pool = holding.length > 0 ? holding : this.members;
+    let best = pool[0];
     let bestD = Infinity;
-    for (const m of this.members) {
+    for (const m of pool) {
       const p = project(m, this.view);
       const d = (p.sx - sx) ** 2 + (p.sy - sy) ** 2;
       if (d < bestD) {

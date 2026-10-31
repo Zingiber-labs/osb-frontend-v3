@@ -133,4 +133,13 @@ describe("SquadronModel", () => {
     expect(taken?.slot).toBe(1);
     expect(t.members).toHaveLength(1);
   });
+
+  it("takeNearest prefers a holding member over a nearer entering one", () => {
+    const s = entersFirstThenHolds();
+    const entering = s.members.find((m) => m.state === "entering")!;
+    const at = project(entering);
+    const taken = s.takeNearest(at.sx, at.sy);
+    expect(taken?.state).toBe("holding");
+    expect(s.members).toHaveLength(1);
+  });
 });

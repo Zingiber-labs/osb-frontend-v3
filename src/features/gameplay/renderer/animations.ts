@@ -1,4 +1,4 @@
-import { Graphics, Sprite } from "pixi.js";
+import { Graphics, Sprite, type Container } from "pixi.js";
 import type { EnemySize, ShipAction } from "@/features/gameplay/engine/types";
 import { callout, CALLOUT_COLORS } from "./callout";
 import { shake, trail, whiteFlash } from "./fx";
@@ -39,7 +39,7 @@ function place(world: World, s: Sprite, p: Vec3, baseScale: number): { sx: numbe
 }
 
 /** Explosion: frame strip plus a white flash, ember ring and radial particles, scaled for depth. Runs for `ms`. */
-async function burst(world: World, x: number, y: number, z: number, scale: number, ms: number) {
+async function burst(world: World, x: number, y: number, z: number, scale: number, ms: number, layer: Container = world.depth) {
   const frames = world.explosionFrames;
   const fire = new Sprite(frames[0]);
   fire.anchor.set(0.5);
@@ -48,17 +48,17 @@ async function burst(world: World, x: number, y: number, z: number, scale: numbe
   // Normal blending: additive plus bloom washed the fireball out to a white disc.
   fire.position.set(x, y);
   fire.zIndex = zIndexFor(z) + 1;
-  world.depth.addChild(fire);
-  const flash = dot(world, 6 * scale, COLORS.flash);
+  layer.addChild(fire);
+  const flash = dot(world, 6 * scale, COLORS.flash, layer);
   flash.position.set(x, y);
   flash.zIndex = fire.zIndex;
   const ring = new Graphics().circle(0, 0, 10 * scale).stroke({ width: 3, color: COLORS.ember });
   ring.blendMode = "add";
   ring.position.set(x, y);
   ring.zIndex = fire.zIndex;
-  world.depth.addChild(ring);
+  layer.addChild(ring);
   const parts = Array.from({ length: 12 }, (_, i) => {
-    const p = dot(world, 2 * scale, i % 2 ? COLORS.ember : COLORS.gold);
+    const p = dot(world, 2 * scale, i % 2 ? COLORS.ember : COLORS.gold, layer);
     p.position.set(x, y);
     p.zIndex = fire.zIndex;
     const a = (i / 12) * Math.PI * 2;
@@ -281,7 +281,7 @@ async function warpOut(world: World) {
 async function explode(world: World) {
   const { app, ship } = world;
   shake(world, 8, 600);
-  const big = burst(world, ship.x, ship.y, SHIP_WORLD.z, 3, DURATION.explode * 0.6);
+  const big = burst(world, ship.x, ship.y, SHIP_WORLD.z, 3, DURATION.explode * 0.6, world.effects);
   await tween(app.ticker, DURATION.explode, (t) => {
     ship.alpha = 1 - t;
     ship.scale.set(1 + t);

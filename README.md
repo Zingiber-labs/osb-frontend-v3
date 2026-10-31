@@ -26,7 +26,7 @@ npm run record-game -- <espnEventId>   # add another recorded game to src/fixtur
 
 Quality: effects (bloom, glow, trails, shake) are chosen automatically. Add `?quality=low` to the URL (e.g. `/game-play?quality=low`) to force the lighter mode on phones or slow machines, or `?quality=high` to force full effects.
 
-Design: `docs/superpowers/specs/2026-10-21-ship-scenario-mvp-design.md`
+Design: `docs/superpowers/specs/2026-10-21-ship-scenario-mvp-design.md`, `docs/superpowers/specs/2026-10-30-chase-camera-design.md`
 
 ## Art pipeline
 
@@ -42,4 +42,4 @@ python scripts/key-art.py .superpowers/art/raw/ship-1.png public/sprites/ship.pn
 
 ## Credits
 
-Sprite art was generated for this project (ship, enemies, lasers, shield, meteors, explosion, flame). See `public/sprites/CREDITS.md`.
+Sprite art was generated for this project (ship, enemies, lasers, shield, meteors, explosion, flame, planet). See `public/sprites/CREDITS.md`.

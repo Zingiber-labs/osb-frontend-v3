@@ -2,7 +2,7 @@ export const SPRITE_BASE = "/sprites";
 
 /**
  * Sprites are stored exactly as drawn on screen (chase view: the player ship from behind, enemies
- * head-on). The ship, damage states, enemies and planet are stored at 2x and drawn at 0.5.
+ * head-on). The ship, damage states, enemies and planet are stored at 2x and drawn at about 0.5.
  * Damage states are full ship images drawn over the body and share its pixel size.
  */
 export const SPRITE_FILES = {

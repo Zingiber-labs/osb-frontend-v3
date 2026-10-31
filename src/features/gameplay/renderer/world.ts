@@ -98,7 +98,7 @@ function makeShip(tex: SpriteTextures) {
   return { ship, hull, body, damage, engines, shieldRing };
 }
 
-export function respawnRock(_world: World, rock: Rock, z = ROCK_Z_FAR * (0.8 + Math.random() * 0.2)): void {
+export function respawnRock(rock: Rock, z = ROCK_Z_FAR * (0.8 + Math.random() * 0.2)): void {
   // Off the centre line in world units so a rock never crosses the ship or the targets.
   const side = Math.random() < 0.5 ? -1 : 1;
   const vertical = Math.random() < 0.35;
@@ -116,7 +116,7 @@ function makeRocks(world: World): Rock[] {
     g.alpha = 0.95;
     world.depth.addChild(g);
     const rock: Rock = { g, p: { x: 0, y: 0, z: ROCK_Z_FAR }, spin: (Math.random() - 0.5) * 0.02, speed: 1 };
-    respawnRock(world, rock, ROCK_Z_NEAR + Math.random() * (ROCK_Z_FAR - ROCK_Z_NEAR));
+    respawnRock(rock, ROCK_Z_NEAR + Math.random() * (ROCK_Z_FAR - ROCK_Z_NEAR));
     return rock;
   });
 }
@@ -127,7 +127,7 @@ export function updateRock(world: World, rock: Rock, dtMs: number, warp: number)
   const p = project(rock.p, world.view);
   const m = 160;
   if (rock.p.z < ROCK_Z_NEAR || p.sx < -m || p.sx > world.width + m || p.sy < -m || p.sy > world.height + m) {
-    respawnRock(world, rock);
+    respawnRock(rock);
     return;
   }
   rock.g.position.set(p.sx, p.sy);
