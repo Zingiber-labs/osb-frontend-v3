@@ -1,7 +1,16 @@
 # Sprite credits
 
-- `flame.png` (engine flame) is drawn procedurally (soft additive gradient), no third-party source.
+- `ship.png`, `ship_damage1..3.png`, `enemy_scout.png`, `enemy_fighter.png`, `enemy_cruiser.png` and
+  `planet.png` were generated for this project on 2026-10-30 with Google Gemini's image model
+  (Nano Banana) through the Gemini web app, from the prompts in `scripts/geminiImage.ts` (the API
+  route in `scripts/gen-art.ts` needs a billed key; the free tier has no image quota). The full-size
+  2048 px downloads were keyed, trimmed and downscaled with `scripts/key-art.py`; the four ship files
+  share one crop (`--bbox-from`) so the damage states overlay the clean ship exactly. The damage
+  states are image-to-image edits of the clean ship made in the same chat.
+- `flame.png` (engine glow) is drawn procedurally (soft additive gradient), no third-party source.
 - `bg/galaxy.jpg` is Outer Sports Ballers' own galaxy backdrop, downscaled.
-- Every other PNG (ship and damage states, enemies, lasers, shield, meteors, explosion strip) was generated for this project with Canva's image generator on 2026-10-21 from text prompts matched to the OSB look, then keyed, sliced and downscaled offline. The damage states are the generated ship with procedural scorch marks and cracks. Earlier revisions used Kenney's CC0 Space Shooter Redux pack; nothing from it remains. Sheets live in the Canva design "Blank black square canvas" (DAHYraDWo9E).
+- Lasers, shield, meteors and the explosion strip were generated with Canva's image generator on
+  2026-10-21 (sheets in the Canva design "Blank black square canvas", DAHYraDWo9E).
 
-Orientation convention: the renderer rotates every sprite a quarter turn clockwise, so sprites that must face right (player ship, my lasers) are stored facing up, and sprites that must face left (enemies, enemy lasers) are stored facing down.
+Orientation convention: files are stored exactly as they appear on screen. The player ship is seen
+from behind, enemies head-on; bolts point up in the file and are rotated along their travel.

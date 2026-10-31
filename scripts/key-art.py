@@ -41,6 +41,7 @@ def main() -> None:
     ap.add_argument("--mode", choices=["solid", "glow"], default="solid")
     ap.add_argument("--threshold", type=int, default=28)
     ap.add_argument("--pad", type=int, default=4)
+    ap.add_argument("--bbox-from", nargs="*", default=[], help="extra source images whose keyed extent is unioned into the crop, so a set of overlays (ship + damage states) shares one frame")
     args = ap.parse_args()
 
     img = Image.open(args.src).convert("RGB")
@@ -55,8 +56,18 @@ def main() -> None:
     ys, xs = np.nonzero(rgba[..., 3] > 8)
     if len(xs) == 0:
         raise SystemExit("nothing left after keying; lower --threshold or check the input")
-    x0, x1 = max(0, xs.min() - args.pad), min(rgba.shape[1], xs.max() + 1 + args.pad)
-    y0, y1 = max(0, ys.min() - args.pad), min(rgba.shape[0], ys.max() + 1 + args.pad)
+    x0, x1, y0, y1 = xs.min(), xs.max() + 1, ys.min(), ys.max() + 1
+    for extra in args.bbox_from:
+        other = np.asarray(Image.open(extra).convert("RGB"))
+        if other.shape != rgb.shape:
+            raise SystemExit(f"{extra} is {other.shape[1]}x{other.shape[0]}, not the same size as {args.src}")
+        oa = key_solid(other, args.threshold) if args.mode == "solid" else key_glow(other)[1]
+        oys, oxs = np.nonzero(oa > 8)
+        if len(oxs):
+            x0, x1 = min(x0, oxs.min()), max(x1, oxs.max() + 1)
+            y0, y1 = min(y0, oys.min()), max(y1, oys.max() + 1)
+    x0, x1 = max(0, x0 - args.pad), min(rgba.shape[1], x1 + args.pad)
+    y0, y1 = max(0, y0 - args.pad), min(rgba.shape[0], y1 + args.pad)
     out = Image.fromarray(np.ascontiguousarray(rgba[y0:y1, x0:x1]))
     h = round(out.height * args.width / out.width)
     out = out.resize((args.width, h), Image.LANCZOS)

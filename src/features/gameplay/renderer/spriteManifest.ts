@@ -1,8 +1,9 @@
 export const SPRITE_BASE = "/sprites";
 
 /**
- * Sprites face up (player side) or down (enemy side) on disk; the renderer turns them a quarter
- * turn clockwise (see FACE_RIGHT). Damage states are full ship images drawn over the body.
+ * Sprites are stored exactly as drawn on screen (chase view: the player ship from behind, enemies
+ * head-on). The ship, damage states, enemies and planet are stored at 2x and drawn at 0.5.
+ * Damage states are full ship images drawn over the body and share its pixel size.
  */
 export const SPRITE_FILES = {
   ship: "ship.png",
@@ -11,6 +12,7 @@ export const SPRITE_FILES = {
   shipDamage3: "ship_damage3.png",
   flame: "flame.png",
   bgGalaxy: "bg/galaxy.jpg",
+  planet: "planet.png",
   shield: "shield.png",
   enemyScout: "enemy_scout.png",
   enemyFighter: "enemy_fighter.png",
