@@ -22,7 +22,7 @@ then keyed, trimmed and downscaled locally, like the Canva pass of 2026-10-21.
 
 | Asset | File | View | Notes |
 | --- | --- | --- | --- |
-| Player ship | `ship.png` | rear three-quarter, from slightly above and behind, nose toward the horizon, two engine nozzles glowing toward the camera | cyan/white hull matching the current ship; about 260 px wide on screen |
+| Player ship | `ship.png` | straight rear view from slightly above and behind, symmetric, nose pointing directly at the horizon, two engine nozzles glowing toward the camera (a first three-quarter render read as yawed, so it was replaced) | cyan/white hull matching the current ship; about 260 px wide on screen |
 | Damage 1-3 | `ship_damage1..3.png` | same render | image-to-image edits of the clean ship: scorch marks; cracks and sparks; smoking wreck. Fallback: procedural scorches as before |
 | Enemies | `enemy_scout.png`, `enemy_fighter.png`, `enemy_cruiser.png` | head-on, slightly from above, approaching | red and dark-grey palette of the current enemies; stored small |
 | Planet | `planet.png` | gas giant, partly in shadow | sits near the vanishing point |

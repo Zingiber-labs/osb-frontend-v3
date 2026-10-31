@@ -63,8 +63,8 @@ export const COLORS = {
 
 /** Engine nozzle positions relative to the ship rig, in design px. Measured from ship.png (nozzle glow centroids, offset from the image centre, times SHIP_SCALE). */
 export const ENGINE_OFFSETS: [{ x: number; y: number }, { x: number; y: number }] = [
-  { x: -82, y: 33 },
-  { x: -16, y: 57 },
+  { x: -42, y: 54 },
+  { x: 42, y: 54 },
 ];
 export const ENGINE_SCALE = 0.55;
 export const ROCK_Z_NEAR = 80;
