@@ -51,11 +51,13 @@ describe("fitStage", () => {
     expect(fitStage(1920, 1080)).toEqual({ scale: 1.5, x: 0, y: 0 });
   });
 
-  it("covers a wider host by cropping top and bottom equally", () => {
+  it("covers a wider host by cropping mostly from the top so the ship stays in frame", () => {
     const f = fitStage(1280, 549);
     expect(f.scale).toBe(1);
     expect(f.x).toBe(0);
-    expect(f.y).toBeCloseTo(-85.5);
+    expect(f.y).toBeCloseTo(-(720 - 549) * 0.75);
+    // The ship's screen point (y 533) plus half its height stays inside the host.
+    expect(533 + 90 + f.y).toBeLessThan(549);
   });
 
   it("covers a narrower host by cropping the sides equally", () => {
