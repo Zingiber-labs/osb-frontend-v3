@@ -48,5 +48,5 @@ export const TOP_CROP_SHARE = 0.75;
 export function fitStage(hostWidth: number, hostHeight: number): { scale: number; x: number; y: number } {
   const scale = Math.max(hostWidth / DESIGN.width, hostHeight / DESIGN.height);
   const overflowY = DESIGN.height * scale - hostHeight;
-  return { scale, x: (hostWidth - DESIGN.width * scale) / 2, y: -overflowY * TOP_CROP_SHARE };
+  return { scale, x: (hostWidth - DESIGN.width * scale) / 2, y: overflowY > 0 ? -overflowY * TOP_CROP_SHARE : 0 };
 }

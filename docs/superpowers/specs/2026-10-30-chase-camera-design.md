@@ -50,7 +50,7 @@ rotation in `spriteUtils.ts` goes away. `CREDITS.md` names Gemini and the date.
 - `view = {vp: {x, y}, f}`; `vp` at 50% width and 42% height; `f` is one tuned constant.
 - `zIndexFor(z)` maps depth to an integer so nearer objects sort on top.
 - Design-space coordinates: the world is built at a fixed design size and the stage is scaled to
-  cover the host (largest of the two ratios, centered, edges cropped). Resize recomputes the stage scale and offset only. This closes
+  cover the host (largest of the two ratios; horizontal crops centered, vertical crops taken 75% from the top so the ship stays in frame). Resize recomputes the stage scale and offset only. This closes
   the "layout not resize-aware" ledger item.
 
 ### Layers (back to front)
