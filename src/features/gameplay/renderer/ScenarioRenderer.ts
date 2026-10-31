@@ -4,9 +4,13 @@ import type { ScenarioState, ShipAction } from "@/features/gameplay/engine/types
 import { ActionQueue } from "./ActionQueue";
 import { runAnimation } from "./animations";
 import { loadSprites, type SpriteTextures } from "./assets";
+import { project } from "./projection";
 import { detectQuality } from "./quality";
 import type { RendererPort } from "./RendererPort";
-import { buildWorld, FLAME_SCALE, type World } from "./world";
+import { applyFit, buildWorld, ENGINE_SCALE, updateRock, type World } from "./world";
+
+const MAX_BANK = 0.12;
+const BOB_PX = 4;
 
 export class ScenarioRenderer implements RendererPort {
   private app: Application | null = null;
@@ -14,6 +18,7 @@ export class ScenarioRenderer implements RendererPort {
   private queue: ActionQueue | null = null;
   // Guards against destroy() running while mount() is still awaiting app.init.
   private mountId = 0;
+  private onResize: (() => void) | null = null;
 
   /**
    * The renderer owns its canvas: Pixi creates it, mount() appends it to the
@@ -50,6 +55,8 @@ export class ScenarioRenderer implements RendererPort {
       return;
     }
     const world = buildWorld(app, tex, detectQuality());
+    this.onResize = () => applyFit(world);
+    app.renderer.on("resize", this.onResize);
     this.app = app;
     this.world = world;
     this.queue = new ActionQueue((action) => runAnimation(world, action));
@@ -63,9 +70,13 @@ export class ScenarioRenderer implements RendererPort {
     this.queue?.clear();
     this.queue = null;
     this.world?.squadronView.destroy();
+    this.world?.starfieldView.destroy();
+    this.world?.reticle.destroy();
     this.world = null;
     if (this.app) {
       this.app.ticker.remove(this.idle);
+      if (this.onResize) this.app.renderer.off("resize", this.onResize);
+      this.onResize = null;
       this.app.destroy({ removeView: true }, { children: true });
       this.app = null;
     }
@@ -95,28 +106,29 @@ export class ScenarioRenderer implements RendererPort {
     const world = this.world;
     if (!world) return;
     const dt = ticker.deltaTime;
+    const dtMs = ticker.deltaMS;
+    const now = performance.now();
     world.backdrop.pan(dt);
-    world.shieldRing.visible = world.shieldRing.alpha > 0.01;
-    for (const star of world.stars) {
-      star.g.x -= star.speed * dt;
-      if (star.g.x < -2) {
-        star.g.x = world.width + 2;
-        star.g.y = Math.random() * world.height;
-      }
-    }
-    for (const rock of world.rocks) {
-      rock.g.x -= rock.speed * dt;
-      rock.g.rotation += rock.spin * dt;
-      if (rock.g.x < -40) {
-        rock.g.x = world.width + 40;
-        rock.g.y = Math.random() * world.height;
-      }
-    }
-    const f = world.flame;
-    f.scale.set(FLAME_SCALE * (0.9 + Math.random() * 0.25), FLAME_SCALE * (0.85 + Math.random() * 0.3));
-    f.alpha = 0.8 + Math.random() * 0.2;
-    world.vignette.alpha = world.vignetteTarget * (1 + 0.2 * Math.sin((performance.now() / 1000) * Math.PI * 2));
-    world.squadron.update(ticker.deltaMS);
+    world.planet.x += 0.002 * dt;
+    world.starfield.update(dtMs);
+    world.starfieldView.draw();
+    for (const rock of world.rocks) updateRock(world, rock, dtMs, world.starfield.warp);
+    world.squadron.update(dtMs);
     world.squadronView.sync();
+
+    // Bank toward the member a shot would take; bob gently.
+    const target = world.squadron.pick();
+    const bankTarget = target ? Math.max(-1, Math.min(1, (project(target, world.view).sx - world.width / 2) / (world.width / 2))) * MAX_BANK : 0;
+    world.bank += (bankTarget - world.bank) * Math.min(1, 0.08 * dt);
+    world.hull.rotation = world.bank;
+    world.hull.x = world.bank * 60;
+    world.hull.y = Math.sin(now / 900) * BOB_PX;
+
+    world.shieldRing.visible = world.shieldRing.alpha > 0.01;
+    for (const e of world.engines) {
+      e.scale.set(ENGINE_SCALE * 1.4 * (0.9 + Math.random() * 0.25), ENGINE_SCALE * 0.6 * (0.85 + Math.random() * 0.3));
+      e.alpha = 0.8 + Math.random() * 0.2;
+    }
+    world.vignette.alpha = world.vignetteTarget * (1 + 0.2 * Math.sin((now / 1000) * Math.PI * 2));
   };
 }

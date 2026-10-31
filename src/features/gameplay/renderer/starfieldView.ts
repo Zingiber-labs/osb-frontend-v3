@@ -20,7 +20,7 @@ export class StarfieldView {
     layer.addChild(this.g);
   }
 
-  draw(unitsPerMs = 1.1): void {
+  draw(): void {
     const g = this.g;
     g.clear();
     const warp = this.model.warp;
@@ -30,7 +30,7 @@ export class StarfieldView {
       const alpha = 0.2 + depth * 0.8;
       const r = (st.near ? 1.6 : 0.9) * (0.5 + depth);
       if (st.near || warp > 1.5) {
-        const back = project({ x: st.x, y: st.y, z: st.z + unitsPerMs * warp * STREAK_MS * st.speed }, this.view);
+        const back = project({ x: st.x, y: st.y, z: st.z + this.model.unitsPerMs * warp * STREAK_MS * st.speed }, this.view);
         g.moveTo(back.sx, back.sy).lineTo(p.sx, p.sy).stroke({ width: r, color: STAR_COLOR, alpha: alpha * 0.7 });
       }
       g.circle(p.sx, p.sy, r).fill({ color: STAR_COLOR, alpha });

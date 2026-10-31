@@ -7,12 +7,13 @@ const LIFETIME_MS = 1500;
 const RISE_PX = 24;
 
 /** Floating label at an action. Fire-and-forget: never awaited by the action queue. */
-export function callout(world: World, x: number, y: number, text: string, color: number): void {
+export function callout(world: World, x: number, y: number, text: string, color: number, sizeFactor = 1): void {
+  const fontSize = Math.max(11, Math.min(20, Math.round(16 * sizeFactor)));
   const label = new Text({
     text,
     style: {
       fontFamily: "system-ui, -apple-system, Segoe UI, Roboto, sans-serif",
-      fontSize: 16,
+      fontSize,
       fontWeight: "800",
       fill: color,
       stroke: { color: 0x05060f, width: 4 },

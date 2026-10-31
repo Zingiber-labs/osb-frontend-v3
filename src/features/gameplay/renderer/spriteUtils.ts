@@ -5,7 +5,7 @@ import type { SpriteKey } from "./spriteManifest";
 /** Generated art is stored at 2x; these are the base scales at depth FOCAL (projection scale 1). */
 export const SHIP_SCALE = 0.5;
 export const PLANET_SCALE = 0.5;
-export const ENEMY_SCALE: Record<EnemySize, number> = { scout: 0.32, fighter: 0.42, cruiser: 0.55 };
+export const ENEMY_SCALE: Record<EnemySize, number> = { scout: 0.5, fighter: 0.6, cruiser: 0.7 };
 export const ENEMY_TEXTURE: Record<EnemySize, SpriteKey> = { scout: "enemyScout", fighter: "enemyFighter", cruiser: "enemyCruiser" };
 
 /** Centred sprite, stored orientation. */

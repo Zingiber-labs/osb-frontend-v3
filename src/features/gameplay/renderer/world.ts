@@ -2,51 +2,56 @@ import { Application, Container, FillGradient, Graphics, Rectangle, Texture, typ
 import type { SpriteTextures } from "./assets";
 import { buildBackdrop, type Backdrop } from "./backdrop";
 import { makeBloom, makeGlow } from "./fx";
-import type { Quality } from "./quality";
 import { stripFrames } from "./fxMath";
+import { DEFAULT_VIEW, DESIGN, fitStage, project, SHIP_SCREEN, zIndexFor, type Vec3, type View } from "./projection";
+import type { Quality } from "./quality";
+import { Reticle } from "./reticle";
 import { EXPLOSION_FRAMES, type SpriteKey } from "./spriteManifest";
-import { FACE_RIGHT, SHIP_SCALE, sprite } from "./spriteUtils";
+import { PLANET_SCALE, SHIP_SCALE, sprite } from "./spriteUtils";
+import { StarfieldModel } from "./starfield";
+import { StarfieldView } from "./starfieldView";
 import { SquadronModel } from "./squadron";
 import { SquadronView } from "./squadronView";
 
-export { ENEMY_SCALE, ENEMY_TEXTURE, FACE_RIGHT, SHIP_SCALE, sprite } from "./spriteUtils";
+export { ENEMY_SCALE, ENEMY_TEXTURE, SHIP_SCALE, sprite } from "./spriteUtils";
+
+export type Rock = { g: Sprite; p: Vec3; spin: number; speed: number };
 
 export type World = {
   app: Application;
+  view: View;
   width: number;
   height: number;
   tex: SpriteTextures;
   /** Explosion strip cut into frames, flash first. */
   explosionFrames: Texture[];
   quality: Quality;
+  root: Container;
   backdrop: Backdrop;
-  farStars: Container;
-  farRocks: Container;
-  nearStars: Container;
-  nearRocks: Container;
-  enemyLane: Container;
+  planet: Sprite;
+  depth: Container;
   shipLayer: Container;
   effects: Container;
   overlay: Container;
-  flame: Sprite;
-  /** Full-screen red vignette; its alpha is driven toward vignetteTarget. */
-  vignette: Container;
-  vignetteTarget: number;
   ship: Container;
-  shipBase: { x: number; y: number };
+  hull: Container;
   shipBody: Sprite;
   damage: [Sprite, Sprite, Sprite];
+  engines: [Sprite, Sprite];
   shieldRing: Sprite;
   /** Live shield alpha (shield / SHIELD_MAX), set by syncState; animations read it instead of caching. */
   shieldAlpha: number;
-  stars: { g: Graphics; speed: number }[];
-  rocks: { g: Sprite; speed: number; spin: number }[];
+  bank: number;
+  /** Full-screen red vignette; its alpha is driven toward vignetteTarget. */
+  vignette: Container;
+  vignetteTarget: number;
+  starfield: StarfieldModel;
+  starfieldView: StarfieldView;
+  rocks: Rock[];
   squadron: SquadronModel;
   squadronView: SquadronView;
+  reticle: Reticle;
 };
-
-/** Base scale of the engine flame; the idle flicker jitters around it. */
-export const FLAME_SCALE = 0.7;
 
 export const COLORS = {
   star: 0xffffff,
@@ -56,63 +61,103 @@ export const COLORS = {
   flash: 0xffffff,
 };
 
+/** Engine nozzle positions relative to the ship rig, in design px. Measured from ship.png (nozzle glow centroids, offset from the image centre, times SHIP_SCALE). */
+export const ENGINE_OFFSETS: [{ x: number; y: number }, { x: number; y: number }] = [
+  { x: -82, y: 33 },
+  { x: -16, y: 57 },
+];
+export const ENGINE_SCALE = 0.55;
+export const ROCK_Z_NEAR = 80;
+export const ROCK_Z_FAR = 4200;
+const ROCK_COUNT = 10;
+const ROCK_UNITS_PER_MS = 1.1;
 const METEOR_KEYS: SpriteKey[] = ["meteorBig1", "meteorBig2", "meteorBig3", "meteorBig4", "meteorMed1", "meteorMed2"];
 
 function makeShip(tex: SpriteTextures) {
   const ship = new Container();
-  // The flame trails behind the ship (to the left). If it visibly points the wrong way, flip the sign of its rotation.
-  const flame = sprite(tex.flame, FLAME_SCALE, -FACE_RIGHT);
-  flame.x = -44;
-  flame.blendMode = "add";
+  const hull = new Container();
+  const engines = ENGINE_OFFSETS.map((o) => {
+    // The flame texture points up; squashed and additive it reads as a nozzle glow facing the camera.
+    const e = sprite(tex.flame, ENGINE_SCALE);
+    e.scale.set(ENGINE_SCALE * 1.4, ENGINE_SCALE * 0.6);
+    e.position.set(o.x, o.y);
+    e.blendMode = "add";
+    return e;
+  }) as [Sprite, Sprite];
   const body = sprite(tex.ship, SHIP_SCALE);
   const damage = ([1, 2, 3] as const).map((i) => {
     const d = sprite(tex[`shipDamage${i}`], SHIP_SCALE);
     d.alpha = 0;
     return d;
   }) as [Sprite, Sprite, Sprite];
-  const shieldRing = sprite(tex.shield, SHIP_SCALE);
+  const shieldRing = sprite(tex.shield, SHIP_SCALE * 2.2);
   shieldRing.alpha = 0;
   shieldRing.blendMode = "add";
-  ship.addChild(flame, body, ...damage, shieldRing);
-  return { ship, flame, body, damage, shieldRing };
+  hull.addChild(...engines, body, ...damage, shieldRing);
+  ship.addChild(hull);
+  return { ship, hull, body, damage, engines, shieldRing };
 }
 
-function makeStars(layer: Container, width: number, height: number, count: number, rMin: number, rMax: number, aMin: number, aMax: number, sMin: number, sMax: number) {
-  return Array.from({ length: count }, () => {
-    const g = new Graphics().circle(0, 0, rMin + Math.random() * (rMax - rMin)).fill({ color: COLORS.star, alpha: aMin + Math.random() * (aMax - aMin) });
-    g.x = Math.random() * width;
-    g.y = Math.random() * height;
-    layer.addChild(g);
-    return { g, speed: sMin + Math.random() * (sMax - sMin) };
-  });
+export function respawnRock(_world: World, rock: Rock, z = ROCK_Z_FAR * (0.8 + Math.random() * 0.2)): void {
+  // Off the centre line in world units so a rock never crosses the ship or the targets.
+  const side = Math.random() < 0.5 ? -1 : 1;
+  const vertical = Math.random() < 0.35;
+  rock.p = vertical
+    ? { x: (Math.random() * 2 - 1) * 1400, y: side * (320 + Math.random() * 500), z }
+    : { x: side * (420 + Math.random() * 900), y: (Math.random() * 2 - 1) * 700, z };
+  rock.speed = 0.85 + Math.random() * 0.3;
+  rock.g.rotation = Math.random() * Math.PI * 2;
 }
 
-function makeRocks(layer: Container, tex: SpriteTextures, width: number, height: number, count: number, scaleMin: number, scaleMax: number, alpha: number, sMin: number, sMax: number, spinScale: number) {
-  return Array.from({ length: count }, () => {
+function makeRocks(world: World): Rock[] {
+  return Array.from({ length: ROCK_COUNT }, () => {
     const key = METEOR_KEYS[Math.floor(Math.random() * METEOR_KEYS.length)];
-    const g = sprite(tex[key], scaleMin + Math.random() * (scaleMax - scaleMin), Math.random() * Math.PI * 2);
-    g.alpha = alpha;
-    g.x = Math.random() * width;
-    g.y = Math.random() * height;
-    layer.addChild(g);
-    return { g, speed: sMin + Math.random() * (sMax - sMin), spin: (Math.random() - 0.5) * 0.02 * spinScale };
+    const g = sprite(world.tex[key]);
+    g.alpha = 0.95;
+    world.depth.addChild(g);
+    const rock: Rock = { g, p: { x: 0, y: 0, z: ROCK_Z_FAR }, spin: (Math.random() - 0.5) * 0.02, speed: 1 };
+    respawnRock(world, rock, ROCK_Z_NEAR + Math.random() * (ROCK_Z_FAR - ROCK_Z_NEAR));
+    return rock;
   });
+}
+
+/** Projects a rock and advances it; respawns past the near plane or outside the frame. */
+export function updateRock(world: World, rock: Rock, dtMs: number, warp: number): void {
+  rock.p.z -= ROCK_UNITS_PER_MS * warp * rock.speed * dtMs;
+  const p = project(rock.p, world.view);
+  const m = 160;
+  if (rock.p.z < ROCK_Z_NEAR || p.sx < -m || p.sx > world.width + m || p.sy < -m || p.sy > world.height + m) {
+    respawnRock(world, rock);
+    return;
+  }
+  rock.g.position.set(p.sx, p.sy);
+  rock.g.scale.set(1.6 * p.scale);
+  rock.g.rotation += rock.spin * dtMs * 0.06;
+  rock.g.zIndex = zIndexFor(rock.p.z);
+}
+
+/** Scales and centres the design frame to cover the host. Call at build and on every resize. */
+export function applyFit(world: World): void {
+  const fit = fitStage(world.app.screen.width, world.app.screen.height);
+  world.root.scale.set(fit.scale);
+  world.root.position.set(fit.x, fit.y);
 }
 
 export function buildWorld(app: Application, tex: SpriteTextures, quality: Quality): World {
-  const width = app.screen.width;
-  const height = app.screen.height;
+  const view = DEFAULT_VIEW;
+  const width = DESIGN.width;
+  const height = DESIGN.height;
 
+  const root = new Container();
   const backdropLayer = new Container();
-  const farStars = new Container();
-  const farRocks = new Container();
-  const nearStars = new Container();
-  const nearRocks = new Container();
-  const enemyLane = new Container();
+  const planetLayer = new Container();
+  const depth = new Container();
+  depth.sortableChildren = true;
   const shipLayer = new Container();
   const effects = new Container();
   const overlay = new Container();
-  app.stage.addChild(backdropLayer, farStars, farRocks, nearStars, nearRocks, enemyLane, shipLayer, effects, overlay);
+  root.addChild(backdropLayer, planetLayer, depth, shipLayer, effects, overlay);
+  app.stage.addChild(root);
 
   const strip = tex.explosion;
   const explosionFrames = stripFrames(strip.width, strip.height, EXPLOSION_FRAMES).map(
@@ -122,27 +167,27 @@ export function buildWorld(app: Application, tex: SpriteTextures, quality: Quali
   const backdrop = buildBackdrop(tex.bgGalaxy, width, height);
   backdropLayer.addChild(backdrop.sprite);
 
-  const stars = [
-    ...makeStars(farStars, width, height, 120, 0.4, 1.0, 0.25, 0.5, 0.08, 0.25),
-    ...makeStars(nearStars, width, height, 40, 0.8, 1.8, 0.6, 1.0, 0.5, 1.4),
-  ];
-  const rocks = [
-    ...makeRocks(farRocks, tex, width, height, 4, 0.2, 0.35, 0.45, 0.2, 0.4, 0.4),
-    ...makeRocks(nearRocks, tex, width, height, 6, 0.45, 0.85, 0.9, 0.6, 1.6, 1),
-  ];
+  const planet = sprite(tex.planet, PLANET_SCALE);
+  planet.position.set(view.vp.x + 250, view.vp.y - 40);
+  planet.alpha = 0.95;
+  planetLayer.addChild(planet);
 
-  const { ship, flame, body, damage, shieldRing } = makeShip(tex);
+  const { ship, hull, body, damage, engines, shieldRing } = makeShip(tex);
   if (quality === "high") {
-    effects.filters = [makeBloom()];
+    depth.filters = [makeBloom()];
     shieldRing.filters = [makeGlow()];
   }
-  const shipBase = { x: width * 0.2, y: height / 2 };
-  ship.position.set(shipBase.x, shipBase.y);
+  ship.position.set(SHIP_SCREEN.x, SHIP_SCREEN.y);
   shipLayer.addChild(ship);
 
-  const squadron = new SquadronModel({ width, height });
-  const squadronView = new SquadronView(squadron, enemyLane, tex);
+  const starfield = new StarfieldModel({ view });
+  const starfieldView = new StarfieldView(starfield, depth, view);
+
+  const squadron = new SquadronModel({ view });
+  const squadronView = new SquadronView(squadron, depth, tex, view);
   squadronView.sync();
+
+  const reticle = new Reticle(effects, app.ticker);
 
   // Edge vignette: four linear-gradient bands (red at the frame edge, transparent inward) so
   // the centre stays clear. Radial FillGradients rendered a solid wash here. Alpha is animated
@@ -174,22 +219,30 @@ export function buildWorld(app: Application, tex: SpriteTextures, quality: Quali
   vignette.alpha = 0;
   overlay.addChild(vignette);
 
-  return { app, width, height, tex, explosionFrames, quality, backdrop, farStars, farRocks, nearStars, nearRocks, enemyLane, shipLayer, effects, overlay, flame, vignette, vignetteTarget: 0, ship, shipBase, shipBody: body, damage, shieldRing, shieldAlpha: 0, stars, rocks, squadron, squadronView };
+  const world: World = {
+    app, view, width, height, tex, explosionFrames, quality, root, backdrop, planet, depth, shipLayer, effects, overlay,
+    ship, hull, shipBody: body, damage, engines, shieldRing, shieldAlpha: 0, bank: 0, vignette, vignetteTarget: 0,
+    starfield, starfieldView, rocks: [], squadron, squadronView, reticle,
+  };
+  world.rocks = makeRocks(world);
+  applyFit(world);
+  return world;
 }
 
 export type LaserKind = "mine" | "charged" | "theirs";
 
+/** A bolt in the depth layer; callers set position, scale, rotation and zIndex every frame. */
 export function laser(world: World, kind: LaserKind): Sprite {
   const key: SpriteKey = kind === "mine" ? "laserMine" : kind === "charged" ? "laserCharged" : "laserTheirs";
-  const s = sprite(world.tex[key], kind === "charged" ? 1.1 : 0.8);
+  const s = sprite(world.tex[key]);
   s.blendMode = "add";
-  world.effects.addChild(s);
+  world.depth.addChild(s);
   return s;
 }
 
-export function dot(world: World, radius: number, color: number): Graphics {
+export function dot(world: World, radius: number, color: number, layer: Container = world.depth): Graphics {
   const g = new Graphics().circle(0, 0, radius).fill(color);
   g.blendMode = "add";
-  world.effects.addChild(g);
+  layer.addChild(g);
   return g;
 }

@@ -26,7 +26,7 @@ export class StarfieldModel {
   private readonly zFar: number;
   private readonly spreadX: number;
   private readonly spreadY: number;
-  private readonly unitsPerMs: number;
+  readonly unitsPerMs: number;
   private readonly view: View;
   private readonly random: () => number;
 
