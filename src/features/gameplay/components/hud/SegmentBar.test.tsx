@@ -24,6 +24,11 @@ describe("SegmentBar", () => {
     expect(empty(b.container)).toBe(3);
   });
 
+  it("rounds exactly for integer values (no float overshoot)", () => {
+    const { container } = render(<SegmentBar label="hull" value={28} max={100} segments={25} />);
+    expect(filled(container)).toBe(7);
+  });
+
   it("marks the low state", () => {
     const { container } = render(<SegmentBar label="hull" value={20} max={100} segments={20} low />);
     expect(container.firstElementChild).toHaveAttribute("data-low", "true");

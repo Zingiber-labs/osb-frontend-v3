@@ -19,7 +19,7 @@ const TONE_FILL: Record<BarTone, string> = {
 
 /** Row of slanted segments; lost segments stay as dim outlines. */
 export function SegmentBar({ label, value, max, segments, low = false, tone = "mine", className = "" }: Props) {
-  const lit = Math.min(segments, Math.max(0, Math.ceil((value / max) * segments)));
+  const lit = Math.min(segments, Math.max(0, Math.ceil((value * segments) / max)));
   const fill = low ? TONE_FILL.theirs : TONE_FILL[tone];
   return (
     <div
