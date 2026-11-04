@@ -2,7 +2,7 @@ import { act, renderHook } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createInitialState } from "@/features/gameplay/engine/reduce";
 import type { ScenarioState } from "@/features/gameplay/engine/types";
-import { EVENT_MS, TIPOFF_MS } from "./missionCard";
+import { EVENT_MS, TIPOFF_MS } from "./missionCardRules";
 import { useMissionCard } from "./useMissionCard";
 
 const ctx = { playerName: "Ja Morant", matchup: "MEM vs IND" };

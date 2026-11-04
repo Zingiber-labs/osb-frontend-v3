@@ -1,4 +1,4 @@
-import type { CardTone, MissionCardData } from "./missionCard";
+import type { CardTone, MissionCardData } from "./missionCardRules";
 
 const TONE: Record<CardTone, string> = { mine: "text-hud-mine", gold: "text-hud-gold", neutral: "text-slate-100" };
 

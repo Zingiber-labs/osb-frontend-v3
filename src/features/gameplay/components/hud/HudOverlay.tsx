@@ -2,7 +2,7 @@ import type { ScenarioState } from "@/features/gameplay/engine/types";
 import type { Feed, RecordedGame } from "@/features/gameplay/feeds/types";
 import { ClockPanel } from "./ClockPanel";
 import { CountersPanel } from "./CountersPanel";
-import { MissionCard } from "./MissionCard.tsx";
+import { MissionCard } from "./MissionCard";
 import { PlayTicker } from "./PlayTicker";
 import { ScorePanel } from "./ScorePanel";
 import { StatusPanel } from "./StatusPanel";

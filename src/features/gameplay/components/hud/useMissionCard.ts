@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import type { ScenarioState } from "@/features/gameplay/engine/types";
-import { cardFor, type CardContext, type MissionCardData } from "./missionCard";
+import { cardFor, type CardContext, type MissionCardData } from "./missionCardRules";
 
 /** Turns state transitions into a timed card. A newer card replaces the current one and restarts its timer. */
 export function useMissionCard(state: ScenarioState, ctx: CardContext): MissionCardData | null {

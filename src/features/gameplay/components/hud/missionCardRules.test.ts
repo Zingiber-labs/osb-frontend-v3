@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { createInitialState } from "@/features/gameplay/engine/reduce";
 import type { ScenarioState } from "@/features/gameplay/engine/types";
-import { cardFor, EVENT_MS, TIPOFF_MS } from "./missionCard";
+import { cardFor, EVENT_MS, TIPOFF_MS } from "./missionCardRules";
 
 const ctx = { playerName: "Ja Morant", matchup: "MEM vs IND" };
 const base = (over: Partial<ScenarioState> = {}): ScenarioState => ({ ...createInitialState({ stat: "pts", target: 20 }), ...over });
