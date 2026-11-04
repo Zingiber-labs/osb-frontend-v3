@@ -18,13 +18,6 @@ vi.mock("@/features/gameplay/renderer/ScenarioRenderer", () => ({
   },
 }));
 
-// The renderer module loads through a real dynamic import, which fake timers do not drive. Wait on the real clock.
-const realSetTimeout = globalThis.setTimeout;
-const rendererReady = () =>
-  act(async () => {
-    await new Promise<void>((resolve) => realSetTimeout(resolve, 50));
-  });
-
 describe("GamePlayPage", () => {
   beforeEach(() => vi.useFakeTimers());
   afterEach(() => vi.useRealTimers());
@@ -49,7 +42,8 @@ describe("GamePlayPage", () => {
     fireEvent.click(screen.getByRole("button", { name: /start/i }));
 
     // The renderer module loads through a real dynamic import; let it settle so the feed can start.
-    await rendererReady();
+    // The renderer loads via a real dynamic import; waitFor polls real time and ticks fake timers until the tip-off card shows.
+    await vi.waitFor(() => expect(screen.getByText(/1 PTS · /)).toBeInTheDocument());
     await act(async () => {
       await vi.advanceTimersByTimeAsync(0);
     });
@@ -111,7 +105,8 @@ describe("GamePlayPage", () => {
     fireEvent.change(screen.getByLabelText(/target/i), { target: { value: "1" } });
     fireEvent.change(screen.getByLabelText(/speed/i), { target: { value: "1000" } });
     fireEvent.click(screen.getByRole("button", { name: /start/i }));
-    await rendererReady();
+    // The renderer loads via a real dynamic import; waitFor polls real time and ticks fake timers until the tip-off card shows.
+    await vi.waitFor(() => expect(screen.getByText(/1 PTS · /)).toBeInTheDocument());
     await act(async () => {
       await vi.advanceTimersByTimeAsync(63_000);
     });

@@ -24,7 +24,7 @@ npm run record-game -- <espnEventId>   # add another recorded game to src/fixtur
 - `src/fixtures/games/` recorded games
 - `scripts/` ESPN capture script
 
-HUD: the game screen is full-bleed with a cinematic overlay in Orbitron: clock and Exit top left, score top right, hull (20 segments) and shield (3) bottom left, kill/block/steal counters, a mission card that announces objective and Final moments, and a play-by-play ticker (large screens only). The result screen offers Replay and Back to setup. Code lives in `src/features/gameplay/components/hud/` (placed by `HudOverlay.tsx`).
+HUD: the game screen is full-bleed with a cinematic overlay in Orbitron: clock and Exit top left, score top right, hull (20 segments) and shield (3) bottom left, kills and combo counters (block and steal sit in the score panel stat line), a mission card that announces objective and Final moments, and a play-by-play ticker (large screens only). The result screen offers Replay and Back to setup. Code lives in `src/features/gameplay/components/hud/` (placed by `HudOverlay.tsx`).
 
 Quality: effects (bloom, glow, trails, shake) are chosen automatically. Add `?quality=low` to the URL (e.g. `/game-play?quality=low`) to force the lighter mode on phones or slow machines, or `?quality=high` to force full effects.
 

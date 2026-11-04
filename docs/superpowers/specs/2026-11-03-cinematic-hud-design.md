@@ -78,8 +78,9 @@ to the setup panel with the header visible. No confirmation.
   grows and dims when it resets to 0; a lost hull segment transitions to its dim outline; a shield segment that
   absorbs a hit flashes white. CSS transitions and tw-animate-css utilities only.
 - `prefers-reduced-motion`: transitions instant, the card appears and disappears without motion.
-- Responsive: at or above 1024 px full labels; 768 to 1023 px drop the player stat line and the
-  matchup subline; below 768 px hide the ticker and use narrower hull segments. Portrait is out of scope.
+- Responsive: at or above `lg` (1024 px) everything shows; `md` to `lg` hides the ticker but keeps the
+  stat line and sublines; below `md` the stat line and sublines are hidden too and segments are narrower.
+  Portrait is out of scope.
 - HUD-only fallback (scene failed to start) keeps working over the dark background.
 
 ## Code structure

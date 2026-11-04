@@ -10,6 +10,7 @@ export const EVENT_MS = 3000;
 
 const progress = (s: ScenarioState) => `${s.myPlayerStats[s.mission.stat]} / ${s.mission.target} ${STAT_LABEL[s.mission.stat]}`;
 
+// Order matters: tip-off > objective > final > period; one transition shows one card.
 /** Which card a state transition deserves, if any. Pure; the hook owns the timer. */
 export function cardFor(prev: ScenarioState, next: ScenarioState, ctx: CardContext): MissionCardData | null {
   if (prev.status === "pending" && next.status === "live") {

@@ -30,7 +30,7 @@ export function HudOverlay({ state, game, myTeamId, playerName, feed, onExit }: 
       <div className="absolute right-3 top-3 md:right-6 md:top-6">
         <ScorePanel clock={state.clock} game={game} myTeamId={myTeamId} stats={state.myPlayerStats} />
       </div>
-      <div className="absolute inset-x-0 top-[12%] flex justify-center">
+      <div className="absolute inset-x-[22%] top-[12%] flex justify-center lg:inset-x-[18%]">
         <MissionCard card={card} />
       </div>
       <div className="absolute bottom-3 left-3 md:bottom-6 md:left-6">

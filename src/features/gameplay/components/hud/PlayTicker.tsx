@@ -6,10 +6,10 @@ const TONE: Record<PlayTone, string> = {
   theirs: "border-hud-theirs/70 text-hud-theirs",
 };
 
-/** Last plays as chips, newest on the right; the oldest fades. Hidden below md. */
+/** Last plays as chips, newest on the right; the oldest fades. The overlay hides this lane below lg. */
 export function PlayTicker({ entries }: { entries: PlayEntry[] }) {
   return (
-    <div data-hud-panel="ticker" aria-label="recent plays" className="hidden items-center gap-2 md:flex">
+    <div data-hud-panel="ticker" aria-label="recent plays" className="flex items-center gap-2">
       {entries.map((e, i) => (
         <span
           key={e.id}
