@@ -5,7 +5,7 @@ import { createReplayFeed, findTeamId } from "@/features/gameplay/feeds/replayFe
 import { useScenario } from "@/features/gameplay/hooks/useScenario";
 import type { RendererPort } from "@/features/gameplay/renderer/RendererPort";
 import { findGame, games } from "@/fixtures/games";
-import { Hud } from "./Hud";
+import { HudOverlay } from "./hud/HudOverlay";
 import { ResultOverlay } from "./ResultOverlay";
 import { ScenarioCanvas } from "./ScenarioCanvas";
 import { SetupPanel } from "./SetupPanel";
@@ -23,6 +23,8 @@ export function GamePlayPage() {
 
   const [config, setConfig] = useState<StartConfig | null>(null);
   const [renderer, setRenderer] = useState<RendererPort | null>(null);
+  // Bumped on Replay so the canvas (and its renderer) remount with a fresh scene.
+  const [runKey, setRunKey] = useState(0);
 
   const game = config ? findGame(config.gameId) : undefined;
   const feed = useMemo(
@@ -55,11 +57,21 @@ export function GamePlayPage() {
     return () => feed.pause();
   }, [feed, renderer]);
 
-  const reset = () => {
+  const exit = () => {
     feed?.stop();
     setShowResult(false);
     setConfig(null);
     setRenderer(null);
+  };
+
+  const replay = () => {
+    if (!config) return;
+    feed?.stop();
+    setShowResult(false);
+    setRenderer(null);
+    setRunKey((k) => k + 1);
+    // A new object makes useMemo build a fresh feed for the same game and player.
+    setConfig({ ...config });
   };
 
   if (!config || !game) {
@@ -72,13 +84,14 @@ export function GamePlayPage() {
   }
 
   const myTeamId = findTeamId(game, config.playerId);
+  const playerName = [...game.home.players, ...game.away.players].find((p) => p.id === config.playerId)?.name ?? "";
 
   return (
-    <section className="relative flex flex-1 flex-col">
+    <section className="fixed inset-0 z-30 flex flex-col bg-slate-950">
       <h1 className="sr-only">Game Play</h1>
-      <Hud state={state} game={game} myTeamId={myTeamId} />
-      <ScenarioCanvas onReady={handleReady} />
-      {showResult ? <ResultOverlay state={state} onReplay={reset} /> : null}
+      <HudOverlay state={state} game={game} myTeamId={myTeamId} playerName={playerName} feed={feed} onExit={exit} />
+      <ScenarioCanvas key={runKey} onReady={handleReady} />
+      {showResult ? <ResultOverlay state={state} mission={mission} onReplay={replay} onExit={exit} /> : null}
     </section>
   );
 }
