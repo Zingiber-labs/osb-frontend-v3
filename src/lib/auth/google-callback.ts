@@ -1,10 +1,9 @@
 import { NextResponse, type NextRequest } from "next/server";
+import { BACKEND_API_URL as API_URL } from "@/lib/api/server";
 import {
   ACCESS_TOKEN_COOKIE,
   accessTokenCookieOptions,
 } from "@/lib/auth/cookies";
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 function resolvePublicOrigin(request: NextRequest): string {
   const forwardedHost = request.headers.get("x-forwarded-host");

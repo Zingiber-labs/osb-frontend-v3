@@ -45,6 +45,8 @@ Create a `.env.local` at the repo root:
 ```bash
 NEXT_PUBLIC_API_URL=https://your-backend.example.com
 NEXT_PUBLIC_SOCKET_URL=https://your-backend.example.com
+# Optional: private URL used only by Next.js on the server.
+# BACKEND_API_URL=http://localhost:8080
 ```
 
 ### Run
@@ -127,8 +129,13 @@ This repo deploys via **Caprover**. The captain config (`captain-definition`) po
 
 Required env on the deploy target:
 
-- `NEXT_PUBLIC_API_URL` — backend API base URL (must be reachable from the Next.js server, since RSC `getSession()` calls it)
-- `NEXT_PUBLIC_SOCKET_URL` — socket.io endpoint
+- `NEXT_PUBLIC_API_URL` — public backend URL for browser redirects, including Google login; supplied when building the image
+- `NEXT_PUBLIC_SOCKET_URL` — public socket.io endpoint; supplied when building the image
+- `BACKEND_API_URL` — optional private backend URL for server-side auth routes, the BFF proxy and RSC sessions; supplied at runtime. Falls back to `NEXT_PUBLIC_API_URL` when unset.
+
+The VPS Compose configuration sets `BACKEND_API_URL=http://osb-be:8080`. Both containers must share the `proxy` Docker network so Next.js can reach the backend without going through the public domain. Browser URLs remain public.
+
+When deploying this change, update `docker-compose.prod.yml` on the VPS as well as the frontend image. The current deployment workflow pulls the image and uses the Compose file already on the server; it does not copy repository changes to that file. Recreate the frontend container to apply runtime environment changes.
 
 ---
 

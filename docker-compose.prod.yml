@@ -5,6 +5,8 @@ services:
     image: ghcr.io/zingiber-labs/osb-frontend-v3:develop
     container_name: osb-frontend
     restart: unless-stopped
+    environment:
+      BACKEND_API_URL: http://osb-be:8080
     networks:
       - proxy
     healthcheck:

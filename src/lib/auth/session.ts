@@ -1,10 +1,9 @@
 import "server-only";
+import { BACKEND_API_URL as API_URL } from "@/lib/api/server";
 import { cache } from "react";
 import { cookies } from "next/headers";
 import { ACCESS_TOKEN_COOKIE } from "./cookies";
 import { normalizeProfile, type User } from "./schemas";
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 async function fetchProfile(token: string, type: User["type"]): Promise<User | null> {
   if (!API_URL) return null;

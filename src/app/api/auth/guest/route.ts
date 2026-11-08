@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { BACKEND_API_URL as API_URL } from "@/lib/api/server";
 import {
   ACCESS_TOKEN_COOKIE,
   accessTokenCookieOptions,
@@ -7,8 +8,6 @@ import {
   BackendAuthResponseSchema,
   normalizeProfile,
 } from "@/lib/auth/schemas";
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export async function POST() {
   if (!API_URL) {
