@@ -43,7 +43,7 @@ describe("useMissionGrading", () => {
   it("shows grading once finished and not yet graded, then graded with rewards", async () => {
     processGame.mockResolvedValueOnce({ processedMissions: 0 }).mockResolvedValue({ processedMissions: 1, missionsCompleted: true });
     const { result, rerender } = renderHook((props: GradingInput) => useMissionGrading(props), { wrapper, initialProps: base });
-    await waitFor(() => expect(processGame).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(processGame).toHaveBeenCalled());
     rerender({ ...base, finished: true, engineWon: true });
     await waitFor(() => expect(result.current).toEqual({ status: "grading" }));
     await waitFor(() => expect(result.current).toEqual({ status: "graded", completed: true, rewards: { xp: 50, gems: 1 } }), { timeout: 7000 });
@@ -56,6 +56,22 @@ describe("useMissionGrading", () => {
     await waitFor(() => expect(result.current).toEqual({ status: "graded", completed: false }));
     expect(warn).toHaveBeenCalledWith(expect.stringMatching(/disagree/i), expect.anything());
     warn.mockRestore();
+  });
+
+  it("re-posts with isGameFinished true and grades from that answer", async () => {
+    processGame.mockResolvedValue({ processedMissions: 1, missionsCompleted: false });
+    const { result, rerender } = renderHook((props: GradingInput) => useMissionGrading(props), { wrapper, initialProps: base });
+    await waitFor(() => expect(processGame).toHaveBeenCalled());
+    rerender({ ...base, finished: true, engineWon: false });
+    expect(result.current).toEqual({ status: "grading" });
+    await waitFor(() => expect(processGame).toHaveBeenCalledWith(expect.objectContaining({ isGameFinished: true })));
+    await waitFor(() => expect(result.current).toEqual({ status: "graded", completed: false }));
+  });
+
+  it("returns an error view when the poll fails", async () => {
+    processGame.mockRejectedValue(new Error("boom"));
+    const { result } = renderHook(() => useMissionGrading({ ...base, finished: true }), { wrapper });
+    await waitFor(() => expect(result.current).toEqual({ status: "error", message: "Could not reach mission control." }));
   });
 
   it("does nothing while disabled or without a user", async () => {
