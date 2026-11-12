@@ -1,5 +1,6 @@
 import type { ScenarioState } from "../../engine/types";
-import type { Feed, RecordedGame } from "../../feeds/types";
+import type { Feed } from "../../feeds/types";
+import type { GameHeader } from "../../feeds/mapPlay";
 import { ClockPanel } from "./ClockPanel";
 import { CountersPanel } from "./CountersPanel";
 import { MissionCard } from "./MissionCard";
@@ -11,7 +12,7 @@ import { usePlayLog } from "./usePlayLog";
 
 type Props = {
   state: ScenarioState;
-  game: RecordedGame;
+  game: GameHeader;
   myTeamId: string;
   playerName: string;
   feed: Feed | null;

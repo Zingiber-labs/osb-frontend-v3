@@ -1,8 +1,8 @@
 import type { Clock, MyPlayerStats } from "../../engine/types";
-import type { RecordedGame } from "../../feeds/types";
+import type { GameHeader } from "../../feeds/mapPlay";
 import { useFlashOnChange } from "./useFlashOnChange";
 
-type Props = { clock: Clock; game: RecordedGame; myTeamId: string; stats: MyPlayerStats };
+type Props = { clock: Clock; game: GameHeader; myTeamId: string; stats: MyPlayerStats };
 
 export function ScorePanel({ clock, game, myTeamId, stats }: Props) {
   const flash = useFlashOnChange(`${clock.home}-${clock.away}`);

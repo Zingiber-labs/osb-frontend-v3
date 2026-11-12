@@ -3,6 +3,8 @@
 @import "swiper/css";
 @import "swiper/css/navigation";
 @import "swiper/css/pagination";
+@import "@osb/gameplay/styles.css";
+@source "../../../../packages/gameplay/src";
 
 @custom-variant dark (&:is(.dark *));
 

@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { X } from "lucide-react";
 import { useState } from "react";
-// import { PseudoPlay } from "./PseudoPlay";
 import { SocketScoreBoard } from "./SocketScoreBoard";
 
 const positions = [
