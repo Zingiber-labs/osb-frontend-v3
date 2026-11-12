@@ -40,7 +40,7 @@ export function useGameFeed(gameId: string, playerId: string, connect: () => Soc
       s.disconnect();
       setSocket(null);
     };
-    // connect is a stable factory; reconnecting on identity change would drop the game
+    // connect stays out of the deps on purpose: an inline factory would change identity every render and reconnect in a loop.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mode, gameId, playerId]);
 
@@ -58,7 +58,11 @@ export function useGameFeed(gameId: string, playerId: string, connect: () => Soc
 
   useEffect(() => {
     if (!live) return;
-    return live.onGame(setGame);
+    const off = live.onGame(setGame);
+    return () => {
+      off();
+      setGame(null);
+    };
   }, [live]);
 
   if (replay) return { feed: replay.feed, game: replay.game, myPlayerId: replay.myPlayerId, mode };

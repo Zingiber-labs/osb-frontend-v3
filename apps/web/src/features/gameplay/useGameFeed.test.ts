@@ -1,8 +1,10 @@
 import { act, renderHook } from "@testing-library/react";
 import { games } from "@osb/gameplay";
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { SOCKET_EVENTS } from "./liveFeed";
 import { feedMode, useGameFeed } from "./useGameFeed";
+
+afterEach(() => vi.unstubAllEnvs());
 
 describe("feedMode", () => {
   it("is replay only when the env switch says so", () => {
@@ -43,6 +45,31 @@ describe("useGameFeed (live)", () => {
     unmount();
     expect(socket.disconnect).toHaveBeenCalledOnce();
   });
+
+  it("clears the header when the game id changes", () => {
+    const handlers = new Map<string, (p: any) => void>();
+    const connect = vi.fn(() => ({
+      connected: true,
+      emit: vi.fn(),
+      on: vi.fn((e: string, cb: (p: any) => void) => { handlers.set(e, cb); }),
+      off: vi.fn(),
+      disconnect: vi.fn(),
+    }));
+    const { result, rerender } = renderHook((p: { g: string }) => useGameFeed(p.g, "h1", connect), { initialProps: { g: "1" } });
+    act(() => {
+      result.current.feed!.start();
+    });
+    act(() => {
+      handlers.get(SOCKET_EVENTS.gameInfo)?.({
+        id: "1", date: "d",
+        home: { id: "H", name: "H", abbreviation: "HOM", players: [{ id: "h1", name: "Home One" }] },
+        away: { id: "A", name: "A", abbreviation: "AWY", players: [] },
+      });
+    });
+    expect(result.current.game).not.toBeNull();
+    rerender({ g: "2" });
+    expect(result.current.game).toBeNull();
+  });
 });
 
 describe("useGameFeed (replay)", () => {
@@ -55,6 +82,5 @@ describe("useGameFeed (replay)", () => {
     expect(result.current.game?.id).toBe(games[0].id);
     expect(result.current.myPlayerId).toBe(games[0].home.players[0].id);
     expect(result.current.feed).not.toBeNull();
-    vi.unstubAllEnvs();
   });
 });
