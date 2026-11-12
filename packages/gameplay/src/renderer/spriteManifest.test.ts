@@ -1,0 +1,24 @@
+/// <reference types="node" />
+import { existsSync } from "node:fs";
+import { resolve } from "node:path";
+import { describe, expect, it } from "vitest";
+import { SPRITE_FILES } from "./spriteManifest";
+
+// The package ships no assets; the sandbox app holds the canonical copy of the sprites.
+const SPRITES_DIR = resolve(process.cwd(), "../../apps/sandbox/public/sprites");
+
+describe("sprite manifest", () => {
+  it("lists only files that exist under apps/sandbox/public/sprites", () => {
+    const missing = Object.entries(SPRITE_FILES)
+      .filter(([, file]) => !existsSync(resolve(SPRITES_DIR, file)))
+      .map(([key, file]) => `${key} -> ${file}`);
+    expect(missing).toEqual([]);
+  });
+
+  it("has the roles the renderer needs", () => {
+    const keys = Object.keys(SPRITE_FILES);
+    for (const k of ["ship", "shipDamage1", "shipDamage2", "shipDamage3", "flame", "planet", "shield", "enemyScout", "enemyFighter", "enemyCruiser", "laserMine", "laserCharged", "laserTheirs", "meteorBig1", "meteorMed1", "explosion"]) {
+      expect(keys).toContain(k);
+    }
+  });
+});
