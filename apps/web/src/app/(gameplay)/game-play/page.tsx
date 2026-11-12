@@ -9,8 +9,9 @@ const GameplayScreen = dynamic(() => import("@/features/gameplay/GameplayScreen"
   loading: () => <div className="flex h-dvh items-center justify-center bg-slate-950 text-slate-300">Loading…</div>,
 });
 
-// Backend game and player ids are numeric; anything else would subscribe to a game that cannot exist.
-const NUMERIC_ID = /^\d+$/;
+// Backend game and player ids are positive integers in the safe range (the live feed enforces the same);
+// anything else would subscribe to a game that cannot exist.
+const NUMERIC_ID = /^[1-9]\d{0,15}$/;
 
 function GameplayRoute() {
   const params = useSearchParams();
