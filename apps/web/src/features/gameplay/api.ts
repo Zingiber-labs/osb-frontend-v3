@@ -28,13 +28,16 @@ export async function fetchActiveMission(): Promise<ActiveMission | null> {
   return data.find((m) => !m.isCompleted) ?? null;
 }
 
+// Shape per the backend OpenAPI document (ProcessGameStatsDto): ids are numbers; every stat is required.
 export type ProcessGameRequest = {
   userId: string;
-  idGame: string;
-  idPlayer: string;
+  idGame: number;
+  idPlayer: number;
   points: number;
-  blocks: number;
   rebounds: number;
+  blocks: number;
+  assists: number;
+  steals: number;
   isGameFinished: boolean;
 };
 
