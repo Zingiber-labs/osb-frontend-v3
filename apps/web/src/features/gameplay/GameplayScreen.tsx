@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useSession } from "@/hooks/useSession";
 import { missionConfigFrom, type ActiveMission } from "./api";
+import type { LiveFeedError } from "./liveFeed";
 import { useActiveMission } from "./useActiveMission";
 import { useGameFeed } from "./useGameFeed";
 import { useMissionGrading } from "./useMissionGrading";
@@ -16,11 +17,19 @@ const PLACEHOLDER_MISSION: MissionConfig = { stat: "pts", target: 1 };
 
 type Props = { gameId: string; playerId: string };
 
+function feedErrorText(err: LiveFeedError): string {
+  if (err.reason === "player-not-in-game") return "This player is not part of this game.";
+  if (err.reason === "server") return err.message;
+  return "We could not reach the live game feed.";
+}
+
 export function GameplayScreen({ gameId, playerId }: Props) {
   const router = useRouter();
   const { data: session } = useSession();
   const active = useActiveMission();
-  const { feed, game, myPlayerId } = useGameFeed(gameId, playerId);
+  const { feed, game, myPlayerId, mode, error: feedError } = useGameFeed(gameId, playerId);
+  // A failed feed only blocks the screen while there is no header; after it, the HUD keeps what was played.
+  const feedFailed = Boolean(feedError && !game);
 
   // The mission is captured once: grading can complete it mid-game, which must not end the session.
   // Captured during render (React's "adjust state on prop change" pattern) so the first loaded render already has it.
@@ -42,12 +51,16 @@ export function GameplayScreen({ gameId, playerId }: Props) {
 
   // Start without waiting for the game header: in live mode the header only arrives after start() subscribes,
   // and the live feed buffers plays until it does; the replay feed's first event is the tipoff.
-  const canStart = Boolean(mission && feed && renderer);
+  const canStart = Boolean(mission && feed && renderer && !feedFailed);
   useEffect(() => {
     if (!canStart || !feed) return;
     feed.start();
     return () => feed.pause();
   }, [canStart, feed, renderer]);
+
+  useEffect(() => {
+    if (feedFailed && feed) feed.stop();
+  }, [feedFailed, feed]);
 
   const [showResult, setShowResult] = useState(false);
   useEffect(() => {
@@ -73,7 +86,8 @@ export function GameplayScreen({ gameId, playerId }: Props) {
     finished,
     engineWon: state.status === "won",
     rewards: lockedMission?.mission.rewards,
-    enabled: Boolean(mission && feed),
+    // Never before the header (zero-stat polls) and never in replay: a recorded game must not post to the backend.
+    enabled: Boolean(mission && feed && game) && mode === "live",
   });
 
   const exit = () => {
@@ -99,6 +113,16 @@ export function GameplayScreen({ gameId, playerId }: Props) {
           “{lockedMission.mission.name}” tracks a stat this scenario cannot visualize yet. Pick a points, blocks, or steals mission.
         </p>
         <Link href="/missions" className="underline">Go to Missions</Link>
+      </section>
+    );
+  }
+
+  if (feedError && !game) {
+    return (
+      <section className="flex h-dvh flex-col items-center justify-center gap-4 bg-slate-950 p-8 text-center text-slate-100">
+        <h1 className="font-display text-2xl tracking-[0.2em]">LIVE FEED UNAVAILABLE</h1>
+        <p className="max-w-md text-slate-300">{feedErrorText(feedError)}</p>
+        <Link href="/hangar" className="underline">Back to hangar</Link>
       </section>
     );
   }

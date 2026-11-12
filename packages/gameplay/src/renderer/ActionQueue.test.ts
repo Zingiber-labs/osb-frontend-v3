@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import type { ShipAction } from "../engine/types";
-import { ActionQueue } from "./ActionQueue";
+import { ActionQueue, MAX_PENDING } from "./ActionQueue";
 
 function deferred() {
   let resolve!: () => void;
@@ -106,5 +106,26 @@ describe("ActionQueue", () => {
     gap.resolve();
     await new Promise((r) => setTimeout(r, 0));
     expect(idle).toBe(true);
+  });
+
+  it("caps the catch-up backlog but always keeps terminal actions", () => {
+    const blocked = deferred();
+    const q = new ActionQueue(() => blocked.promise, 0, async () => {});
+    q.enqueue(Array.from({ length: 20 }, () => fire));
+    q.enqueue([{ type: "warpOut" }]);
+    expect(q.pending).toBeLessThanOrEqual(MAX_PENDING);
+    expect(q.pending).toBe(8);
+    expect(q.pendingActions().at(-1)).toEqual({ type: "warpOut" });
+  });
+
+  it("never drops terminal actions even when they alone exceed the cap", () => {
+    const blocked = deferred();
+    const q = new ActionQueue(() => blocked.promise, 0, async () => {});
+    q.enqueue([{ type: "objectiveComplete" }]);
+    q.enqueue(Array.from({ length: 20 }, () => fire));
+    q.enqueue([{ type: "explode" }]);
+    const types = q.pendingActions().map((a) => a.type);
+    expect(types).toContain("explode");
+    expect(q.pending).toBeLessThanOrEqual(MAX_PENDING);
   });
 });

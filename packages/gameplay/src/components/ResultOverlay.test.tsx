@@ -23,6 +23,13 @@ describe("ResultOverlay", () => {
     expect(screen.getByText(/grading mission/i)).toBeInTheDocument();
   });
 
+  it("announces the grading line politely", () => {
+    render(<ResultOverlay state={won} mission={mission} grading={{ status: "grading" }} primaryAction={{ label: "Exit", onClick: () => {} }} />);
+    const status = screen.getByRole("status");
+    expect(status).toHaveAttribute("aria-live", "polite");
+    expect(status).toHaveTextContent(/grading mission/i);
+  });
+
   it("shows rewards once graded as completed", () => {
     render(
       <ResultOverlay state={won} mission={mission} grading={{ status: "graded", completed: true, rewards: { xp: 50, gems: 2 } }} primaryAction={{ label: "Exit", onClick: () => {} }} />,

@@ -4,12 +4,8 @@ WORKDIR /app
 
 ARG NEXT_PUBLIC_API_URL
 ARG NEXT_PUBLIC_SOCKET_URL
-ARG NEXTAUTH_SECRET
-ARG NEXTAUTH_URL
 ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 ENV NEXT_PUBLIC_SOCKET_URL=$NEXT_PUBLIC_SOCKET_URL
-ENV NEXTAUTH_SECRET=$NEXTAUTH_SECRET
-ENV NEXTAUTH_URL=$NEXTAUTH_URL
 
 COPY package.json package-lock.json ./
 COPY apps/web/package.json apps/web/
@@ -18,6 +14,7 @@ COPY packages/gameplay/package.json packages/gameplay/
 RUN npm ci
 
 COPY . .
+RUN npm run typecheck && npm run lint
 RUN NODE_OPTIONS="--max-old-space-size=4096" npm run build -w apps/web
 
 # --- Runner ---
@@ -31,12 +28,8 @@ RUN addgroup --system --gid 1001 nodejs && adduser --system --uid 1001 nextjs
 
 ARG NEXT_PUBLIC_API_URL
 ARG NEXT_PUBLIC_SOCKET_URL
-ARG NEXTAUTH_SECRET
-ARG NEXTAUTH_URL
 ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 ENV NEXT_PUBLIC_SOCKET_URL=$NEXT_PUBLIC_SOCKET_URL
-ENV NEXTAUTH_SECRET=$NEXTAUTH_SECRET
-ENV NEXTAUTH_URL=$NEXTAUTH_URL
 
 COPY --from=builder --chown=nextjs:nodejs /app/apps/web/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/apps/web/.next/static ./apps/web/.next/static

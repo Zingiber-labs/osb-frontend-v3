@@ -19,7 +19,15 @@ All ids are the backend's numeric game and player ids, sent as strings where the
   "home": { "id": "2", "name": "Boston Celtics", "abbreviation": "BOS", "players": [{ "id": "1091465698", "name": "Dillon Mitchell" }] },
   "away": { "id": "14", "name": "Los Angeles Lakers", "abbreviation": "LAL", "players": [] } }
 ```
-`players` lists everyone who may appear in `playerIds` (active rosters are enough).
+`players` lists everyone who may appear in `playerIds` (active rosters are enough), and MUST include every player id the client can subscribe with (any player the hangar lets the user pick for this game). A missing id makes the client show "This player is not part of this game."
+
+`gameError` (instead of `gameInfo`)
+```json
+{ "gameId": 21718083, "message": "Unknown game 21718083" }
+```
+- Sent instead of `gameInfo` when the game is unknown or the subscribed player is not on either roster.
+- `message` is shown to the user as is, so keep it short and human-readable.
+- If neither `gameInfo` nor `gameError` arrives within 15 s of subscribing, the client gives up and shows "We could not reach the live game feed."
 
 `gamePlay` (one per play)
 ```json
@@ -32,5 +40,9 @@ All ids are the backend's numeric game and player ids, sent as strings where the
 - `period` plays mark the start of a period; `final` is the last play and carries the final score.
 - `other` plays are ignored by the client but keep the clock honest; sending them is optional.
 
-## Not changed
-`POST /missions/process-game` keeps grading missions; the client still calls it every 5 s with the player's stats and stops when the response reports done.
+## Grading (`POST /missions/process-game`)
+- Live mode only, and only after `gameInfo` arrives; replay mode never posts.
+- The client polls every 5 s with the stats its engine has counted from the plays (points, blocks, steals; rebounds and assists are sent as 0), with `isGameFinished: false`.
+- At the buzzer (the `final` play) it posts once more with `isGameFinished: true` and the final stats.
+- It stops polling when a response is a verdict: `missionsCompleted: true` with `processedMissions > 0` (or `done: true` / `status: "completed"`), or, for the post sent with `isGameFinished: true`, any `missionsCompleted` value.
+- The final post may arrive after the mission was already completed by an earlier poll; it must be idempotent (no double rewards, no error that undoes the earlier result).

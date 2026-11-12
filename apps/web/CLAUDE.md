@@ -32,7 +32,7 @@ Tests: Vitest + Testing Library, files beside the code (`*.test.ts(x)`).
 
 - `src/app/(auth)/` — public login/signup pages
 - `src/app/(main)/` — authed app shell. Layout is RSC and `await getSession()`; redirects to `/login` if null
-- `src/app/(gameplay)/` — `/game-play` renders `features/gameplay/GameplayScreen` (client-only) behind the same RSC auth gate
+- `src/app/(gameplay)/` — `/game-play` renders `features/gameplay/GameplayScreen` (client-only) behind the same RSC auth gate. In replay mode nothing is posted to the backend.
 - `src/features/<name>/` — feature folders (api.ts, hooks, components, tests). `features/gameplay` is the exemplar.
 - `src/app/api/auth/*/route.ts` — BFF auth: `login`, `signup`, `logout`, `me`, `guest`, `callback`
 - `src/app/api/backend/[...path]/route.ts` — BFF data proxy (forwards everything with `Bearer osb_at`)

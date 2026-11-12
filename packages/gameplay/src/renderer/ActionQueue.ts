@@ -3,6 +3,15 @@ import type { ShipAction } from "../engine/types";
 export type ActionRunner = (action: ShipAction) => Promise<void>;
 export type Waiter = (ms: number) => Promise<void>;
 
+/**
+ * Backlog cap. The queue only animates (state is already synced when actions are enqueued), so a late joiner's
+ * catch-up burst must not leave the scene minutes behind the HUD: past this many pending actions the oldest are
+ * dropped, except terminal ones, which always play.
+ */
+export const MAX_PENDING = 8;
+
+const TERMINAL: ReadonlySet<ShipAction["type"]> = new Set(["objectiveComplete", "warpOut", "explode"]);
+
 const defaultWait: Waiter = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export class ActionQueue {
@@ -27,8 +36,18 @@ export class ActionQueue {
     return this.draining;
   }
 
+  /** Snapshot of the actions waiting to run (the running one excluded). */
+  pendingActions(): ShipAction[] {
+    return [...this.queue];
+  }
+
   enqueue(actions: ShipAction[]): void {
     this.queue.push(...actions);
+    while (this.queue.length > MAX_PENDING) {
+      const oldest = this.queue.findIndex((a) => !TERMINAL.has(a.type));
+      if (oldest === -1) break;
+      this.queue.splice(oldest, 1);
+    }
     void this.drain();
   }
 

@@ -9,7 +9,8 @@ vi.mock("@/hooks/useSession", () => ({ useSession: () => ({ data: { id: "u1" } }
 
 const gameFeed = vi.fn();
 vi.mock("./useGameFeed", () => ({ useGameFeed: () => gameFeed() }));
-vi.mock("./useMissionGrading", () => ({ useMissionGrading: () => undefined }));
+const missionGrading = vi.fn((_input: { enabled: boolean }) => undefined);
+vi.mock("./useMissionGrading", () => ({ useMissionGrading: (input: { enabled: boolean }) => missionGrading(input) }));
 
 const canvasCallsReady = { current: false };
 vi.mock("@osb/gameplay", async (importOriginal) => {
@@ -35,7 +36,8 @@ describe("GameplayScreen", () => {
     replace.mockClear();
     push.mockClear();
     canvasCallsReady.current = false;
-    gameFeed.mockReturnValue({ feed: null, game: null, myPlayerId: "p1", mode: "live" });
+    missionGrading.mockClear();
+    gameFeed.mockReturnValue({ feed: null, game: null, myPlayerId: "p1", mode: "live", error: null });
   });
 
   it("redirects to /missions when the user has no active mission", async () => {
@@ -105,5 +107,50 @@ describe("GameplayScreen", () => {
     rerender(<GameplayScreen gameId="1" playerId="p1" />);
     expect(screen.getByTestId("canvas")).toBeInTheDocument();
     expect(screen.queryByText(/mission control unavailable/i)).toBeNull();
+  });
+
+  it("explains a live feed that never answered and stops it", () => {
+    const fakeFeed = { start: vi.fn(), stop: vi.fn(), pause: vi.fn(), step: vi.fn(), onEvent: vi.fn(() => () => {}) };
+    gameFeed.mockReturnValue({ feed: fakeFeed, game: null, myPlayerId: "p1", mode: "live", error: { reason: "timeout", message: "late" } });
+    activeMission.mockReturnValue(pointsMission);
+    render(<GameplayScreen gameId="1" playerId="p1" />);
+    expect(screen.getByRole("heading", { name: "LIVE FEED UNAVAILABLE" })).toBeInTheDocument();
+    expect(screen.getByText("We could not reach the live game feed.")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Back to hangar" })).toHaveAttribute("href", "/hangar");
+    expect(screen.queryByTestId("canvas")).not.toBeInTheDocument();
+    expect(fakeFeed.stop).toHaveBeenCalled();
+  });
+
+  it("says when the player is not part of the game, and shows the server's message otherwise", () => {
+    activeMission.mockReturnValue(pointsMission);
+    gameFeed.mockReturnValue({ feed: null, game: null, myPlayerId: "p1", mode: "live", error: { reason: "player-not-in-game", message: "x" } });
+    const { unmount } = render(<GameplayScreen gameId="1" playerId="p1" />);
+    expect(screen.getByText("This player is not part of this game.")).toBeInTheDocument();
+    unmount();
+    gameFeed.mockReturnValue({ feed: null, game: null, myPlayerId: "p1", mode: "live", error: { reason: "server", message: "Unknown game 1" } });
+    render(<GameplayScreen gameId="1" playerId="p1" />);
+    expect(screen.getByText("Unknown game 1")).toBeInTheDocument();
+  });
+
+  it("does not grade before the game header arrives", () => {
+    const fakeFeed = { start: vi.fn(), stop: vi.fn(), pause: vi.fn(), step: vi.fn(), onEvent: vi.fn(() => () => {}) };
+    gameFeed.mockReturnValue({ feed: fakeFeed, game: null, myPlayerId: "p1", mode: "live", error: null });
+    activeMission.mockReturnValue(pointsMission);
+    render(<GameplayScreen gameId="1" playerId="p1" />);
+    expect(missionGrading.mock.lastCall?.[0].enabled).toBe(false);
+  });
+
+  it("grades a live game once the header is known, and never grades a replay", () => {
+    const fakeFeed = { start: vi.fn(), stop: vi.fn(), pause: vi.fn(), step: vi.fn(), onEvent: vi.fn(() => () => {}) };
+    const game = { id: "1", date: "d", home: { id: "H", name: "H", abbreviation: "HOM", players: [{ id: "p1", name: "P One" }] }, away: { id: "A", name: "A", abbreviation: "AWY", players: [] } };
+    activeMission.mockReturnValue(pointsMission);
+    gameFeed.mockReturnValue({ feed: fakeFeed, game, myPlayerId: "p1", mode: "live", error: null });
+    const { unmount } = render(<GameplayScreen gameId="1" playerId="p1" />);
+    expect(missionGrading.mock.lastCall?.[0].enabled).toBe(true);
+    unmount();
+    missionGrading.mockClear();
+    gameFeed.mockReturnValue({ feed: fakeFeed, game, myPlayerId: "p1", mode: "replay", error: null });
+    render(<GameplayScreen gameId="1" playerId="p1" />);
+    expect(missionGrading.mock.lastCall?.[0].enabled).toBe(false);
   });
 });

@@ -2,6 +2,7 @@ name: CI
 
 on:
   push:
+    branches: [develop, main]
   pull_request:
 
 jobs:
@@ -17,3 +18,5 @@ jobs:
       - run: npm run typecheck
       - run: npm run lint
       - run: npm test
+      - run: npm run build:web
+      - run: npm run build -w apps/sandbox

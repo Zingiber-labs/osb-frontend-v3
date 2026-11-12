@@ -28,35 +28,38 @@ This is a Next.js 15 (App Router) + React 19 client. It is fully decoupled from 
 
 ### Prerequisites
 
-- Node.js 18+
+- Node.js 22
 - npm (the repo uses `package-lock.json`)
 - Access to the backend API (`NEXT_PUBLIC_API_URL`)
 
 ### Setup
 
+This app lives in the OSB monorepo (`apps/web`); install and run it from the repo root.
+
 ```bash
 git clone git@github.com:Zingiber-labs/osb-frontend-v3.git
 cd osb-frontend-v3
-npm install
+npm ci            # at the monorepo root (npm workspaces)
+npm run dev:web   # dev server on http://localhost:3000
 ```
 
-Create a `.env.local` at the repo root:
+Create `apps/web/.env` (see `.env.example`):
 
-```bash
-NEXT_PUBLIC_API_URL=https://your-backend.example.com
-NEXT_PUBLIC_SOCKET_URL=https://your-backend.example.com
-# Optional: private URL used only by Next.js on the server.
-# BACKEND_API_URL=http://localhost:8080
-```
+- `NEXT_PUBLIC_API_URL` — public backend URL
+- `NEXT_PUBLIC_SOCKET_URL` — public socket.io endpoint (gameplay play-by-play)
+- `BACKEND_API_URL` — optional, server-side override: private backend URL used only by Next.js on the server
+- `NEXT_PUBLIC_GAMEPLAY_FEED` — dev only: `replay` drives `/game-play` from the recorded fixture instead of the socket
 
 ### Run
 
+From the repo root:
+
 ```bash
-npm run dev          # dev server on http://localhost:3000
-npm run build        # production build (type errors fail the build)
-npm run start        # serve production build
-npm run test         # vitest + Testing Library
-npx tsc --noEmit     # type check
+npm run dev:web                  # dev server on http://localhost:3000
+npm run build:web                # production build (type errors fail the build)
+npm run start -w apps/web        # serve production build
+npm run test -w apps/web         # vitest + Testing Library
+npm run typecheck -w apps/web    # type check
 ```
 
 ---
@@ -79,7 +82,7 @@ Browser ──fetch──> Next.js Route Handlers (BFF) ──fetch + Bearer─�
 - **All backend data calls** go through `/api/backend/[...path]` — the BFF proxy reads the auth cookie and forwards the request with `Authorization: Bearer <token>`.
 - **Auth mutations** (`useLogin`, `useSignup`, `useLogout`, `useGuestLogin`, `startGoogleLogin`) live in `@/lib/auth/client`.
 
-A guided code tour is available at [`.tours/new-joiner-architecture.tour`](.tours/new-joiner-architecture.tour) — open it with the [CodeTour](https://marketplace.visualstudio.com/items?itemName=vsls-contrib.codetour) VS Code extension.
+A guided code tour is available at [`.tours/new-joiner-architecture.tour`](../../.tours/new-joiner-architecture.tour) at the repo root — open it with the [CodeTour](https://marketplace.visualstudio.com/items?itemName=vsls-contrib.codetour) VS Code extension. Its file paths predate the move into `apps/web`, so prefix them with `apps/web/`.
 
 ---
 
@@ -118,7 +121,7 @@ src/
 | Touch session shape | Edit `UserSchema` and `normalizeProfile` in `src/lib/auth/schemas.ts` |
 | Modify route protection | Edit `PUBLIC_ROUTES` in `src/middleware.ts` |
 
-For Claude Code / AI-assisted development conventions, see [`CLAUDE.md`](CLAUDE.md) at the repo root.
+Conventions: see `CLAUDE.md` in this folder.
 
 ---
 
@@ -152,7 +155,7 @@ When deploying this change, update `docker-compose.prod.yml` on the VPS as well 
 - **No `/auth/refresh` endpoint** on the backend yet — sessions live until `osb_at` expires, then the user re-logs in
 - **Google OAuth** still receives the JWT as a URL query param on the backend redirect; the Next.js callback handler stores it server-side immediately, but the URL is briefly visible in browser history. Backend should switch to a POST callback or code-exchange flow
 - **No `redirectUrl` allowlist** on backend `/auth/google` — coordinate with backend team
-- **No tests yet** — Vitest + Playwright recommended for follow-up
+- Tests: Vitest + Testing Library (`npm run test -w apps/web`)
 
 ---
 

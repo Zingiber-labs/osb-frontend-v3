@@ -72,6 +72,30 @@ describe("useGameFeed (live)", () => {
   });
 });
 
+describe("useGameFeed (errors)", () => {
+  it("surfaces a server gameError and clears it when the game changes", () => {
+    const handlers = new Map<string, (p: any) => void>();
+    const connect = vi.fn(() => ({
+      connected: true,
+      emit: vi.fn(),
+      on: vi.fn((e: string, cb: (p: any) => void) => { handlers.set(e, cb); }),
+      off: vi.fn(),
+      disconnect: vi.fn(),
+    }));
+    const { result, rerender } = renderHook((p: { g: string }) => useGameFeed(p.g, "h1", connect), { initialProps: { g: "1" } });
+    expect(result.current.error).toBeNull();
+    act(() => {
+      result.current.feed!.start();
+    });
+    act(() => {
+      handlers.get(SOCKET_EVENTS.gameError)?.({ gameId: 1, message: "Unknown game 1" });
+    });
+    expect(result.current.error).toEqual({ reason: "server", message: "Unknown game 1" });
+    rerender({ g: "2" });
+    expect(result.current.error).toBeNull();
+  });
+});
+
 describe("useGameFeed (replay)", () => {
   it("uses the first recorded game and one of its home players, ignoring the url ids", () => {
     vi.stubEnv("NEXT_PUBLIC_GAMEPLAY_FEED", "replay");
@@ -82,5 +106,6 @@ describe("useGameFeed (replay)", () => {
     expect(result.current.game?.id).toBe(games[0].id);
     expect(result.current.myPlayerId).toBe(games[0].home.players[0].id);
     expect(result.current.feed).not.toBeNull();
+    expect(result.current.error).toBeNull();
   });
 });

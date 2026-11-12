@@ -59,7 +59,11 @@ export function ResultOverlay({ state, mission, grading, primaryAction, secondar
             </div>
           ))}
         </dl>
-        {grading ? <GradingLine grading={grading} engineWon={won} /> : null}
+        {grading ? (
+          <div role="status" aria-live="polite">
+            <GradingLine grading={grading} engineWon={won} />
+          </div>
+        ) : null}
         <div className="flex gap-3 font-sans">
           <Button autoFocus onClick={primaryAction.onClick}>{primaryAction.label}</Button>
           {secondaryAction ? <Button variant="outline" onClick={secondaryAction.onClick}>{secondaryAction.label}</Button> : null}

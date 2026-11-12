@@ -24,4 +24,4 @@ next-env.d.ts
 
 # agent scratch (local only)
 .superpowers/
-docs/superpowers/
+**/docs/superpowers/
