@@ -7,3 +7,5 @@ node_modules
 .superpowers
 docs
 apps/sandbox/public
+**/.env*
+!**/.env.example

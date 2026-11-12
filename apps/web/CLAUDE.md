@@ -1,4 +1,4 @@
-# CLAUDE.md — outer-sports-baller-v3
+# CLAUDE.md — @osb/web (apps/web)
 
 Frontend for Outer Sports Ballers, a multiplayer basketball game. Next.js 15 (App Router) + React 19 web client. Talks to a separate backend API via a BFF proxy — the browser never sees backend URLs or tokens.
 
@@ -8,7 +8,7 @@ Frontend for Outer Sports Ballers, a multiplayer basketball game. Next.js 15 (Ap
 - **TanStack Query 5** for all data fetching and mutations
 - **react-hook-form + zod** for forms (`@hookform/resolvers/zod`)
 - **Tailwind 4 + shadcn/ui (new-york style) + Radix** for UI; Lucide icons
-- **Three.js + @react-three/fiber + @react-three/drei** for the gameplay scene
+- **@osb/gameplay** (workspace package, PixiJS) for the gameplay scene; see root CLAUDE.md
 - **socket.io-client** for realtime
 - **react-hot-toast** for notifications
 - Auth: custom BFF + HttpOnly cookies (NO NextAuth, NO axios, NO localStorage tokens)
@@ -16,22 +16,24 @@ Frontend for Outer Sports Ballers, a multiplayer basketball game. Next.js 15 (Ap
 ## Build & Run
 
 ```bash
-npm run dev         # dev server on :3000
-npm run build       # production build (type errors fail the build)
-npm run start       # serve production build
-npm run lint        # next lint (warnings only)
-npx tsc --noEmit    # type check
+npm run dev -w apps/web      # or npm run dev:web from the root
+npm run build -w apps/web
+npm run test -w apps/web     # vitest + Testing Library
+npm run typecheck -w apps/web
 ```
 
-Required env: `NEXT_PUBLIC_API_URL`, `NEXT_PUBLIC_SOCKET_URL`.
+Required env (apps/web/.env, see .env.example): `NEXT_PUBLIC_API_URL`, `NEXT_PUBLIC_SOCKET_URL`. Dev switch `NEXT_PUBLIC_GAMEPLAY_FEED=replay` drives /game-play from the recorded fixture.
 
-No tests yet. If adding any, use Vitest for unit and Playwright for E2E.
+TypeScript version is pinned at the repo root (see root package.json). It is held at `^5.9.0` because TypeScript 6 turns on `noUncheckedSideEffectImports` by default, which fails on the CSS side-effect imports in the Next layouts (TS2882). Retry TS 6 by adding an ambient `declare module "*.css";` under `apps/web/src` rather than loosening tsconfig.
+
+Tests: Vitest + Testing Library, files beside the code (`*.test.ts(x)`).
 
 ## Project Structure
 
 - `src/app/(auth)/` — public login/signup pages
 - `src/app/(main)/` — authed app shell. Layout is RSC and `await getSession()`; redirects to `/login` if null
-- `src/app/(gameplay)/` — full-bleed Three.js scene; same RSC auth gate
+- `src/app/(gameplay)/` — `/game-play` renders `features/gameplay/GameplayScreen` (client-only) behind the same RSC auth gate
+- `src/features/<name>/` — feature folders (api.ts, hooks, components, tests). `features/gameplay` is the exemplar.
 - `src/app/api/auth/*/route.ts` — BFF auth: `login`, `signup`, `logout`, `me`, `guest`, `callback`
 - `src/app/api/backend/[...path]/route.ts` — BFF data proxy (forwards everything with `Bearer osb_at`)
 - `src/app/providers.tsx` — single root QueryClient + `SessionHydrator`
@@ -61,8 +63,7 @@ Cookie names: `osb_at` (access, Path=/), `osb_rt` (refresh, Path=/api/auth, scop
 - Data: never call `fetch` directly from components — use `api` from `@/lib/api/client` or a TanStack `useQuery`
 - Errors in API routes: `return NextResponse.json({ error: "..." }, { status: 4xx/5xx })`
 - Errors in mutations: surface via `mutation.error.message` in the UI; don't swallow
-- TypeScript: strict on, `any` allowed (rule disabled), but prefer typed where cheap. **`ignoreBuildErrors` is OFF** — type errors fail the build, fix them before merging
-- Three.js assets: `useMemo` once per canvas — never recreate per render
+- TypeScript: strict on, `any` is tolerated in legacy code only; new feature code is fully typed. **`ignoreBuildErrors` is OFF** — type errors fail the build, fix them before merging
 
 ## When you make changes
 
