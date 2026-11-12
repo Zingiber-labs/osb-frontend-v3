@@ -25,8 +25,8 @@ export function GameplayScreen({ gameId, playerId }: Props) {
   const mission = useMemo(() => (active.data ? missionConfigFrom(active.data.mission.requirements) : null), [active.data]);
 
   useEffect(() => {
-    if (!active.isPending && active.data === null) router.replace("/missions");
-  }, [active.isPending, active.data, router]);
+    if (!active.isPending && !active.isFetching && active.data === null) router.replace("/missions");
+  }, [active.isPending, active.isFetching, active.data, router]);
 
   const [renderer, setRenderer] = useState<RendererPort | null>(null);
   const handleReady = useCallback((r: RendererPort) => setRenderer(r), []);

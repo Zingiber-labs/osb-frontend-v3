@@ -28,7 +28,7 @@ vi.mock("./useActiveMission", () => ({ useActiveMission: () => activeMission() }
 
 import { GameplayScreen } from "./GameplayScreen";
 
-const pointsMission = { data: { id: "m", missionId: "1", isCompleted: false, isClaimed: false, mission: { id: 1, name: "Score", requirements: { points: 10 }, rewards: { xp: 5 } } }, isPending: false };
+const pointsMission = { data: { id: "m", missionId: "1", isCompleted: false, isClaimed: false, mission: { id: 1, name: "Score", requirements: { points: 10 }, rewards: { xp: 5 } } }, isPending: false, isFetching: false };
 
 describe("GameplayScreen", () => {
   beforeEach(() => {
@@ -39,13 +39,13 @@ describe("GameplayScreen", () => {
   });
 
   it("redirects to /missions when the user has no active mission", async () => {
-    activeMission.mockReturnValue({ data: null, isPending: false });
+    activeMission.mockReturnValue({ data: null, isPending: false, isFetching: false });
     render(<GameplayScreen gameId="1" playerId="p1" />);
     await waitFor(() => expect(replace).toHaveBeenCalledWith("/missions"));
   });
 
   it("explains an unsupported mission instead of starting", () => {
-    activeMission.mockReturnValue({ data: { id: "m", missionId: "1", isCompleted: false, isClaimed: false, mission: { id: 1, name: "Dimes", requirements: { assists: 5 }, rewards: {} } }, isPending: false });
+    activeMission.mockReturnValue({ data: { id: "m", missionId: "1", isCompleted: false, isClaimed: false, mission: { id: 1, name: "Dimes", requirements: { assists: 5 }, rewards: {} } }, isPending: false, isFetching: false });
     render(<GameplayScreen gameId="1" playerId="p1" />);
     expect(screen.getByText(/not supported/i)).toBeInTheDocument();
     expect(screen.queryByTestId("canvas")).not.toBeInTheDocument();
@@ -70,12 +70,19 @@ describe("GameplayScreen", () => {
   });
 
   it("explains a failed mission load instead of connecting forever", () => {
-    activeMission.mockReturnValue({ data: undefined, isPending: false, isError: true });
+    activeMission.mockReturnValue({ data: undefined, isPending: false, isFetching: false, isError: true });
     render(<GameplayScreen gameId="1" playerId="p1" />);
     expect(screen.getByRole("heading", { name: /mission control unavailable/i })).toBeInTheDocument();
     expect(screen.getByText("We could not load your active mission.")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Go to Missions" })).toHaveAttribute("href", "/missions");
     expect(screen.queryByText(/connecting/i)).not.toBeInTheDocument();
+    expect(replace).not.toHaveBeenCalled();
+  });
+
+  it("does not redirect while a stale null is being refetched", async () => {
+    activeMission.mockReturnValue({ data: null, isPending: false, isFetching: true });
+    render(<GameplayScreen gameId="1" playerId="p1" />);
+    await new Promise((r) => setTimeout(r, 50));
     expect(replace).not.toHaveBeenCalled();
   });
 });
