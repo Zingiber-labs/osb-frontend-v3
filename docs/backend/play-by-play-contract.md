@@ -26,7 +26,7 @@ All ids are the backend's numeric game and player ids, sent as strings where the
 { "order": 42, "period": 1, "clockSeconds": 611, "homeScore": 12, "awayScore": 9,
   "kind": "score", "points": 3, "teamId": "2", "playerIds": ["1091465698"] }
 ```
-- `order`: strictly increasing within a game; the client dedupes by it.
+- `order`: integer starting at 1, strictly increasing within a game; the client dedupes by it and resumes with `fromOrder` = the last order it applied (0 means from the beginning).
 - `period`: 1-4, 5+ overtime. `clockSeconds`: seconds left in the period.
 - `kind`: `score | block | steal | turnover | period | final | other`. `points` (1, 2, 3) only for `score`.
 - `period` plays mark the start of a period; `final` is the last play and carries the final score.

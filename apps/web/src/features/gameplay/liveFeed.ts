@@ -9,7 +9,7 @@ export const SOCKET_EVENTS = {
 
 /** The slice of a socket.io client the feed needs; tests pass a fake. */
 export type SocketLike = {
-  connected?: boolean;
+  connected: boolean;
   emit(event: string, payload?: unknown): void;
   on(event: string, cb: (payload: any) => void): void;
   off(event: string, cb: (payload: any) => void): void;
@@ -26,7 +26,7 @@ export type LiveFeed = Feed & {
  */
 export function createLiveFeed(socket: SocketLike, opts: { gameId: string; playerId: string }): LiveFeed {
   const gameId = Number(opts.gameId);
-  if (Number.isNaN(gameId)) throw new Error(`LiveFeed: gameId must be numeric, got "${opts.gameId}"`);
+  if (!Number.isSafeInteger(gameId) || gameId <= 0) throw new Error(`LiveFeed: gameId must be a positive integer, got "${opts.gameId}"`);
   const eventListeners = new Set<(e: GameEvent) => void>();
   const gameListeners = new Set<(g: GameHeader) => void>();
 
@@ -103,7 +103,7 @@ export function createLiveFeed(socket: SocketLike, opts: { gameId: string; playe
       running = true;
       attach();
       // A not-yet-connected socket subscribes from the connect handler; emitting here too would double-subscribe.
-      if (!subscribed && socket.connected !== false) subscribe();
+      if (!subscribed && socket.connected) subscribe();
       drain();
     },
     pause() {
@@ -113,7 +113,8 @@ export function createLiveFeed(socket: SocketLike, opts: { gameId: string; playe
       const e = ready.shift();
       if (e) publish(e);
     },
-    // Terminal, like the replay feed: buffered-but-undelivered events are discarded and the feed cannot be restarted; hosts that only want to hold delivery use pause().
+    // Unsubscribes, detaches, and discards buffered events. `start()` afterwards resubscribes from the last applied order,
+    // so events translated but not yet delivered are lost; hosts that only want to hold delivery use `pause()`.
     stop() {
       running = false;
       detach();

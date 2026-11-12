@@ -109,6 +109,7 @@ describe("createLiveFeed", () => {
     fire(SOCKET_EVENTS.play, play(1));
     expect(events).toHaveLength(0);
   });
+
   it("on a not-yet-connected socket subscribes once from the connect handler", () => {
     const { socket, emitted, fire } = fakeSocket(false);
     const feed = createLiveFeed(socket, { gameId: "1", playerId: "h1" });
@@ -123,8 +124,10 @@ describe("createLiveFeed", () => {
     expect(emitted.at(-1)).toEqual([SOCKET_EVENTS.subscribe, { gameId: 1, fromOrder: 2 }]);
   });
 
-  it("rejects a non-numeric game id", () => {
+  it("rejects a non-positive-integer game id", () => {
     const { socket } = fakeSocket();
-    expect(() => createLiveFeed(socket, { gameId: "g1", playerId: "h1" })).toThrow('LiveFeed: gameId must be numeric, got "g1"');
+    expect(() => createLiveFeed(socket, { gameId: "g1", playerId: "h1" })).toThrow('LiveFeed: gameId must be a positive integer, got "g1"');
+    expect(() => createLiveFeed(socket, { gameId: "", playerId: "h1" })).toThrow("positive integer");
+    expect(() => createLiveFeed(socket, { gameId: "1.5", playerId: "h1" })).toThrow("positive integer");
   });
 });
