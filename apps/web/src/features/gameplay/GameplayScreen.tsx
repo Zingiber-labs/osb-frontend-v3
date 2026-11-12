@@ -31,15 +31,18 @@ export function GameplayScreen({ gameId, playerId }: Props) {
   const [renderer, setRenderer] = useState<RendererPort | null>(null);
   const handleReady = useCallback((r: RendererPort) => setRenderer(r), []);
 
-  const ready = Boolean(mission && feed && game);
-  const state = useScenario(ready ? feed : null, mission ?? PLACEHOLDER_MISSION, renderer);
+  // Subscribe as soon as the mission is known: this effect must be attached before the start effect below runs.
+  const state = useScenario(mission && feed ? feed : null, mission ?? PLACEHOLDER_MISSION, renderer);
   const finished = state.status === "won" || state.status === "lost";
 
+  // Start without waiting for the game header: in live mode the header only arrives after start() subscribes,
+  // and the live feed buffers plays until it does; the replay feed's first event is the tipoff.
+  const canStart = Boolean(mission && feed && renderer);
   useEffect(() => {
-    if (!ready || !feed || !renderer) return;
+    if (!canStart || !feed) return;
     feed.start();
     return () => feed.pause();
-  }, [ready, feed, renderer]);
+  }, [canStart, feed, renderer]);
 
   const [showResult, setShowResult] = useState(false);
   useEffect(() => {
@@ -65,13 +68,23 @@ export function GameplayScreen({ gameId, playerId }: Props) {
     finished,
     engineWon: state.status === "won",
     rewards: active.data?.mission.rewards,
-    enabled: ready,
+    enabled: Boolean(mission && feed),
   });
 
   const exit = () => {
     feed?.stop();
     router.push("/hangar");
   };
+
+  if (active.isError) {
+    return (
+      <section className="flex h-dvh flex-col items-center justify-center gap-4 bg-slate-950 p-8 text-center text-slate-100">
+        <h1 className="font-display text-2xl tracking-[0.2em]">MISSION CONTROL UNAVAILABLE</h1>
+        <p className="max-w-md text-slate-300">We could not load your active mission.</p>
+        <Link href="/missions" className="underline">Go to Missions</Link>
+      </section>
+    );
+  }
 
   if (active.data && !mission) {
     return (
