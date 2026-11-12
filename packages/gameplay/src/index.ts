@@ -3,6 +3,8 @@ export { createInitialState, reduce } from "./engine/reduce";
 export { ENEMY_BY_POINTS, HULL_DAMAGE_BY_POINTS, HULL_MAX, HULL_MIN, SHIELD_MAX } from "./engine/mapping";
 export type { Feed, PlayKind, RecordedGame, RecordedPlay, RosterPlayer, TeamRoster } from "./feeds/types";
 export { createReplayFeed, buildTimeline, findTeamId } from "./feeds/replayFeed";
+export { clockOf, createPlayMapper } from "./feeds/mapPlay";
+export type { GameHeader, PlayMapper } from "./feeds/mapPlay";
 export { createTestFeed } from "./feeds/testFeed";
 export type { TestFeed } from "./feeds/testFeed";
 export { games, findGame } from "./fixtures/games";
