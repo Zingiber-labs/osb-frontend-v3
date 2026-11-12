@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.app.json",
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.scripts.tsbuildinfo",
+    "composite": true,
+    "lib": ["ES2023", "DOM"],
+    "types": ["node"],
+    "paths": { "@/*": ["./src/*"] },
+    "noEmit": true
+  },
+  "include": ["scripts", "src/features/gameplay/engine/types.ts", "src/features/gameplay/feeds/types.ts"]
+}
