@@ -1,10 +1,38 @@
-import { Button } from "./Button";
 import type { MissionConfig, ScenarioState } from "../engine/types";
+import { Button } from "./Button";
 import { STAT_LABEL } from "./hud/format";
 
-type Props = { state: ScenarioState; mission: MissionConfig; onReplay: () => void; onExit: () => void };
+export type GradingView =
+  | { status: "grading" }
+  | { status: "graded"; completed: boolean; rewards?: { xp?: number; coins?: number; gems?: number } }
+  | { status: "error"; message: string };
 
-export function ResultOverlay({ state, mission, onReplay, onExit }: Props) {
+export type ResultAction = { label: string; onClick: () => void };
+
+type Props = {
+  state: ScenarioState;
+  mission: MissionConfig;
+  /** Backend verdict, when the host app grades missions. Omitted: the engine verdict stands alone. */
+  grading?: GradingView;
+  primaryAction: ResultAction;
+  secondaryAction?: ResultAction;
+};
+
+function GradingLine({ grading, engineWon }: { grading: GradingView; engineWon: boolean }) {
+  if (grading.status === "grading") return <p className="text-xs tracking-[0.3em] text-hud-chrome motion-safe:animate-pulse">GRADING MISSION…</p>;
+  if (grading.status === "error") return <p className="text-xs tracking-[0.2em] text-hud-theirs">{grading.message}</p>;
+  if (!grading.completed) {
+    return <p className="text-xs tracking-[0.2em] text-hud-theirs">{engineWon ? "MISSION NOT CREDITED BY HQ" : "NO REWARDS THIS TIME"}</p>;
+  }
+  const rewards = Object.entries(grading.rewards ?? {}).filter((entry): entry is [string, number] => typeof entry[1] === "number" && entry[1] > 0);
+  return (
+    <div className="flex gap-4 text-sm tracking-[0.2em] text-hud-gold">
+      {rewards.length === 0 ? <span>MISSION CREDITED</span> : rewards.map(([k, v]) => <span key={k}>{`+${v} ${k.toUpperCase()}`}</span>)}
+    </div>
+  );
+}
+
+export function ResultOverlay({ state, mission, grading, primaryAction, secondaryAction }: Props) {
   const won = state.status === "won";
   const stats = state.myPlayerStats;
   const cells: [string, string | number][] = [
@@ -31,9 +59,10 @@ export function ResultOverlay({ state, mission, onReplay, onExit }: Props) {
             </div>
           ))}
         </dl>
+        {grading ? <GradingLine grading={grading} engineWon={won} /> : null}
         <div className="flex gap-3 font-sans">
-          <Button autoFocus onClick={onReplay}>Replay</Button>
-          <Button variant="outline" onClick={onExit}>Back to setup</Button>
+          <Button autoFocus onClick={primaryAction.onClick}>{primaryAction.label}</Button>
+          {secondaryAction ? <Button variant="outline" onClick={secondaryAction.onClick}>{secondaryAction.label}</Button> : null}
         </div>
       </div>
     </div>

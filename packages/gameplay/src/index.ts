@@ -13,5 +13,6 @@ export { NULL_RENDERER } from "./renderer/RendererPort";
 export { ScenarioCanvas } from "./components/ScenarioCanvas";
 export { HudOverlay } from "./components/hud/HudOverlay";
 export { ResultOverlay } from "./components/ResultOverlay";
+export type { GradingView, ResultAction } from "./components/ResultOverlay";
 export { useScenario } from "./hooks/useScenario";
 export { Button } from "./components/Button";
