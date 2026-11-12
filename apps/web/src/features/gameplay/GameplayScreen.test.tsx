@@ -85,4 +85,15 @@ describe("GameplayScreen", () => {
     await new Promise((r) => setTimeout(r, 50));
     expect(replace).not.toHaveBeenCalled();
   });
+
+  it("keeps the game running when the active mission is completed after the session started", async () => {
+    activeMission.mockReturnValue(pointsMission);
+    const { rerender } = render(<GameplayScreen gameId="1" playerId="p1" />);
+    await waitFor(() => expect(screen.getByTestId("canvas")).toBeInTheDocument());
+    activeMission.mockReturnValue({ data: null, isPending: false, isFetching: false });
+    rerender(<GameplayScreen gameId="1" playerId="p1" />);
+    await new Promise((r) => setTimeout(r, 50));
+    expect(replace).not.toHaveBeenCalled();
+    expect(screen.getByTestId("canvas")).toBeInTheDocument();
+  });
 });

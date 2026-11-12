@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useSession } from "@/hooks/useSession";
-import { missionConfigFrom } from "./api";
+import { missionConfigFrom, type ActiveMission } from "./api";
 import { useActiveMission } from "./useActiveMission";
 import { useGameFeed } from "./useGameFeed";
 import { useMissionGrading } from "./useMissionGrading";
@@ -22,11 +22,16 @@ export function GameplayScreen({ gameId, playerId }: Props) {
   const active = useActiveMission();
   const { feed, game, myPlayerId } = useGameFeed(gameId, playerId);
 
-  const mission = useMemo(() => (active.data ? missionConfigFrom(active.data.mission.requirements) : null), [active.data]);
+  // The mission is captured once: grading can complete it mid-game, which must not end the session.
+  // Captured during render (React's "adjust state on prop change" pattern) so the first loaded render already has it.
+  const [lockedMission, setLockedMission] = useState<ActiveMission | null>(null);
+  if (active.data && !lockedMission) setLockedMission(active.data);
+
+  const mission = useMemo(() => (lockedMission ? missionConfigFrom(lockedMission.mission.requirements) : null), [lockedMission]);
 
   useEffect(() => {
-    if (!active.isPending && !active.isFetching && active.data === null) router.replace("/missions");
-  }, [active.isPending, active.isFetching, active.data, router]);
+    if (!lockedMission && !active.isPending && !active.isFetching && active.data === null) router.replace("/missions");
+  }, [lockedMission, active.isPending, active.isFetching, active.data, router]);
 
   const [renderer, setRenderer] = useState<RendererPort | null>(null);
   const handleReady = useCallback((r: RendererPort) => setRenderer(r), []);
@@ -67,7 +72,7 @@ export function GameplayScreen({ gameId, playerId }: Props) {
     stats: state.myPlayerStats,
     finished,
     engineWon: state.status === "won",
-    rewards: active.data?.mission.rewards,
+    rewards: lockedMission?.mission.rewards,
     enabled: Boolean(mission && feed),
   });
 
@@ -86,12 +91,12 @@ export function GameplayScreen({ gameId, playerId }: Props) {
     );
   }
 
-  if (active.data && !mission) {
+  if (lockedMission && !mission) {
     return (
       <section className="flex h-dvh flex-col items-center justify-center gap-4 bg-slate-950 p-8 text-center text-slate-100">
         <h1 className="font-display text-2xl tracking-[0.2em]">MISSION NOT SUPPORTED</h1>
         <p className="max-w-md text-slate-300">
-          “{active.data.mission.name}” tracks a stat this scenario cannot visualize yet. Pick a points, blocks, or steals mission.
+          “{lockedMission.mission.name}” tracks a stat this scenario cannot visualize yet. Pick a points, blocks, or steals mission.
         </p>
         <Link href="/missions" className="underline">Go to Missions</Link>
       </section>
