@@ -1,6 +1,5 @@
 import { useCallback, useState } from "react";
-import { ScenarioCanvas } from "@/features/gameplay/components/ScenarioCanvas";
-import type { RendererPort } from "@/features/gameplay/renderer/RendererPort";
+import { ScenarioCanvas, type RendererPort } from "@osb/gameplay";
 import { SandboxControls } from "./SandboxControls";
 
 /** The scene with no feed and no game data: every renderer action can be fired by hand. */

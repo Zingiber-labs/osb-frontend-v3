@@ -8,5 +8,5 @@
     "paths": { "@/*": ["./src/*"] },
     "noEmit": true
   },
-  "include": ["scripts", "src/features/gameplay/engine/types.ts", "src/features/gameplay/feeds/types.ts"]
+  "include": ["scripts"]
 }

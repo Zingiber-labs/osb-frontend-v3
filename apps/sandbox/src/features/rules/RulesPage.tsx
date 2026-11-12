@@ -1,5 +1,5 @@
-import { ENEMY_BY_POINTS, HULL_DAMAGE_BY_POINTS, HULL_MAX, SHIELD_MAX } from "@/features/gameplay/engine/mapping";
-import type { Points } from "@/features/gameplay/engine/types";
+import { ENEMY_BY_POINTS, HULL_DAMAGE_BY_POINTS, HULL_MAX, SHIELD_MAX } from "@osb/gameplay";
+import type { Points } from "@osb/gameplay";
 
 const POINTS: Points[] = [1, 2, 3];
 

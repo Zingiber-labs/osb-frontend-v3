@@ -1,4 +1,4 @@
-import type { ShipAction } from "@/features/gameplay/engine/types";
+import type { ShipAction } from "@osb/gameplay";
 
 /** One of each ship action with a realistic caption, for exercising the renderer without game data. */
 export const SAMPLE_ACTIONS: { label: string; action: ShipAction }[] = [

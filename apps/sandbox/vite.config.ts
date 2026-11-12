@@ -9,6 +9,8 @@ export default defineConfig({
   resolve: {
     alias: { "@": fileURLToPath(new URL("./src", import.meta.url)) },
   },
+  optimizeDeps: { exclude: ["@osb/gameplay"] },
+  server: { fs: { allow: [fileURLToPath(new URL("../../", import.meta.url))] } },
   test: {
     environment: "jsdom",
     setupFiles: ["./src/test/setup.ts"],

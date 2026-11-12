@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router";
 import { describe, expect, it } from "vitest";
 import { AppRoutes } from "@/app/router";
-import { HULL_DAMAGE_BY_POINTS, SHIELD_MAX } from "@/features/gameplay/engine/mapping";
+import { HULL_DAMAGE_BY_POINTS, SHIELD_MAX } from "@osb/gameplay";
 import { RulesPage } from "./RulesPage";
 
 describe("RulesPage", () => {

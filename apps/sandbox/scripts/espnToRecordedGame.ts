@@ -1,5 +1,4 @@
-import type { Points } from "../src/features/gameplay/engine/types";
-import type { PlayKind, RecordedGame, RecordedPlay, RosterPlayer, TeamRoster } from "../src/features/gameplay/feeds/types";
+import type { PlayKind, Points, RecordedGame, RecordedPlay, RosterPlayer, TeamRoster } from "@osb/gameplay";
 
 export type EspnCompetitor = {
   homeAway: "home" | "away";

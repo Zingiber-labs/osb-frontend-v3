@@ -4,13 +4,13 @@ import { describe, expect, it } from "vitest";
 import { AppRoutes } from "./router";
 
 describe("AppRoutes", () => {
-  it("redirects / to /game-play", () => {
+  it("redirects / to /sandbox", () => {
     render(
       <MemoryRouter initialEntries={["/"]}>
         <AppRoutes />
       </MemoryRouter>,
     );
-    expect(screen.getByRole("heading", { name: /game play/i })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /sandbox/i })).toBeInTheDocument();
   });
 
   it("renders the not-found page for unknown paths", () => {

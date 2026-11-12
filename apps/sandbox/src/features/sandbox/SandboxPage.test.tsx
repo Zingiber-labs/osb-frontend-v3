@@ -3,13 +3,13 @@ import { StrictMode } from "react";
 import { MemoryRouter } from "react-router";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { AppRoutes } from "@/app/router";
-import { HULL_MAX } from "@/features/gameplay/engine/mapping";
+import { HULL_MAX } from "@osb/gameplay";
 import { SandboxPage } from "./SandboxPage";
 
 const enqueue = vi.fn();
 const syncState = vi.fn();
 
-vi.mock("@/features/gameplay/renderer/ScenarioRenderer", () => ({
+vi.mock("../../../../../packages/gameplay/src/renderer/ScenarioRenderer", () => ({
   ScenarioRenderer: class {
     mount = vi.fn(() => Promise.resolve());
     destroy = vi.fn();

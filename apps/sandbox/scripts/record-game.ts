@@ -20,7 +20,7 @@ if (!summary.plays?.length) {
 }
 
 const game = espnToRecordedGame(summary);
-await mkdir("src/fixtures/games", { recursive: true });
-const out = `src/fixtures/games/${game.id}.json`;
+await mkdir("../../packages/gameplay/src/fixtures/games", { recursive: true });
+const out = `../../packages/gameplay/src/fixtures/games/${game.id}.json`;
 await writeFile(out, JSON.stringify(game, null, 2));
 console.log(`wrote ${out}: ${game.plays.length} plays, ${game.home.abbreviation} vs ${game.away.abbreviation}`);

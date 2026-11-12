@@ -1,9 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { HULL_MAX, HULL_MIN, SHIELD_MAX } from "@/features/gameplay/engine/mapping";
-import { createInitialState } from "@/features/gameplay/engine/reduce";
-import type { ScenarioState } from "@/features/gameplay/engine/types";
-import type { RendererPort } from "@/features/gameplay/renderer/RendererPort";
+import { createInitialState, HULL_MAX, HULL_MIN, SHIELD_MAX } from "@osb/gameplay";
+import type { RendererPort, ScenarioState } from "@osb/gameplay";
 import { SAMPLE_ACTIONS } from "./sampleActions";
 
 type Props = { renderer: RendererPort | null };
