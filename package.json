@@ -15,5 +15,9 @@
     "test": "npm run test --workspaces --if-present",
     "typecheck": "npm run typecheck --workspaces --if-present",
     "lint": "oxlint apps packages"
+  },
+  "devDependencies": {
+    "oxlint": "^1.88.0",
+    "typescript": "^5.9.0"
   }
 }
