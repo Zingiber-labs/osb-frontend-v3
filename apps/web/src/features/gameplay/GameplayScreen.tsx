@@ -81,7 +81,7 @@ export function GameplayScreen({ gameId, playerId }: Props) {
     router.push("/hangar");
   };
 
-  if (active.isError) {
+  if (active.isError && !lockedMission) {
     return (
       <section className="flex h-dvh flex-col items-center justify-center gap-4 bg-slate-950 p-8 text-center text-slate-100">
         <h1 className="font-display text-2xl tracking-[0.2em]">MISSION CONTROL UNAVAILABLE</h1>

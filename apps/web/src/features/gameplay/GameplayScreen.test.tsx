@@ -45,7 +45,7 @@ describe("GameplayScreen", () => {
   });
 
   it("explains an unsupported mission instead of starting", () => {
-    activeMission.mockReturnValue({ data: { id: "m", missionId: "1", isCompleted: false, isClaimed: false, mission: { id: 1, name: "Dimes", requirements: { assists: 5 }, rewards: {} } }, isPending: false, isFetching: false });
+    activeMission.mockReturnValue({ data: { id: "m", missionId: "1", isCompleted: false, isClaimed: false, mission: { id: 1, name: "Dimes", requirements: { assists: 5 }, rewards: {} } }, isPending: false, isFetching: false, isError: false });
     render(<GameplayScreen gameId="1" playerId="p1" />);
     expect(screen.getByText(/not supported/i)).toBeInTheDocument();
     expect(screen.queryByTestId("canvas")).not.toBeInTheDocument();
@@ -95,5 +95,15 @@ describe("GameplayScreen", () => {
     await new Promise((r) => setTimeout(r, 50));
     expect(replace).not.toHaveBeenCalled();
     expect(screen.getByTestId("canvas")).toBeInTheDocument();
+  });
+
+  it("keeps the game running when a mission refetch fails after the session started", async () => {
+    activeMission.mockReturnValue({ ...pointsMission, isError: false });
+    const { rerender } = render(<GameplayScreen gameId="1" playerId="p1" />);
+    await waitFor(() => expect(screen.getByTestId("canvas")).toBeInTheDocument());
+    activeMission.mockReturnValue({ data: undefined, isPending: false, isFetching: false, isError: true });
+    rerender(<GameplayScreen gameId="1" playerId="p1" />);
+    expect(screen.getByTestId("canvas")).toBeInTheDocument();
+    expect(screen.queryByText(/mission control unavailable/i)).toBeNull();
   });
 });
