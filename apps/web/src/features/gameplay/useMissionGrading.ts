@@ -2,7 +2,7 @@
 
 import type { GradingView, MyPlayerStats } from "@osb/gameplay";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { isGraded, processGame, type MissionRewards, type ProcessGameResponse } from "./api";
 
 /** Poll period for process-game. Overridable through the env so tests do not wait 5 s per refetch. */
@@ -33,10 +33,14 @@ export function useMissionGrading(input: GradingInput): GradingView | undefined 
   // Once graded, stop posting (no re-post on observer remount while the result is cached).
   const cached = queryClient.getQueryData<GradingResult>(queryKey);
   const alreadyGraded = cached ? isGraded(cached.res, cached.sentFinished) : false;
+  // The first verdict is final: a later answer (e.g. the buzzer post's "No active missions to process") must
+  // neither regress the view nor restart polling.
+  const [verdict, setVerdict] = useState<{ completed: boolean } | null>(null);
 
   const query = useQuery<GradingResult>({
     queryKey,
-    enabled: enabled && Boolean(userId) && !alreadyGraded,
+    // With `enabled` false TanStack Query runs no refetchInterval, so a latched verdict also stops the polling.
+    enabled: enabled && Boolean(userId) && !alreadyGraded && !verdict,
     queryFn: async () => {
       const { stats: s, finished: f } = latest.current;
       // Rebounds and assists are not tracked by the engine; the backend requires the fields.
@@ -69,6 +73,9 @@ export function useMissionGrading(input: GradingInput): GradingView | undefined 
 
   const data = query.data;
   const graded = data ? isGraded(data.res, data.sentFinished) : false;
+  // Latch the first verdict (state set during render, React's "adjust state on change" pattern). The buzzer
+  // refetch still fires once for backend bookkeeping; its answer is ignored.
+  if (graded && data && !verdict) setVerdict({ completed: data.res.missionsCompleted === true });
 
   // Keep the queryFn reading the newest stats; declared before the buzzer refetch so it sees them.
   useEffect(() => {
@@ -83,20 +90,20 @@ export function useMissionGrading(input: GradingInput): GradingView | undefined 
   }, [finished, enabled, userId, refetch]);
 
   useEffect(() => {
-    if (!graded) return;
+    if (!verdict) return;
     queryClient.invalidateQueries({ queryKey: ["profile-data"] });
     queryClient.invalidateQueries({ queryKey: ["notifications"] });
-  }, [graded, queryClient]);
+  }, [verdict, queryClient]);
 
   useEffect(() => {
-    if (!graded || !finished || !data) return;
-    const completed = data.res.missionsCompleted === true;
-    if (completed !== engineWon) {
-      console.warn("mission grading: backend and engine disagree", { backend: data.res, engineWon });
+    if (!verdict || !finished) return;
+    if (verdict.completed !== engineWon) {
+      console.warn("mission grading: backend and engine disagree", { backendCompleted: verdict.completed, engineWon });
     }
-  }, [graded, finished, data, engineWon]);
+  }, [verdict, finished, engineWon]);
 
   if (!finished) return undefined;
+  if (verdict) return verdict.completed ? { status: "graded", completed: true, rewards } : { status: "graded", completed: false };
   if (query.error) return { status: "error", message: "Could not reach mission control." };
   if (!data || !graded) return { status: "grading" };
   const completed = data.res.missionsCompleted === true;

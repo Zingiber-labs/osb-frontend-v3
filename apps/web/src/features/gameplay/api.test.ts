@@ -32,4 +32,10 @@ describe("isGraded", () => {
   it("is not graded with nothing processed", () => {
     expect(isGraded({ missionsCompleted: false, processedMissions: 0 }, true)).toBe(false);
   });
+  it("is graded as completed at the buzzer when the mission was already completed earlier", () => {
+    expect(isGraded({ processedMissions: 0, missionsCompleted: true }, true)).toBe(true);
+  });
+  it("is not graded mid-game when there is nothing to process", () => {
+    expect(isGraded({ processedMissions: 0, missionsCompleted: true }, false)).toBe(false);
+  });
 });

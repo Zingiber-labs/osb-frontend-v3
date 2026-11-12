@@ -68,6 +68,34 @@ describe("useMissionGrading", () => {
     await waitFor(() => expect(result.current).toEqual({ status: "graded", completed: false }));
   });
 
+  it("keeps the completed verdict when the buzzer post answers 'no active missions'", async () => {
+    processGame
+      .mockResolvedValueOnce({ processedMissions: 1, missionsCompleted: true })
+      .mockResolvedValue({ processedMissions: 0, missionsCompleted: true, message: "No active missions to process" });
+    const { result, rerender } = renderHook((props: GradingInput) => useMissionGrading(props), { wrapper, initialProps: base });
+    await waitFor(() => expect(processGame).toHaveBeenCalled());
+    rerender({ ...base, finished: true, engineWon: true });
+    await waitFor(() => expect(processGame).toHaveBeenCalledWith(expect.objectContaining({ isGameFinished: true })));
+    const graded = { status: "graded", completed: true, rewards: { xp: 50, gems: 1 } };
+    await waitFor(() => expect(result.current).toEqual(graded));
+    await new Promise((r) => setTimeout(r, 60));
+    expect(result.current).toEqual(graded);
+  });
+
+  it("latches the verdict even when a later answer is not a verdict", async () => {
+    processGame.mockResolvedValueOnce({ processedMissions: 1, missionsCompleted: true }).mockResolvedValue({ processedMissions: 0 });
+    const { result, rerender } = renderHook((props: GradingInput) => useMissionGrading(props), { wrapper, initialProps: base });
+    await waitFor(() => expect(processGame).toHaveBeenCalled());
+    rerender({ ...base, finished: true, engineWon: true });
+    await waitFor(() => expect(processGame).toHaveBeenCalledWith(expect.objectContaining({ isGameFinished: true })));
+    const graded = { status: "graded", completed: true, rewards: { xp: 50, gems: 1 } };
+    await waitFor(() => expect(result.current).toEqual(graded));
+    const calls = processGame.mock.calls.length;
+    await new Promise((r) => setTimeout(r, 60));
+    expect(result.current).toEqual(graded);
+    expect(processGame).toHaveBeenCalledTimes(calls);
+  });
+
   it("returns an error view when the poll fails", async () => {
     processGame.mockRejectedValue(new Error("boom"));
     const { result } = renderHook(() => useMissionGrading({ ...base, finished: true }), { wrapper });

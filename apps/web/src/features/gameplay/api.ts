@@ -54,10 +54,15 @@ export async function processGame(req: ProcessGameRequest): Promise<ProcessGameR
   return data ?? {};
 }
 
-/** The backend has reached a verdict: success any time, failure only once the game is over. */
+/**
+ * The backend has reached a verdict: success any time, failure only once the game is over. After the buzzer,
+ * "no active missions" with missionsCompleted: true means the mission was completed by an earlier poll.
+ */
 export function isGraded(res: ProcessGameResponse, gameFinished: boolean): boolean {
   if (res.done === true || res.status === "completed") return true;
-  if ((res.processedMissions ?? 0) === 0) return false;
-  if (res.missionsCompleted === true) return true;
+  const processed = res.processedMissions ?? 0;
+  if (processed > 0 && res.missionsCompleted === true) return true;
+  // Nothing left to process: only a verdict at the buzzer, when the mission was already completed earlier.
+  if (processed === 0) return gameFinished && res.missionsCompleted === true;
   return res.missionsCompleted === false && gameFinished;
 }
