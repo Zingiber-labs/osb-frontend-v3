@@ -9,6 +9,7 @@ export const SOCKET_EVENTS = {
 
 /** The slice of a socket.io client the feed needs; tests pass a fake. */
 export type SocketLike = {
+  connected?: boolean;
   emit(event: string, payload?: unknown): void;
   on(event: string, cb: (payload: any) => void): void;
   off(event: string, cb: (payload: any) => void): void;
@@ -25,6 +26,7 @@ export type LiveFeed = Feed & {
  */
 export function createLiveFeed(socket: SocketLike, opts: { gameId: string; playerId: string }): LiveFeed {
   const gameId = Number(opts.gameId);
+  if (Number.isNaN(gameId)) throw new Error(`LiveFeed: gameId must be numeric, got "${opts.gameId}"`);
   const eventListeners = new Set<(e: GameEvent) => void>();
   const gameListeners = new Set<(g: GameHeader) => void>();
 
@@ -73,7 +75,11 @@ export function createLiveFeed(socket: SocketLike, opts: { gameId: string; playe
     drain();
   };
 
-  const subscribe = () => socket.emit(SOCKET_EVENTS.subscribe, { gameId, fromOrder: last });
+  let subscribed = false;
+  const subscribe = () => {
+    subscribed = true;
+    socket.emit(SOCKET_EVENTS.subscribe, { gameId, fromOrder: last });
+  };
   const onConnect = () => subscribe();
 
   let attached = false;
@@ -92,16 +98,12 @@ export function createLiveFeed(socket: SocketLike, opts: { gameId: string; playe
     socket.off("connect", onConnect);
   };
 
-  let subscribed = false;
-
   return {
     start() {
       running = true;
       attach();
-      if (!subscribed) {
-        subscribed = true;
-        subscribe();
-      }
+      // A not-yet-connected socket subscribes from the connect handler; emitting here too would double-subscribe.
+      if (!subscribed && socket.connected !== false) subscribe();
       drain();
     },
     pause() {
@@ -111,6 +113,7 @@ export function createLiveFeed(socket: SocketLike, opts: { gameId: string; playe
       const e = ready.shift();
       if (e) publish(e);
     },
+    // Terminal, like the replay feed: buffered-but-undelivered events are discarded and the feed cannot be restarted; hosts that only want to hold delivery use pause().
     stop() {
       running = false;
       detach();

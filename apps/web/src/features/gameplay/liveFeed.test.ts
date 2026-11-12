@@ -13,10 +13,11 @@ const play = (order: number, extra: Partial<RecordedPlay> = {}): RecordedPlay =>
   order, period: 1, clockSeconds: 700 - order, homeScore: 0, awayScore: 0, kind: "score", points: 2, teamId: "H", playerIds: ["h1"], ...extra,
 });
 
-function fakeSocket() {
+function fakeSocket(connected = true) {
   const handlers = new Map<string, Set<(p: any) => void>>();
   const emitted: Array<[string, unknown]> = [];
   const socket: SocketLike = {
+    connected,
     emit: (e, p) => { emitted.push([e, p]); },
     on: (e, cb) => { (handlers.get(e) ?? handlers.set(e, new Set()).get(e)!).add(cb); },
     off: (e, cb) => { handlers.get(e)?.delete(cb); },
@@ -107,5 +108,23 @@ describe("createLiveFeed", () => {
     expect(emitted).toContainEqual([SOCKET_EVENTS.unsubscribe, { gameId: 1 }]);
     fire(SOCKET_EVENTS.play, play(1));
     expect(events).toHaveLength(0);
+  });
+  it("on a not-yet-connected socket subscribes once from the connect handler", () => {
+    const { socket, emitted, fire } = fakeSocket(false);
+    const feed = createLiveFeed(socket, { gameId: "1", playerId: "h1" });
+    feed.start();
+    expect(emitted).toEqual([]);
+    fire("connect", undefined);
+    expect(emitted).toEqual([[SOCKET_EVENTS.subscribe, { gameId: 1, fromOrder: 0 }]]);
+    fire(SOCKET_EVENTS.gameInfo, header);
+    fire(SOCKET_EVENTS.play, play(1));
+    fire(SOCKET_EVENTS.play, play(2));
+    fire("connect", undefined);
+    expect(emitted.at(-1)).toEqual([SOCKET_EVENTS.subscribe, { gameId: 1, fromOrder: 2 }]);
+  });
+
+  it("rejects a non-numeric game id", () => {
+    const { socket } = fakeSocket();
+    expect(() => createLiveFeed(socket, { gameId: "g1", playerId: "h1" })).toThrow('LiveFeed: gameId must be numeric, got "g1"');
   });
 });
