@@ -1,0 +1,10 @@
+@import "@fontsource-variable/geist";
+@import "@fontsource-variable/orbitron";
+
+@theme {
+  --font-display: "Orbitron Variable", sans-serif;
+  --color-hud-mine: #38bdf8;
+  --color-hud-gold: #fbbf24;
+  --color-hud-theirs: #f43f5e;
+  --color-hud-chrome: #64748b;
+}

@@ -1,0 +1,30 @@
+{
+  "header": {
+    "id": "999",
+    "competitions": [
+      {
+        "date": "2026-01-15T00:30Z",
+        "competitors": [
+          { "homeAway": "home", "team": { "id": "13", "displayName": "Los Angeles Lakers", "abbreviation": "LAL" } },
+          { "homeAway": "away", "team": { "id": "9", "displayName": "Golden State Warriors", "abbreviation": "GS" } }
+        ]
+      }
+    ]
+  },
+  "boxscore": {
+    "players": [
+      { "team": { "id": "13" }, "statistics": [ { "athletes": [ { "athlete": { "id": "p1", "displayName": "Laker One" } }, { "athlete": { "id": "p2", "displayName": "Laker Two" } } ] } ] },
+      { "team": { "id": "9" }, "statistics": [ { "athletes": [ { "athlete": { "id": "w1", "displayName": "Warrior One" } } ] } ] }
+    ]
+  },
+  "plays": [
+    { "id": "1", "sequenceNumber": "1", "type": { "text": "Jumpball" }, "text": "Jumpball", "homeScore": 0, "awayScore": 0, "period": { "number": 1 }, "clock": { "displayValue": "12:00" }, "scoringPlay": false, "participants": [] },
+    { "id": "2", "sequenceNumber": "2", "type": { "text": "Jump Shot" }, "text": "Laker One makes 18-foot jumper (Laker Two assists)", "homeScore": 2, "awayScore": 0, "period": { "number": 1 }, "clock": { "displayValue": "11:42" }, "scoringPlay": true, "shootingPlay": true, "scoreValue": 2, "team": { "id": "13" }, "participants": [ { "athlete": { "id": "p1" } }, { "athlete": { "id": "p2" } } ] },
+    { "id": "3", "sequenceNumber": "3", "type": { "text": "Layup Shot" }, "text": "Warrior One misses driving layup (Laker Two blocks)", "homeScore": 2, "awayScore": 0, "period": { "number": 1 }, "clock": { "displayValue": "11:20" }, "scoringPlay": false, "shootingPlay": true, "scoreValue": 0, "team": { "id": "9" }, "participants": [ { "athlete": { "id": "w1" } }, { "athlete": { "id": "p2" } } ] },
+    { "id": "4", "sequenceNumber": "4", "type": { "text": "Bad Pass\nTurnover" }, "text": "Laker One bad pass (Warrior One steals)", "homeScore": 2, "awayScore": 0, "period": { "number": 1 }, "clock": { "displayValue": "10:58" }, "scoringPlay": false, "team": { "id": "13" }, "participants": [ { "athlete": { "id": "p1" } }, { "athlete": { "id": "w1" } } ] },
+    { "id": "5", "sequenceNumber": "5", "type": { "text": "Free Throw - 1 of 2" }, "text": "Warrior One makes free throw 1 of 2", "homeScore": 2, "awayScore": 1, "period": { "number": 1 }, "clock": { "displayValue": "10:40" }, "scoringPlay": true, "scoreValue": 1, "team": { "id": "9" }, "participants": [ { "athlete": { "id": "w1" } } ] },
+    { "id": "6", "sequenceNumber": "6", "type": { "text": "End Period" }, "text": "End of the 1st Quarter", "homeScore": 2, "awayScore": 1, "period": { "number": 1 }, "clock": { "displayValue": "0.0" }, "scoringPlay": false, "participants": [] },
+    { "id": "6b", "sequenceNumber": "7", "type": { "text": "End Period" }, "text": "End of the 4th Quarter", "homeScore": 2, "awayScore": 1, "period": { "number": 4 }, "clock": { "displayValue": "0.0" }, "scoringPlay": false, "participants": [] },
+    { "id": "7", "sequenceNumber": "8", "type": { "text": "End Game" }, "text": "End of Game", "homeScore": 2, "awayScore": 1, "period": { "number": 4 }, "clock": { "displayValue": "0.0" }, "scoringPlay": false, "participants": [] }
+  ]
+}
